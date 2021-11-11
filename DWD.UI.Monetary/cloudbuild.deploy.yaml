@@ -2,7 +2,7 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args:
       - 'build'
-      - '--file=DWD.UI.Monetary/Deploy.dockerfile'
+      - '--file=Deploy.dockerfile'
       - '--tag=us-central1-docker.pkg.dev/$PROJECT_ID/dwd-modernization-lab/dwd-ui-monetary-deploy:$COMMIT_SHA'
       - 'Deploy.dockerfile'
     id: build-deploy-container
