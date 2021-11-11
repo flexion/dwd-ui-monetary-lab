@@ -2,6 +2,7 @@
 
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
+        <RuntimeIdentifiers>linux-x64;alpine-x64</RuntimeIdentifiers>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
         <AnalysisMode>AllEnabledByDefault</AnalysisMode>
         <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
