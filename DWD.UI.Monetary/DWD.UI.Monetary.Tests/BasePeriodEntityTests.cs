@@ -119,7 +119,7 @@ namespace DWD.UI.Monetary.Tests
         {
             // Get base period from date
             var myClaimDate = new DateTime(2021, 4, 1);
-            var myBasePeriod = new BasePeriod(myClaimDate);
+            var myBasePeriod = new BasePeriod(myClaimDate, false);
 
             /*
              * Quarters: For unemployment purposes the quarter does not start until the first full week of that month.
@@ -158,7 +158,7 @@ namespace DWD.UI.Monetary.Tests
         {
             // Get base period from date
             var myClaimDate = new DateTime(2021, 4, 6);
-            var myBasePeriod = new BasePeriod(myClaimDate);
+            var myBasePeriod = new BasePeriod(myClaimDate, false);
 
             // Check quarter properties
             Assert.Equal(2020, myBasePeriod.FirstQuarter.Year);
@@ -191,7 +191,7 @@ namespace DWD.UI.Monetary.Tests
         {
             // Get base period from date
             var myClaimDate = new DateTime(2021, 7, 4);
-            var myBasePeriod = new BasePeriod(myClaimDate);
+            var myBasePeriod = new BasePeriod(myClaimDate, false);
 
             // Check quarter properties
             Assert.Equal(2020, myBasePeriod.FirstQuarter.Year);
