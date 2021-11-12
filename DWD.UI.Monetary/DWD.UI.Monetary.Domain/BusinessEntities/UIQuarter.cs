@@ -1,3 +1,4 @@
+#nullable enable
 namespace DWD.UI.Monetary.Domain.BusinessEntities
 {
     using System;
@@ -71,9 +72,20 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
         /// <returns>The previous ui quarter.</returns>
         public static UIQuarter Decrement(UIQuarter item) => --item;
 
-        public bool Equals(UIQuarter other) =>
-            null != other
-                && this.Year.Equals(other.Year)
-                && this.QuarterNumber.Equals(other.QuarterNumber);
+        public bool Equals(UIQuarter? other) =>
+            this.Equals((object)other!);
+
+        public override bool Equals(object? obj)
+        {
+            if (obj == null)
+            {
+                return false;
+            }
+
+            var other = obj as UIQuarter;
+            return null != other && this.Year.Equals(other.Year) && this.QuarterNumber.Equals(other.QuarterNumber);
+        }
+
+        public override int GetHashCode() => HashCode.Combine(this.Year, this.QuarterNumber);
     }
 }
