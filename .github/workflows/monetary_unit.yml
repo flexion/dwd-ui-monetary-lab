@@ -1,0 +1,56 @@
+name: Monetary Unit tests
+
+on:
+  pull_request:
+    branches: [ '*' ]
+    paths:
+      - "DWD.UI.Monetary/**"
+      - ".github/workflows/monetary_unit.yaml"
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+
+    - name: Restore dependencies
+      run: |-
+        cd DWD.UI.Monetary
+        dotnet restore
+
+    - name: Build
+      run: |-
+        cd DWD.UI.Monetary
+        dotnet build --no-restore
+
+    - name: Test
+      run: |-
+        cd DWD.UI.Monetary
+        dotnet test --filter FullyQualifiedName~Tests.Unit --no-build --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./coverage
+
+    - name: Copy Coverage To Predictable Location
+      run: |-
+        cd DWD.UI.Monetary
+        cp coverage/**/coverage.cobertura.xml coverage/coverage.cobertura.xml
+
+    - name: Code Coverage Summary Report
+      uses: irongut/CodeCoverageSummary@v1.1.0
+      with:
+        filename: DWD.UI.Monetary/coverage/coverage.cobertura.xml
+        badge: true
+        fail_below_min: true
+        format: 'markdown'
+        output: 'both'
+        thresholds: '70 80'
+
+    - name: Add Coverage PR Comment
+      uses: marocchino/sticky-pull-request-comment@v2
+      with:
+        recreate: true
+        path: code-coverage-results.md
