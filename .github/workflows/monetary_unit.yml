@@ -5,7 +5,7 @@ on:
     branches: [ '*' ]
     paths:
       - "DWD.UI.Monetary/**"
-      - ".github/workflows/monetary_unit.yaml"
+      - ".github/workflows/monetary_unit.yml"
 
 jobs:
   build:
