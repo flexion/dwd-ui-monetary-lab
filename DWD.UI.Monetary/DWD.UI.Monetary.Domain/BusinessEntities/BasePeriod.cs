@@ -9,7 +9,11 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
     /// <summary>
     /// The base period used within our eligibility logic.
     /// </summary>
-    internal class BasePeriod : IBasePeriod, IEnumerable<CalendarQuarter>
+    /// <remarks> For unemployment purposes the quarter does not start until the first full week of that month.
+    /// Example: October of 2021. The first full week of October was Sunday-Saturday 10/3-10/9 so that is when the quarter 4
+    /// would start for unemployment purposes.  The week of 9/26-10/2 would be considered to be apart of Q3.
+    /// </remarks>
+    internal class BasePeriod : IBasePeriod, IEnumerable<UIQuarter>
     {
         // TODO: Ask Helen if this is needed, and if so what the correct minimum should be.
         /// <summary>
@@ -20,7 +24,7 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
         /// <summary>
         /// Local storage for quarters.
         /// </summary>
-        private readonly CalendarQuarter[] quarters = new CalendarQuarter[4];
+        private readonly UIQuarter[] quarters = new UIQuarter[4];
 
         /// <summary>
         /// Hidden default constructor.
@@ -42,26 +46,26 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
             }
 
             // Populate basePeriod with last 4 complete quarters, skipping most recent complete quarter
-            var currentQuarter = new CalendarQuarter(initialClaimDate);
+            var currentQuarter = new UIQuarter(initialClaimDate);
             var tempQuarter = --currentQuarter;
 
             for (var i = 3; i >= 0; i--)
             {
                 tempQuarter = --tempQuarter;
-                this[i] = new CalendarQuarter(tempQuarter.Year, tempQuarter.QuarterNumber);
+                this[i] = new UIQuarter(tempQuarter.Year, tempQuarter.QuarterNumber);
             }
         }
 
         /// <summary>
-        /// Get base period quarters as IEnumerable of ICalendarQuarter.
+        /// Get base period quarters as IEnumerable of IUIQuarter.
         /// </summary>
-        public IEnumerable<ICalendarQuarter> BasePeriodQuarters => this;
+        public IEnumerable<IUIQuarter> BasePeriodQuarters => this;
 
         /// <summary>
         /// Indexer into base period quarters.
         /// </summary>
         /// <param name="index">The zero based quarter index to return.</param>
-        public CalendarQuarter this[int index]
+        public UIQuarter this[int index]
         {
             get => this.quarters[index];
             private init => this.quarters[index] = value;
@@ -70,28 +74,28 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
         /// <summary>
         /// Friendly getter for first quarter.
         /// </summary>
-        public CalendarQuarter FirstQuarter => this[0];
+        public UIQuarter FirstQuarter => this[0];
 
         /// <summary>
         /// Friendly getter for second quarter.
         /// </summary>
-        public CalendarQuarter SecondQuarter => this[1];
+        public UIQuarter SecondQuarter => this[1];
 
         /// <summary>
         /// Friendly getter for third quarter.
         /// </summary>
-        public CalendarQuarter ThirdQuarter => this[2];
+        public UIQuarter ThirdQuarter => this[2];
 
         /// <summary>
         /// Friendly getter for fourth quarter.
         /// </summary>
-        public CalendarQuarter FourthQuarter => this[3];
+        public UIQuarter FourthQuarter => this[3];
 
         /// <summary>
         /// Get an enumerator so clients can use foreach and similar interactions.
         /// </summary>
-        /// <returns>An IEnumerator of type CalendarQuarter.</returns>
-        public IEnumerator<CalendarQuarter> GetEnumerator()
+        /// <returns>An IEnumerator of type UIQuarter.</returns>
+        public IEnumerator<UIQuarter> GetEnumerator()
         {
             for (var i = 0; i < 4; i++)
             {

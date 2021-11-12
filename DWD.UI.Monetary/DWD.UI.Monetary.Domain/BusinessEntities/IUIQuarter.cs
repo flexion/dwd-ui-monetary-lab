@@ -1,14 +1,12 @@
 namespace DWD.UI.Monetary.Domain.BusinessEntities
 {
-    using System;
-
     /// <summary>
-    /// Simplified representation of calendar quarter.
+    /// Simplified representation of unemployment insurance quarter.
     /// </summary>
-    public interface ICalendarQuarter : IEquatable<ICalendarQuarter>
+    public interface IUIQuarter
     {
         /// <summary>
-        /// The calendar year.
+        /// The quarter's year.
         /// </summary>
         int Year { get; }
 
