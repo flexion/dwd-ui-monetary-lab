@@ -10,7 +10,7 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
     /// Example: October of 2021. The first full week of October was Sunday-Saturday 10/3-10/9 so that is when the quarter 4
     /// would start for unemployment purposes.  The week of 9/26-10/2 would be considered to be apart of Q3.
     /// </remarks>
-    internal class UIQuarter : IUIQuarter
+    internal class UIQuarter : IUIQuarter, IEquatable<UIQuarter>
     {
         /// <summary>
         /// The quarter's year.
@@ -70,5 +70,10 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
         /// <param name="item">The ui quarter to decrement.</param>
         /// <returns>The previous ui quarter.</returns>
         public static UIQuarter Decrement(UIQuarter item) => --item;
+
+        public bool Equals(UIQuarter other) =>
+            null != other
+                && this.Year.Equals(other.Year)
+                && this.QuarterNumber.Equals(other.QuarterNumber);
     }
 }

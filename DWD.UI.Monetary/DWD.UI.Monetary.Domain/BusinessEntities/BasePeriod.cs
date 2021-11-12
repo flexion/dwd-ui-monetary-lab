@@ -47,7 +47,7 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
 
             // Populate basePeriod with last 4 complete quarters, skipping most recent complete quarter
             var currentQuarter = new UIQuarter(initialClaimDate);
-            var tempQuarter = --currentQuarter;
+            var tempQuarter = useAltBasePeriod ? currentQuarter : --currentQuarter;
 
             for (var i = 3; i >= 0; i--)
             {
