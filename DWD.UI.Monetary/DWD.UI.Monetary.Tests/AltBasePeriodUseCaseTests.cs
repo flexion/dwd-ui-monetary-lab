@@ -55,10 +55,10 @@ namespace DWD.UI.Monetary.Tests
                 .ThenBy(q => q.QuarterNumber)
                 .ToArray();
             var testQuarters = new UIQuarter[4];
-            testQuarters[0] = new UIQuarter(2020, 2);
-            testQuarters[1] = new UIQuarter(2020, 3);
-            testQuarters[2] = new UIQuarter(2020, 4);
-            testQuarters[3] = new UIQuarter(2021, 1);
+            testQuarters[0] = new UIQuarter(2019, 4);
+            testQuarters[1] = new UIQuarter(2020, 1);
+            testQuarters[2] = new UIQuarter(2020, 2);
+            testQuarters[3] = new UIQuarter(2020, 3);
 
             Assert.Equal(testQuarters[0], actualQuarters[0]);
             Assert.Equal(testQuarters[1], actualQuarters[1]);
