@@ -1,6 +1,8 @@
 namespace DWD.UI.Monetary.Tests
 {
     using System;
+    using System.Linq;
+    using Domain.BusinessEntities;
     using Domain.UseCases;
     using Xunit;
 
