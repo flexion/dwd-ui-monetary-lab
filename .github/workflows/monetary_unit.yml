@@ -32,7 +32,7 @@ jobs:
     - name: Test
       run: |-
         cd DWD.UI.Monetary
-        dotnet test --filter FullyQualifiedName~Tests.Unit --no-build --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./coverage
+        dotnet test --no-build --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./coverage
 
     - name: Copy Coverage To Predictable Location
       run: |-
