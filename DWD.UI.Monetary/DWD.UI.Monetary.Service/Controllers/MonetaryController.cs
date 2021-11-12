@@ -48,7 +48,7 @@ namespace DWD.UI.Monetary.Service.Controllers
             try
             {
                 // Calculate the base period
-                var basePeriod = this.calculateBasePeriod.CalculateBasePeriodFromInitialClaimDate(initialClaimDate);
+                var basePeriod = this.calculateBasePeriod.CalculateBasePeriodFromInitialClaimDate(initialClaimDate, false);
 
                 // Map from IBasePeriod to BasePeriodDto and return
                 var result = BasePeriodMapper.MapToDto(basePeriod);

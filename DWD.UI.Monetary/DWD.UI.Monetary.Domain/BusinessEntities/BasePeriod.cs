@@ -31,8 +31,9 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
         /// Construct instance using initial claim date as input.
         /// </summary>
         /// <param name="initialClaimDate">The initial claim date.</param>
+        /// <param name="useAltBasePeriod">Calculate alternative.</param>
         /// <exception cref="ArgumentException">Throws a ArgumentException if the supplied initial claim date is not valid.</exception>
-        public BasePeriod(DateTime initialClaimDate)
+        public BasePeriod(DateTime initialClaimDate, bool useAltBasePeriod)
         {
             // Check if claim date is invalid
             if (ClaimDateInvalid(initialClaimDate, out var errorMessage))

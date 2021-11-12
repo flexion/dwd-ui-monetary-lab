@@ -13,7 +13,7 @@ namespace DWD.UI.Monetary.Tests
         {
             // Get base period from date
             var myClaimDate = new DateTime(2021, 10, 31);
-            var myBasePeriod = new BasePeriod(myClaimDate);
+            var myBasePeriod = new BasePeriod(myClaimDate, false);
 
             // Check quarter properties
             Assert.Equal(2020, myBasePeriod.FirstQuarter.Year);
@@ -53,7 +53,7 @@ namespace DWD.UI.Monetary.Tests
         {
             // Get base period from date
             var myClaimDate = new DateTime(2021, 1, 3);
-            var myBasePeriod = new BasePeriod(myClaimDate);
+            var myBasePeriod = new BasePeriod(myClaimDate, false);
 
             // Check quarter properties
             Assert.Equal(2019, myBasePeriod.FirstQuarter.Year);
@@ -86,7 +86,7 @@ namespace DWD.UI.Monetary.Tests
         {
             // Get base period from date
             var myClaimDate = new DateTime(2020, 12, 6);
-            var myBasePeriod = new BasePeriod(myClaimDate);
+            var myBasePeriod = new BasePeriod(myClaimDate, false);
 
             // Check quarter properties
             Assert.Equal(2019, myBasePeriod.FirstQuarter.Year);
@@ -118,21 +118,21 @@ namespace DWD.UI.Monetary.Tests
         public void FutureClaimDate()
         {
             var myClaimDate = new DateTime(2999, 12, 1);
-            Assert.Throws<ArgumentException>(() => new BasePeriod(myClaimDate));
+            Assert.Throws<ArgumentException>(() => new BasePeriod(myClaimDate, false));
         }
 
         [Fact]
         public void MinValidClaimDate()
         {
             var myClaimDate = new DateTime(1899, 1, 1);
-            Assert.Throws<ArgumentException>(() => new BasePeriod(myClaimDate));
+            Assert.Throws<ArgumentException>(() => new BasePeriod(myClaimDate, false));
         }
 
         [Fact]
         public void CheckLeapYear()
         {
             var myClaimDate = new DateTime(2020, 2, 29);
-            var myBasePeriod = new BasePeriod(myClaimDate);
+            var myBasePeriod = new BasePeriod(myClaimDate, false);
 
             Assert.Equal(2018, myBasePeriod.FirstQuarter.Year);
             Assert.Equal(4, myBasePeriod.FirstQuarter.QuarterNumber);

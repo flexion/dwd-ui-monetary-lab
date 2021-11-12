@@ -13,7 +13,7 @@ namespace DWD.UI.Monetary.Tests
             // Get base period from date
             var myClaimDate = new DateTime(2021, 10, 31);
             var basePeriodUseCase = new CalculateBasePeriod();
-            var result = basePeriodUseCase.CalculateBasePeriodFromInitialClaimDate(myClaimDate);
+            var result = basePeriodUseCase.CalculateBasePeriodFromInitialClaimDate(myClaimDate, false);
 
             // Check result
             Assert.NotNull(result);

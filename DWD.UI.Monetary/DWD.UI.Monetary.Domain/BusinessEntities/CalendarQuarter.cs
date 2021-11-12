@@ -70,6 +70,7 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
                 quarter.QuarterNumber = 4;
                 quarter.Year--;
             }
+
             return quarter;
         }
 
@@ -79,5 +80,17 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
         /// <param name="item">The calendar quarter to decrement.</param>
         /// <returns>The previous calendar quarter.</returns>
         public static CalendarQuarter Decrement(CalendarQuarter item) => --item;
+
+        public bool Equals(ICalendarQuarter oth)
+        {
+            var result = false;
+
+            if (null != oth)
+            {
+                result = this.Year == oth.Year && this.QuarterNumber == oth.QuarterNumber;
+            }
+
+            return result;
+        }
     }
 }
