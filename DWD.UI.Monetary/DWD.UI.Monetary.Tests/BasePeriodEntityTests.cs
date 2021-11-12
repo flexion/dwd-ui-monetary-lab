@@ -1,7 +1,7 @@
 namespace DWD.UI.Monetary.Tests
 {
     using System;
-    using DWD.UI.Monetary.Domain.BusinessEntities;
+    using Domain.BusinessEntities;
     using Xunit;
 
     // TODO: Add more tests
@@ -13,7 +13,7 @@ namespace DWD.UI.Monetary.Tests
         {
             // Get base period from date
             var myClaimDate = new DateTime(2021, 10, 31);
-            var myBasePeriod = new BasePeriod(myClaimDate, false);
+            var myBasePeriod = new BasePeriod(myClaimDate);
 
             // Check quarter properties
             Assert.Equal(2020, myBasePeriod.FirstQuarter.Year);
@@ -29,7 +29,7 @@ namespace DWD.UI.Monetary.Tests
             Assert.Equal(2, myBasePeriod.FourthQuarter.QuarterNumber);
 
             // Check base period is enumerable
-            foreach (var quarter in myBasePeriod)
+            foreach (var quarter in myBasePeriod.BasePeriodQuarters)
             {
                 Assert.NotNull(quarter);
             }
@@ -37,7 +37,7 @@ namespace DWD.UI.Monetary.Tests
             // Check base period indexer
             for (var i = 0; i < 4; i++)
             {
-                Assert.NotNull(myBasePeriod[i]);
+                Assert.NotNull(myBasePeriod.FirstQuarter);
             }
 
             // Check IBasePeriod interface
@@ -53,7 +53,7 @@ namespace DWD.UI.Monetary.Tests
         {
             // Get base period from date
             var myClaimDate = new DateTime(2021, 1, 3);
-            var myBasePeriod = new BasePeriod(myClaimDate, false);
+            var myBasePeriod = new BasePeriod(myClaimDate);
 
             // Check quarter properties
             Assert.Equal(2019, myBasePeriod.FirstQuarter.Year);
@@ -69,15 +69,9 @@ namespace DWD.UI.Monetary.Tests
             Assert.Equal(3, myBasePeriod.FourthQuarter.QuarterNumber);
 
             // Check base period is enumerable
-            foreach (var quarter in myBasePeriod)
+            foreach (var quarter in myBasePeriod.BasePeriodQuarters)
             {
                 Assert.NotNull(quarter);
-            }
-
-            // Check base period indexer
-            for (var i = 0; i < 4; i++)
-            {
-                Assert.NotNull(myBasePeriod[i]);
             }
         }
 
@@ -86,7 +80,7 @@ namespace DWD.UI.Monetary.Tests
         {
             // Get base period from date
             var myClaimDate = new DateTime(2020, 12, 6);
-            var myBasePeriod = new BasePeriod(myClaimDate, false);
+            var myBasePeriod = new BasePeriod(myClaimDate);
 
             // Check quarter properties
             Assert.Equal(2019, myBasePeriod.FirstQuarter.Year);
@@ -102,15 +96,9 @@ namespace DWD.UI.Monetary.Tests
             Assert.Equal(2, myBasePeriod.FourthQuarter.QuarterNumber);
 
             // Check base period is enumerable
-            foreach (var quarter in myBasePeriod)
+            foreach (var quarter in myBasePeriod.BasePeriodQuarters)
             {
                 Assert.NotNull(quarter);
-            }
-
-            // Check base period indexer
-            for (var i = 0; i < 4; i++)
-            {
-                Assert.NotNull(myBasePeriod[i]);
             }
         }
 
@@ -119,7 +107,7 @@ namespace DWD.UI.Monetary.Tests
         {
             // Get base period from date
             var myClaimDate = new DateTime(2021, 4, 1);
-            var myBasePeriod = new BasePeriod(myClaimDate, false);
+            var myBasePeriod = new BasePeriod(myClaimDate);
 
             /*
              * Quarters: For unemployment purposes the quarter does not start until the first full week of that month.
@@ -141,16 +129,11 @@ namespace DWD.UI.Monetary.Tests
             Assert.Equal(3, myBasePeriod.FourthQuarter.QuarterNumber);
 
             // Check base period is enumerable
-            foreach (var quarter in myBasePeriod)
+            foreach (var quarter in myBasePeriod.BasePeriodQuarters)
             {
                 Assert.NotNull(quarter);
             }
 
-            // Check base period indexer
-            for (var i = 0; i < 4; i++)
-            {
-                Assert.NotNull(myBasePeriod[i]);
-            }
         }
 
         [Fact]
@@ -158,7 +141,7 @@ namespace DWD.UI.Monetary.Tests
         {
             // Get base period from date
             var myClaimDate = new DateTime(2021, 4, 6);
-            var myBasePeriod = new BasePeriod(myClaimDate, false);
+            var myBasePeriod = new BasePeriod(myClaimDate);
 
             // Check quarter properties
             Assert.Equal(2020, myBasePeriod.FirstQuarter.Year);
@@ -174,15 +157,9 @@ namespace DWD.UI.Monetary.Tests
             Assert.Equal(4, myBasePeriod.FourthQuarter.QuarterNumber);
 
             // Check base period is enumerable
-            foreach (var quarter in myBasePeriod)
+            foreach (var quarter in myBasePeriod.BasePeriodQuarters)
             {
                 Assert.NotNull(quarter);
-            }
-
-            // Check base period indexer
-            for (var i = 0; i < 4; i++)
-            {
-                Assert.NotNull(myBasePeriod[i]);
             }
         }
 
@@ -191,7 +168,7 @@ namespace DWD.UI.Monetary.Tests
         {
             // Get base period from date
             var myClaimDate = new DateTime(2021, 7, 4);
-            var myBasePeriod = new BasePeriod(myClaimDate, false);
+            var myBasePeriod = new BasePeriod(myClaimDate);
 
             // Check quarter properties
             Assert.Equal(2020, myBasePeriod.FirstQuarter.Year);
@@ -207,15 +184,9 @@ namespace DWD.UI.Monetary.Tests
             Assert.Equal(1, myBasePeriod.FourthQuarter.QuarterNumber);
 
             // Check base period is enumerable
-            foreach (var quarter in myBasePeriod)
+            foreach (var quarter in myBasePeriod.BasePeriodQuarters)
             {
                 Assert.NotNull(quarter);
-            }
-
-            // Check base period indexer
-            for (var i = 0; i < 4; i++)
-            {
-                Assert.NotNull(myBasePeriod[i]);
             }
         }
 
@@ -258,21 +229,21 @@ namespace DWD.UI.Monetary.Tests
         public void FutureClaimDate()
         {
             var myClaimDate = new DateTime(2999, 12, 1);
-            Assert.Throws<ArgumentException>(() => new BasePeriod(myClaimDate, false));
+            Assert.Throws<ArgumentException>(() => new BasePeriod(myClaimDate));
         }
 
         [Fact]
         public void MinValidClaimDate()
         {
             var myClaimDate = new DateTime(1899, 1, 1);
-            Assert.Throws<ArgumentException>(() => new BasePeriod(myClaimDate, false));
+            Assert.Throws<ArgumentException>(() => new BasePeriod(myClaimDate));
         }
 
         [Fact]
         public void CheckLeapYear()
         {
             var myClaimDate = new DateTime(2020, 2, 29);
-            var myBasePeriod = new BasePeriod(myClaimDate, false);
+            var myBasePeriod = new BasePeriod(myClaimDate);
 
             Assert.Equal(2018, myBasePeriod.FirstQuarter.Year);
             Assert.Equal(4, myBasePeriod.FirstQuarter.QuarterNumber);

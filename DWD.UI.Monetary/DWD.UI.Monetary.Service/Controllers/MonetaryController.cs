@@ -49,10 +49,10 @@ namespace DWD.UI.Monetary.Service.Controllers
             try
             {
                 // Calculate the base period
-                var basePeriod = this.calculateBasePeriod.CalculateBasePeriodFromInitialClaimDate(initialClaimDate, useAltBase);
+                var basePeriod = this.calculateBasePeriod.CalculateBasePeriodFromInitialClaimDate(initialClaimDate);
 
                 // Map from IBasePeriod to BasePeriodDto and return
-                var result = BasePeriodMapper.MapToDto(basePeriod);
+                var result = BasePeriodMapper.MapToDto(useAltBase ? basePeriod.AltBasePeriodQuarters : basePeriod.BasePeriodQuarters);
                 return Ok(result);
             }
             catch (ArgumentException argumentException)

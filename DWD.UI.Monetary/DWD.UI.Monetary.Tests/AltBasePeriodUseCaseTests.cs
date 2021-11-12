@@ -15,11 +15,11 @@ namespace DWD.UI.Monetary.Tests
             // Get base period from date
             var myClaimDate = new DateTime(2020, 11, 22);
             var basePeriodUseCase = new CalculateBasePeriod();
-            var result = basePeriodUseCase.CalculateBasePeriodFromInitialClaimDate(myClaimDate, true);
+            var result = basePeriodUseCase.CalculateBasePeriodFromInitialClaimDate(myClaimDate);
 
             // Check result
             Assert.NotNull(result);
-            var quarters = result.BasePeriodQuarters;
+            var quarters = result.AltBasePeriodQuarters;
             Assert.NotNull(quarters);
 
             var actualQuarters = quarters.OrderBy(q => q.Year)

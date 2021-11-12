@@ -12,9 +12,8 @@ namespace DWD.UI.Monetary.Domain.UseCases
         /// Calculate the base period from the initial claim date.
         /// </summary>
         /// <param name="initialClaimDate">The initial claim date.  Not required, but per UI rules the initial claim date should fall on a Sunday as it is the first day of the week for claim purposes.</param>
-        /// <param name="useAltBasePeriod">Use alternative base period calculation.</param>
         /// <returns>Base period information.</returns>
-        public IBasePeriod CalculateBasePeriodFromInitialClaimDate(DateTime initialClaimDate, bool useAltBasePeriod) =>
-                                    new BasePeriod(initialClaimDate, useAltBasePeriod);
+        public IBasePeriod CalculateBasePeriodFromInitialClaimDate(DateTime initialClaimDate) =>
+                                    new BasePeriod(initialClaimDate);
     }
 }
