@@ -40,7 +40,25 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
         public UIQuarter(DateTime date)
         {
             this.Year = date.Year;
-            this.QuarterNumber = date.UIQuarterNumber();
+            this.QuarterNumber = date.CalendarQuarterNumber();
+
+            // Find first Sunday of calendar quarter
+            var firstSundayOfQuarter = date.FirstDayOfCalendarQuarter();
+            while (firstSundayOfQuarter.DayOfWeek != DayOfWeek.Sunday)
+            {
+                firstSundayOfQuarter = firstSundayOfQuarter.AddDays(1);
+            }
+
+            // If required, decrement calendar quarter to UI quarter
+            if (date < firstSundayOfQuarter)
+            {
+                this.QuarterNumber--;
+                if (this.QuarterNumber == 0)
+                {
+                    this.QuarterNumber = 4;
+                    this.Year--;
+                }
+            }
         }
 
         /// <summary>
