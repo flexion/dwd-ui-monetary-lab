@@ -2,6 +2,9 @@
 
 namespace DWD.UI.Monetary.Service
 {
+    using System;
+    using System.IO;
+    using System.Reflection;
     using DWD.UI.Monetary.Domain.UseCases;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
@@ -36,7 +39,16 @@ namespace DWD.UI.Monetary.Service
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "DWD.UI.Monetary.Service", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "Monetary Endpoint Demo",
+                    Version = "v1",
+                    Description = "An initial lab-safe implementation."
+                });
+
+                // using System.Reflection;
+                var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
             });
 
             services.AddTransient<ICalculateBasePeriod, CalculateBasePeriod>();
