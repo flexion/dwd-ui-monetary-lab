@@ -108,13 +108,6 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
                 return true;
             }
 
-            // Check the claim date is not a future date
-            if (initialClaimDate.Date > DateTime.Today)
-            {
-                errorMessage = $"The supplied initial claim date is not valid: Future date's are not supported (initialClaimDate={initialClaimDate.Date.ToShortDateString()}).";
-                return true;
-            }
-
             errorMessage = null;
             return false;
         }
