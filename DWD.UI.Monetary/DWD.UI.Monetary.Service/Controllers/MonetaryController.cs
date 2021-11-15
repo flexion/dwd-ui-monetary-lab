@@ -62,7 +62,7 @@ namespace DWD.UI.Monetary.Service.Controllers
         /// Example - Claimant files a claim 11/10/21 (quarter 4).<br />
         /// He does not qualify for a standard base period so the system will check for the alternate base period.
         /// </remarks>
-        /// <param name="initialClaimDate">The initial claim date.</param>
+        /// <param name="initialClaimDate">The initial claim date in standard formats (MM/DD/YYYY, MM-DD-YYYY, YYYY-MM-DD, etc.).</param>
         /// <param name="useAltBase">Calculate the alternate base period?</param>
         /// <returns>The calculated base period.</returns>
         [SwaggerResponse((int)HttpStatusCode.OK, "OK", typeof(IBasePeriodDto), "application/json")]
