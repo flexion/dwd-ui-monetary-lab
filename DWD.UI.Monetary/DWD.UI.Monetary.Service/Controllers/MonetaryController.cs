@@ -40,10 +40,11 @@ namespace DWD.UI.Monetary.Service.Controllers
         /// Calculate base period from initial claim date.
         /// </summary>
         /// <param name="initialClaimDate">The initial claim date.</param>
+        /// <param name="useAltBase">Check the alt base period.</param>
         /// <returns>The calculated base period.</returns>
         [HttpGet]
         [Route("GetBasePeriodFromInitialClaimDate")]
-        public IActionResult GetBasePeriodFromInitialClaimDate(DateTime initialClaimDate)
+        public IActionResult GetBasePeriodFromInitialClaimDate(DateTime initialClaimDate, bool useAltBase)
         {
             try
             {
@@ -51,7 +52,7 @@ namespace DWD.UI.Monetary.Service.Controllers
                 var basePeriod = this.calculateBasePeriod.CalculateBasePeriodFromInitialClaimDate(initialClaimDate);
 
                 // Map from IBasePeriod to BasePeriodDto and return
-                var result = BasePeriodMapper.MapToDto(basePeriod);
+                var result = BasePeriodMapper.MapToDto(useAltBase ? basePeriod.AltBasePeriodQuarters : basePeriod.BasePeriodQuarters);
                 return Ok(result);
             }
             catch (ArgumentException argumentException)

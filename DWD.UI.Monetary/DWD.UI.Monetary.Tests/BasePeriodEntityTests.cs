@@ -1,7 +1,7 @@
 namespace DWD.UI.Monetary.Tests
 {
     using System;
-    using DWD.UI.Monetary.Domain.BusinessEntities;
+    using Domain.BusinessEntities;
     using Xunit;
 
     // TODO: Add more tests
@@ -29,7 +29,7 @@ namespace DWD.UI.Monetary.Tests
             Assert.Equal(2, myBasePeriod.FourthQuarter.QuarterNumber);
 
             // Check base period is enumerable
-            foreach (var quarter in myBasePeriod)
+            foreach (var quarter in myBasePeriod.BasePeriodQuarters)
             {
                 Assert.NotNull(quarter);
             }
@@ -37,7 +37,7 @@ namespace DWD.UI.Monetary.Tests
             // Check base period indexer
             for (var i = 0; i < 4; i++)
             {
-                Assert.NotNull(myBasePeriod[i]);
+                Assert.NotNull(myBasePeriod.FirstQuarter);
             }
 
             // Check IBasePeriod interface
@@ -69,15 +69,9 @@ namespace DWD.UI.Monetary.Tests
             Assert.Equal(3, myBasePeriod.FourthQuarter.QuarterNumber);
 
             // Check base period is enumerable
-            foreach (var quarter in myBasePeriod)
+            foreach (var quarter in myBasePeriod.BasePeriodQuarters)
             {
                 Assert.NotNull(quarter);
-            }
-
-            // Check base period indexer
-            for (var i = 0; i < 4; i++)
-            {
-                Assert.NotNull(myBasePeriod[i]);
             }
         }
 
@@ -102,15 +96,9 @@ namespace DWD.UI.Monetary.Tests
             Assert.Equal(2, myBasePeriod.FourthQuarter.QuarterNumber);
 
             // Check base period is enumerable
-            foreach (var quarter in myBasePeriod)
+            foreach (var quarter in myBasePeriod.BasePeriodQuarters)
             {
                 Assert.NotNull(quarter);
-            }
-
-            // Check base period indexer
-            for (var i = 0; i < 4; i++)
-            {
-                Assert.NotNull(myBasePeriod[i]);
             }
         }
 
@@ -141,16 +129,11 @@ namespace DWD.UI.Monetary.Tests
             Assert.Equal(3, myBasePeriod.FourthQuarter.QuarterNumber);
 
             // Check base period is enumerable
-            foreach (var quarter in myBasePeriod)
+            foreach (var quarter in myBasePeriod.BasePeriodQuarters)
             {
                 Assert.NotNull(quarter);
             }
 
-            // Check base period indexer
-            for (var i = 0; i < 4; i++)
-            {
-                Assert.NotNull(myBasePeriod[i]);
-            }
         }
 
         [Fact]
@@ -174,15 +157,9 @@ namespace DWD.UI.Monetary.Tests
             Assert.Equal(4, myBasePeriod.FourthQuarter.QuarterNumber);
 
             // Check base period is enumerable
-            foreach (var quarter in myBasePeriod)
+            foreach (var quarter in myBasePeriod.BasePeriodQuarters)
             {
                 Assert.NotNull(quarter);
-            }
-
-            // Check base period indexer
-            for (var i = 0; i < 4; i++)
-            {
-                Assert.NotNull(myBasePeriod[i]);
             }
         }
 
@@ -207,15 +184,9 @@ namespace DWD.UI.Monetary.Tests
             Assert.Equal(1, myBasePeriod.FourthQuarter.QuarterNumber);
 
             // Check base period is enumerable
-            foreach (var quarter in myBasePeriod)
+            foreach (var quarter in myBasePeriod.BasePeriodQuarters)
             {
                 Assert.NotNull(quarter);
-            }
-
-            // Check base period indexer
-            for (var i = 0; i < 4; i++)
-            {
-                Assert.NotNull(myBasePeriod[i]);
             }
         }
 

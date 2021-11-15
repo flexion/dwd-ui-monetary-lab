@@ -11,5 +11,9 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
         /// Array of quarters making up the base period.
         /// </summary>
         IEnumerable<IUIQuarter> BasePeriodQuarters { get; }
+        /// <summary>
+        /// Array of alternative quarters making up the base period.
+        /// </summary>
+        IEnumerable<IUIQuarter> AltBasePeriodQuarters { get; }
     }
 }

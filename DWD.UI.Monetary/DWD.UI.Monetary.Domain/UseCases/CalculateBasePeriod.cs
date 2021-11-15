@@ -13,6 +13,7 @@ namespace DWD.UI.Monetary.Domain.UseCases
         /// </summary>
         /// <param name="initialClaimDate">The initial claim date.  Not required, but per UI rules the initial claim date should fall on a Sunday as it is the first day of the week for claim purposes.</param>
         /// <returns>Base period information.</returns>
-        public IBasePeriod CalculateBasePeriodFromInitialClaimDate(DateTime initialClaimDate) => new BasePeriod(initialClaimDate);
+        public IBasePeriod CalculateBasePeriodFromInitialClaimDate(DateTime initialClaimDate) =>
+                                    new BasePeriod(initialClaimDate);
     }
 }
