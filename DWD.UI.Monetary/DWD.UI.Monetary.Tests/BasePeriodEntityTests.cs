@@ -190,8 +190,6 @@ namespace DWD.UI.Monetary.Tests
             }
         }
 
-        // This test will fail with Future date exception until 11/25/2021.  Please uncomment after 11/25/2021.
-        /*
         [Fact]
         public void NovemberTwentyFifth2021()
         {
@@ -213,23 +211,10 @@ namespace DWD.UI.Monetary.Tests
             Assert.Equal(2, myBasePeriod.FourthQuarter.QuarterNumber);
 
             // Check base period is enumerable
-            foreach (var quarter in myBasePeriod)
+            foreach (var quarter in myBasePeriod.BasePeriodQuarters)
             {
                 Assert.NotNull(quarter);
             }
-
-            // Check base period indexer
-            for (var i = 0; i < 4; i++)
-            {
-                Assert.NotNull(myBasePeriod[i]);
-            }
-        }*/
-
-        [Fact]
-        public void FutureClaimDate()
-        {
-            var myClaimDate = new DateTime(2999, 12, 1);
-            Assert.Throws<ArgumentException>(() => new BasePeriod(myClaimDate));
         }
 
         [Fact]
