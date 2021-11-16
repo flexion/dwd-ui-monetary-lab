@@ -10,6 +10,7 @@ A preliminary service that exposes some public domain calculations related to DW
 ## Dependencies
 * .net 5 (base framework)
 * asp.net core 5 (rest api)
+* coverlet 3.0.2 (code coverage)
 * swashbuckle 5.6.3 (swagger)
 * xunit 2.4.1 (unit testing)
 
