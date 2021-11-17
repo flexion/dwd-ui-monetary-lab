@@ -6,9 +6,8 @@ namespace DWD.UI.Monetary.Service.Controllers
     using System.Net;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
-    using DWD.UI.Monetary.Domain.UseCases;
-    using DWD.UI.Monetary.Service.Mappers;
-    using Microsoft.OpenApi.Extensions;
+    using Domain.UseCases;
+    using Mappers;
     using Models;
     using Swashbuckle.AspNetCore.Annotations;
 
