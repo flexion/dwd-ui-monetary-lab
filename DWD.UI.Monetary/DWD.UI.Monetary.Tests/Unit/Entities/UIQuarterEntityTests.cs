@@ -1,10 +1,13 @@
-namespace DWD.UI.Monetary.Tests
+namespace DWD.UI.Monetary.Tests.Unit.Entities
 {
     using System;
     using DWD.UI.Monetary.Domain.BusinessEntities;
     using Xunit;
 
-    public class DateTimeExtensionsTests
+    /// <summary>
+    /// Unit tests for the UIQuarter entity.
+    /// </summary>
+    public class UIQuarterEntityTests
     {
         [Fact]
         public void JanuaryFirst2021()

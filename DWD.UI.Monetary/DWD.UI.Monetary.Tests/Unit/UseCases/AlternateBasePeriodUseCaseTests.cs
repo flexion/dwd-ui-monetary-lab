@@ -6,7 +6,10 @@ namespace DWD.UI.Monetary.Tests
     using Domain.UseCases;
     using Xunit;
 
-    public class AltBasePeriodUseCaseTests
+    /// <summary>
+    /// Unit tests for the CalculateBasePeriod use case.  Alternate base period calculations.
+    /// </summary>
+    public class AlternateBasePeriodUseCaseTests
     {
 
         [Fact]
