@@ -2,7 +2,7 @@
 namespace DWD.UI.Monetary.Domain.BusinessEntities
 {
     using System;
-    using Extensions;
+    using Utilities;
 
     /// <summary>
     /// Represents an unemployment insurance quarter.
@@ -41,10 +41,10 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
         public UIQuarter(DateTime date)
         {
             this.Year = date.Year;
-            this.QuarterNumber = date.CalendarQuarterNumber();
+            this.QuarterNumber = DateUtil.CalendarQuarterNumber(date);
 
             // Find first Sunday of calendar quarter
-            var firstSundayOfQuarter = date.FirstDayOfCalendarQuarter();
+            var firstSundayOfQuarter = DateUtil.FirstDayOfCalendarQuarter(date.Year, this.QuarterNumber);
             while (firstSundayOfQuarter.DayOfWeek != DayOfWeek.Sunday)
             {
                 firstSundayOfQuarter = firstSundayOfQuarter.AddDays(1);
