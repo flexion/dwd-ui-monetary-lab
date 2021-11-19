@@ -14,7 +14,6 @@ namespace DWD.UI.Monetary.Tests
                 new object[] {2020, 3, new DateTime(2020, 7, 1) },
                 new object[] {2020, 4, new DateTime(2020, 10, 1) },
             };
-
         [Theory]
         [MemberData(nameof(DataForFirstDayOfCalendarQuarter))]
         public void ShouldReturnFirstDayOfCalendarQuarter(int year, int quarterNumber, DateTime expected)
@@ -22,6 +21,7 @@ namespace DWD.UI.Monetary.Tests
             var actual = DateUtility.FirstDayOfCalendarQuarter(year, quarterNumber);
             Assert.Equal(expected, actual);
         }
+
         public static IEnumerable<object[]> DataForQuarterNumber =>
             new List<object[]>
             {
@@ -32,8 +32,8 @@ namespace DWD.UI.Monetary.Tests
             };
         [Theory]
         [MemberData(nameof(DataForQuarterNumber))]
-        public void ShouldReturnQuarterNumber(DateTime input, int expected) =>
-            Assert.Equal(expected, DateUtility.CalendarQuarterNumber(input));
+        public void ShouldReturnQuarterNumber(DateTime date, int expected) =>
+            Assert.Equal(expected, DateUtility.CalendarQuarterNumber(date));
 
         [Fact]
         public void TestFirstDayOfCalendarQuarterThrowsArgumentOutOfRangeException() =>
