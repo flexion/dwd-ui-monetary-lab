@@ -4,7 +4,7 @@ namespace DWD.UI.Monetary.Domain.Utilities
     /// <summary>
     /// Additional methods to be used on any DateTime.
     /// </summary>
-    public static class DateUtil
+    public static class DateUtility
     {
         /// <summary>
         /// Return the calendar quarter number for the supplied date.
