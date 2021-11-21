@@ -107,7 +107,7 @@ namespace DWD.UI.Monetary.Service
                 {
                     Host = dbSettings["Host"],
                     Username = dbSettings["User"],
-                    Password = dbSettings["Password"],
+                    Password = config["SqlConnection:Password"],
                     Database = dbSettings["Database"],
                     SslMode = SslMode.Disable,
                     Pooling = true
@@ -122,7 +122,7 @@ namespace DWD.UI.Monetary.Service
                     // Remember - storing secrets in plain text is potentially unsafe. Consider using
                     // something like https://cloud.google.com/secret-manager/docs/overview to help keep
                     // secrets secret.
-                    Host = $"{dbSocketDir}/{instanceConnectionName}",
+                    Host = String.Format("{0}/{1}", dbSocketDir, instanceConnectionName),
                     Username = Environment.GetEnvironmentVariable("DB_USER"), // e.g. 'my-db-user
                     Password = Environment.GetEnvironmentVariable("DB_PASS"), // e.g. 'my-db-password'
                     Database = Environment.GetEnvironmentVariable("DB_NAME"), // e.g. 'my-database'
@@ -131,8 +131,8 @@ namespace DWD.UI.Monetary.Service
                 };
             }
 
-            services.AddDbContext<ClaimantWageContext>(options =>
-                options.UseNpgsql(connectionString.ToString()));
+            _ = services.AddDbContext<ClaimantWageContext>(options =>
+                  options.UseNpgsql(connectionString.ToString()));
         }
     }
 }
