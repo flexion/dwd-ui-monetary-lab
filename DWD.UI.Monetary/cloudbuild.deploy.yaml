@@ -20,6 +20,7 @@ steps:
       - '--image=us-central1-docker.pkg.dev/$PROJECT_ID/dwd-modernization-lab/dwd-ui-monetary-postgres-deploy:$COMMIT_SHA'
       - '--platform=managed'
       - '--region=us-central1'
+      - '--allow-unauthenticated'
       - '--add-cloudsql-instances=dwd-ui-modernizatioin:us-central1:daves-awesome-db'
       - '--update-secrets=INSTANCE_CONNECTION_NAME=DAVE_INSTANCE_CONNECTION_NAME:latest'
       - '--update-secrets=DB_NAME=DAVE_DB_NAME:latest'
