@@ -97,10 +97,10 @@ namespace DWD.UI.Monetary.Service
 
         private static void ConfigureDbContext(IServiceCollection services, IConfiguration config)
         {
-            var googleProject = Environment.GetEnvironmentVariable("GOOGLE_PROJECT");
+            var instanceConnectionName = Environment.GetEnvironmentVariable("INSTANCE_CONNECTION_NAME");
 
             NpgsqlConnectionStringBuilder connectionString;
-            if (string.IsNullOrEmpty(googleProject))
+            if (string.IsNullOrEmpty(instanceConnectionName))
             {
                 var dbSettings = config.GetSection("SqlConnection");
                 connectionString = new NpgsqlConnectionStringBuilder
@@ -116,13 +116,12 @@ namespace DWD.UI.Monetary.Service
             else
             {
                 var dbSocketDir = Environment.GetEnvironmentVariable("DB_SOCKET_PATH") ?? "/cloudsql";
-                var instanceConnectionName = Environment.GetEnvironmentVariable("INSTANCE_CONNECTION_NAME");
                 connectionString = new NpgsqlConnectionStringBuilder()
                 {
                     // Remember - storing secrets in plain text is potentially unsafe. Consider using
                     // something like https://cloud.google.com/secret-manager/docs/overview to help keep
                     // secrets secret.
-                    Host = String.Format("{0}/{1}", dbSocketDir, instanceConnectionName),
+                    Host = $"{dbSocketDir}/{instanceConnectionName}",
                     Username = Environment.GetEnvironmentVariable("DB_USER"), // e.g. 'my-db-user
                     Password = Environment.GetEnvironmentVariable("DB_PASS"), // e.g. 'my-db-password'
                     Database = Environment.GetEnvironmentVariable("DB_NAME"), // e.g. 'my-database'
