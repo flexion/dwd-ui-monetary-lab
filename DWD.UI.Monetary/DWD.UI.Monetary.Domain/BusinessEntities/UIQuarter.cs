@@ -41,10 +41,11 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
         public UIQuarter(DateTime date)
         {
             this.Year = date.Year;
-            this.QuarterNumber = DateUtility.CalendarQuarterNumber(date);
+            var claimDate = new ClaimDate(date);
+            this.QuarterNumber = claimDate.QuarterNumber;
 
             // Find first Sunday of calendar quarter
-            var firstSundayOfQuarter = DateUtility.FirstDayOfCalendarQuarter(date.Year, this.QuarterNumber);
+            var firstSundayOfQuarter = claimDate.FirstDayOfCalendarQuarter;
             while (firstSundayOfQuarter.DayOfWeek != DayOfWeek.Sunday)
             {
                 firstSundayOfQuarter = firstSundayOfQuarter.AddDays(1);
