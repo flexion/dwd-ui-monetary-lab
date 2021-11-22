@@ -1,4 +1,6 @@
 #pragma warning disable IDE0052
+#pragma warning disable CA1801
+#pragma warning disable IDE0060
 
 namespace DWD.UI.Monetary.Service
 {
@@ -6,6 +8,7 @@ namespace DWD.UI.Monetary.Service
     using System.IO;
     using System.Reflection;
     using DWD.UI.Monetary.Domain.UseCases;
+    using DWD.UI.Monetary.Service.Extensions;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
@@ -21,13 +24,23 @@ namespace DWD.UI.Monetary.Service
         /// <summary>
         /// Constructor
         /// </summary>
+        /// <param name="env"></param>
         /// <param name="configuration"></param>
-        public Startup(IConfiguration configuration) => this.Configuration = configuration;
+        public Startup(IWebHostEnvironment env, IConfiguration configuration)
+        {
+            this.Environment = env;
+            this.Configuration = configuration;
+        }
 
         /// <summary>
         /// Reference to configuration data.
         /// </summary>
         private IConfiguration Configuration { get; }
+
+        /// <summary>
+        /// Reference to host environment.
+        /// </summary>
+        private IWebHostEnvironment Environment { get; }
 
         /// <summary>
         /// Configure services in IoC container.
@@ -36,6 +49,11 @@ namespace DWD.UI.Monetary.Service
         /// <remarks>This method gets called by the runtime. Use this method to add services to the container.</remarks>
         public void ConfigureServices(IServiceCollection services)
         {
+            if (this.Environment.IsStaging() || this.Environment.IsProduction())
+            {
+                services.AddGoogleLogging(this.Configuration);
+            }
+
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {

@@ -9,6 +9,8 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="MELT" Version="0.8.0" />
+        <PackageReference Include="MELT.Xunit" Version="0.8.0" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />
         <PackageReference Include="xunit" Version="2.4.1" />
         <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
@@ -23,6 +25,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\DWD.UI.Monetary.Domain\DWD.UI.Monetary.Domain.csproj" />
+      <ProjectReference Include="..\DWD.UI.Monetary.Service\DWD.UI.Monetary.Service.csproj" />
     </ItemGroup>
 
 </Project>
