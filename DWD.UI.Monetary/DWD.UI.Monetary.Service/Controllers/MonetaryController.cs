@@ -7,8 +7,6 @@ namespace DWD.UI.Monetary.Service.Controllers
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
     using Domain.UseCases;
-    using EF.Stubs;
-    using Gateways;
     using Mappers;
     using Models;
     using Swashbuckle.AspNetCore.Annotations;
@@ -31,21 +29,14 @@ namespace DWD.UI.Monetary.Service.Controllers
         private readonly ICalculateBasePeriod calculateBasePeriod;
 
         /// <summary>
-        /// Claimant Wages.
-        /// </summary>
-        private readonly IClaimantWageRepository claimantWageRepository;
-
-        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="logger">A logger reference.</param>
         /// <param name="calculateBasePeriod">A domain logic reference.</param>
-        /// <param name="theClaimantWageRepository">Wages</param>
-        public MonetaryController(ILogger<MonetaryController> logger, ICalculateBasePeriod calculateBasePeriod, IClaimantWageRepository theClaimantWageRepository)
+        public MonetaryController(ILogger<MonetaryController> logger, ICalculateBasePeriod calculateBasePeriod)
         {
             this.logger = logger;
             this.calculateBasePeriod = calculateBasePeriod;
-            this.claimantWageRepository = theClaimantWageRepository;
         }
 
         /// <summary>
@@ -97,15 +88,6 @@ namespace DWD.UI.Monetary.Service.Controllers
                 var problem = this.Problem(argumentException.Message, null, 400);
                 return problem;
             }
-        }
-
-        [HttpPost]
-        [Route("CreateClaimantWage")]
-        public IActionResult CreateClaimantWage(ClaimantWage wage)
-        {
-            this.claimantWageRepository.AddClaimantWage(wage);
-            var claimantWages = this.claimantWageRepository.GetClaimantWages();
-            return this.Ok(claimantWages);
         }
     }
 }
