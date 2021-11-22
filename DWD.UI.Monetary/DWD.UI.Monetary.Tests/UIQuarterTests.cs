@@ -5,7 +5,7 @@ namespace DWD.UI.Monetary.Tests
     using DWD.UI.Monetary.Domain.BusinessEntities;
     using Xunit;
 
-    public class DateTimeExtensionsTests
+    public class UIQuarterTests
     {
         [Fact]
         public void JanuaryFirst2021()

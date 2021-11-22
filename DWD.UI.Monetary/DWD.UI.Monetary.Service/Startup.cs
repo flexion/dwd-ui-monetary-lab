@@ -1,4 +1,6 @@
 #pragma warning disable IDE0052
+#pragma warning disable CA1801
+#pragma warning disable IDE0060
 
 namespace DWD.UI.Monetary.Service
 {
