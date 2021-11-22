@@ -1,18 +1,20 @@
+#pragma warning disable CA1052
+#pragma warning disable CA1822
 namespace DWD.UI.Monetary.Domain.Utilities
 {
     using System;
     /// <summary>
     /// Additional methods to be used on any DateTime.
     /// </summary>
-    public static class DateUtil
+    public class CalendarQuarter : ICalendarQuarter
     {
         /// <summary>
         /// Return the calendar quarter number for the supplied date.
         /// </summary>
-        /// <param name="date">date.</param>
+        /// <param name="dateTime">dateTime.</param>
         /// <returns>The calendar quarter number.</returns>
-        public static int CalendarQuarterNumber(DateTime date) =>
-            date.Month switch
+        public int CalendarQuarterNumber(DateTime dateTime) =>
+            dateTime.Month switch
             {
                 < 4 => 1,
                 < 7 => 2,
@@ -26,7 +28,7 @@ namespace DWD.UI.Monetary.Domain.Utilities
         /// <param name="year">year.</param>
         /// <param name="quarterNumber">quarterNumber.</param>
         /// <returns>The first day of the calendar quarter.</returns>
-        public static DateTime FirstDayOfCalendarQuarter(int year, int quarterNumber) =>
+        public DateTime FirstDayOfCalendarQuarter(int year, int quarterNumber) =>
             quarterNumber switch
             {
                 1 => new DateTime(year, 1, 1),

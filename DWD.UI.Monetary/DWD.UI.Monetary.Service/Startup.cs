@@ -6,6 +6,7 @@ namespace DWD.UI.Monetary.Service
     using System.IO;
     using System.Reflection;
     using Domain.UseCases;
+    using Domain.Utilities;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
@@ -52,6 +53,7 @@ namespace DWD.UI.Monetary.Service
             });
 
             services.AddTransient<ICalculateBasePeriod, CalculateBasePeriod>();
+            services.AddScoped<ICalendarQuarter, CalendarQuarter>();
         }
 
         /// <summary>

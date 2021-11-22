@@ -2,6 +2,7 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
 {
     using System;
     using System.Collections.Generic;
+    using Utilities;
 
     // TODO: Add a method to get base period by year and week i.e. 2021 41, meaning 41st week of 2021.
 
@@ -51,7 +52,7 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
             }
 
             // Populate basePeriod with last 4 complete quarters, skipping most recent complete quarter
-            var currentQuarter = new UIQuarter(initialClaimDate);
+            var currentQuarter = new UIQuarter(initialClaimDate, new CalendarQuarter());
             var tempQuarter = --currentQuarter;
 
             for (var i = 3; i >= 0; i--)
