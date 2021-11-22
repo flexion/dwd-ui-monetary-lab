@@ -51,6 +51,18 @@ namespace DWD.UI.Monetary.Service.Controllers
         }
 
         /// <summary>
+        /// Gets all claimant quarterly wage entries for claimant.
+        /// </summary>
+        /// <param name="claimantId">claimant identifier</param>
+        /// <returns>All wage entries for claimant</returns>
+        [HttpGet]
+        [Route("GetAllClaimantWagesForClaimant/{claimantId}")]
+        public IActionResult GetAllClaimantWagesForClaimant([FromRoute] string claimantId)
+        {
+            var claimantWages = this.claimantWageRepository.GetClaimantWagesByClaimantId(claimantId);
+            return this.Ok(claimantWages);
+        }
+        /// <summary>
         /// Updates a single wage entry by wage entry id
         /// </summary>
         /// <param name="id">wage entry id</param>
