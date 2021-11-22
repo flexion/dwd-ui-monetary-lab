@@ -2,7 +2,8 @@ namespace DWD.UI.Monetary.Service.Gateways
 {
     using System.Collections.ObjectModel;
     using System.Linq;
-    using EF.Stubs;
+    using Frameworks;
+    using Models.Stubs;
 
     public class ClaimantWageDbRepository : IClaimantWageRepository
     {

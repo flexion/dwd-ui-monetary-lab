@@ -1,9 +1,10 @@
 ﻿#nullable disable
 
-namespace DWD.UI.Monetary.Service.EF.Stubs
+namespace DWD.UI.Monetary.Service.Frameworks
 {
     using System;
     using Microsoft.EntityFrameworkCore;
+    using Models.Stubs;
 
     public partial class ClaimantWageContext : DbContext
     {

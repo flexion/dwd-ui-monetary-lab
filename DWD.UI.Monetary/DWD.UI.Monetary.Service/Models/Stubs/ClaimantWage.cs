@@ -1,6 +1,6 @@
 ﻿#nullable disable
 
-namespace DWD.UI.Monetary.Service.EF.Stubs
+namespace DWD.UI.Monetary.Service.Models.Stubs
 {
     public partial class ClaimantWage
     {

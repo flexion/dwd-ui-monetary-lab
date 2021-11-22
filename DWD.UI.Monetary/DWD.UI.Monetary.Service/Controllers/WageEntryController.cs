@@ -3,8 +3,8 @@
 namespace DWD.UI.Monetary.Service.Controllers
 {
     using Microsoft.AspNetCore.Mvc;
-    using EF.Stubs;
     using Gateways;
+    using Models.Stubs;
 
     /// <summary>
     /// Provides endpoints for entering wage data.
