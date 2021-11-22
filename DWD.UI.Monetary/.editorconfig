@@ -73,6 +73,33 @@ indent_style = tab
 dotnet_analyzer_diagnostic.severity = warning
 
 ##########################################
+# Custom Severity for solution
+# dotnet_diagnostic.<rule ID>.severity = <severity>
+##########################################
+# SA1633: The file header is missing or not located at the top of the file.
+dotnet_diagnostic.SA1633.severity = none
+# SA1210: Using directives should be ordered alphabetically by the namespaces.
+dotnet_diagnostic.SA1210.severity = none
+# SA1000: The keyword 'new' should be followed by a space.
+dotnet_diagnostic.SA1000.severity = none
+# SA1201: A constructor should not follow a property
+dotnet_diagnostic.SA1201.severity = none
+# SA1131: Constant values should appear on the right-hand side of comparisons
+dotnet_diagnostic.SA1131.severity = none
+# SA1623: The property's documentation summary text should begin with: 'Gets'
+dotnet_diagnostic.SA1623.severity = suggestion
+# SA1502: Element should not be on a single line
+dotnet_diagnostic.SA1502.severity = none
+# SA1642: Constructor summary documentation should begin with standard text
+dotnet_diagnostic.SA1642.severity = suggestion
+# IDE0019: Use pattern matching
+dotnet_diagnostic.IDE0019.severity = suggestion
+# SA1413: Use trailing comma in multi-line initializers
+dotnet_diagnostic.SA1413.severity = suggestion
+# SA1629: Documentation text should end with a period
+dotnet_diagnostic.SA1629.severity = suggestion
+
+##########################################
 # Language Rules
 # https://docs.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/language-rules
 ##########################################
