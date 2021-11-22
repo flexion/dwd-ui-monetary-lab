@@ -53,12 +53,12 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
 
             // Populate basePeriod with last 5 complete quarters, skipping most recent complete quarter
             var previous5Quarters = new UIQuarter[5];
-            var currentQuarter1 = new UIQuarter(initialClaimDate);
+            var currentQuarter = new UIQuarter(initialClaimDate);
 
             for (var i = 4; i >= 0; i--)
             {
-                currentQuarter1 = --currentQuarter1;
-                previous5Quarters[i] = new UIQuarter(currentQuarter1.Year, currentQuarter1.QuarterNumber);
+                currentQuarter = --currentQuarter;
+                previous5Quarters[i] = new UIQuarter(currentQuarter.Year, currentQuarter.QuarterNumber);
             }
 
             this.standardQuarters = previous5Quarters.Take(4).ToArray();
