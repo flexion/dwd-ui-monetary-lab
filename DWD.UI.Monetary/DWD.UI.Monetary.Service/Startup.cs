@@ -5,6 +5,7 @@
 namespace DWD.UI.Monetary.Service
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Reflection;
     using Domain.UseCases;
@@ -22,6 +23,7 @@ namespace DWD.UI.Monetary.Service
     /// <summary>
     /// Configure the service during start up.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public class Startup
     {
         /// <summary>

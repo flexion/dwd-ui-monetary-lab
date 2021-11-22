@@ -21,7 +21,8 @@ namespace DWD.UI.Monetary.Tests.Controllers
         public void CreateClaimantWageTest()
         {
             var controller = GetWageEntryController();
-            var actionResult = controller.CreateClaimantWage("12", 2021, 3, (decimal)100.00);
+            _ = controller.CreateClaimantWage("12", 2021, 3, (decimal)100.00);
+            var actionResult = controller.GetAllClaimantWages();
             Assert.NotNull(actionResult);
             // We cast it to the expected response type
             var okResult = actionResult as OkObjectResult;
@@ -57,6 +58,10 @@ namespace DWD.UI.Monetary.Tests.Controllers
             var wage = okResult.Value as ClaimantWage;
             Assert.True(wage != null);
             Assert.Equal("19", wage.ClaimantId);
+            Assert.Equal((short)2021, wage.WageYear);
+            Assert.Equal((short)3, wage.WageQuarter);
+            Assert.Equal((decimal)100.00, wage.TotalWages);
+            Assert.Equal(1, wage.Id);
         }
 
         [Fact]
