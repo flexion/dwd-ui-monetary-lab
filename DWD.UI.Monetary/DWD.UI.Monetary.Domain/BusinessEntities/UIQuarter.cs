@@ -1,4 +1,5 @@
 #nullable enable
+#pragma warning disable IDE0078
 namespace DWD.UI.Monetary.Domain.BusinessEntities
 {
     using System;
@@ -13,6 +14,24 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
     /// </remarks>
     internal class UIQuarter : IUIQuarter, IEquatable<UIQuarter>
     {
+        // TODO: Ask Helen if this is needed, and if so what the correct minimum should be.
+        /// <summary>
+        /// The minimum valid year.
+        /// </summary>
+        private const int MinimumValidYear = 1900;
+
+        // TODO: Ask Helen if this is needed, and if so what the correct maximum should be.
+        /// <summary>
+        /// The maximum valid year.
+        /// </summary>
+        private const int MaximumValidYear = 9999;
+
+        // TODO: Ask Helen if this is needed, and if so what the correct minimum should be.
+        /// <summary>
+        /// The minimum valid date that can be used to construct a UI Quarter.
+        /// </summary>
+        private static readonly DateTime MinimumValidDate = new(1900, 1, 1);
+
         /// <summary>
         /// The quarter's year.
         /// </summary>
@@ -30,6 +49,12 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
         /// <param name="quarterNumber">The quarter number.</param>
         public UIQuarter(int year, int quarterNumber)
         {
+            // Check if year and quarter number are invalid
+            if (YearOrQuarterInvalid(year, quarterNumber, out var errorMessage))
+            {
+                throw new ArgumentException(errorMessage);
+            }
+
             this.Year = year;
             this.QuarterNumber = quarterNumber;
         }
@@ -40,6 +65,12 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
         /// <param name="date">date.</param>
         public UIQuarter(DateTime date)
         {
+            // Check if date is invalid
+            if (DateInvalid(date, out var errorMessage))
+            {
+                throw new ArgumentException(errorMessage);
+            }
+
             this.Year = date.Year;
             this.QuarterNumber = date.CalendarQuarterNumber();
 
@@ -90,9 +121,19 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
         /// <returns>The previous ui quarter.</returns>
         public static UIQuarter Decrement(UIQuarter item) => --item;
 
+        /// <summary>
+        /// Check for value equality.
+        /// </summary>
+        /// <param name="other">The other UIQuarter to check for equality.</param>
+        /// <returns>True if the values are equal, false otherwise.</returns>
         public bool Equals(UIQuarter? other) =>
             this.Equals((object)other!);
 
+        /// <summary>
+        /// Check if the object for value equality.
+        /// </summary>
+        /// <param name="obj">The object to check for equality.</param>
+        /// <returns>True if the object is a UIQuarter and if its values are equal, false otherwise.</returns>
         public override bool Equals(object? obj)
         {
             if (obj is UIQuarter quarter)
@@ -103,6 +144,56 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
             return false;
         }
 
+        /// <summary>
+        /// Get a hash code for this UIQuarter instance.
+        /// </summary>
+        /// <returns>A integer hashcode for this UIQuarter instance.</returns>
         public override int GetHashCode() => HashCode.Combine(this.Year, this.QuarterNumber);
+
+        /// <summary>
+        /// Determine if the year and quarter number are invalid.
+        /// </summary>
+        /// <param name="year">The year.</param>
+        /// <param name="quarterNumber">The quarter number.</param>
+        /// <param name="errorMessage">The error message (out).</param>
+        /// <returns>True if the year or quarter number are invalid, false otherwise.</returns>
+        private static bool YearOrQuarterInvalid(int year, int quarterNumber, out string? errorMessage)
+        {
+            // Check the year is within bounds
+            if (year is < MinimumValidYear or > MaximumValidYear)
+            {
+                errorMessage = $"The supplied year is not valid: year must be between {MinimumValidYear} and {MaximumValidYear} (Year={year}).";
+                return true;
+            }
+
+            // Check the quarter number is within bounds
+            if (quarterNumber is < 1 or > 4)
+            {
+                errorMessage = $"The supplied quarterNumber is not valid: quarter number must be between 1 and 4. (Quarter Number={quarterNumber}).";
+                return true;
+            }
+
+            errorMessage = null;
+            return false;
+        }
+
+        /// <summary>
+        /// Determine if the date is invalid.
+        /// </summary>
+        /// <param name="date">The year.</param>
+        /// <param name="errorMessage">The error message (out).</param>
+        /// <returns>True if the date is invalid, false otherwise.</returns>
+        private static bool DateInvalid(DateTime date, out string? errorMessage)
+        {
+            // Check the year is within bounds
+            if (date < MinimumValidDate)
+            {
+                errorMessage = $"The supplied date is not valid: Dates before {MinimumValidDate} are not supported when creating UIQuarters (Date={date.Date.ToShortDateString()}).";
+                return true;
+            }
+
+            errorMessage = null;
+            return false;
+        }
     }
 }

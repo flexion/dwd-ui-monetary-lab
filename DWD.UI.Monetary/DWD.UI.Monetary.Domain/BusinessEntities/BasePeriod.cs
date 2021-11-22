@@ -25,7 +25,6 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
         /// </summary>
         private readonly UIQuarter[] stdQuarters = new UIQuarter[4];
 
-
         /// <summary>
         /// Local storage for quarters.
         /// </summary>
@@ -40,7 +39,6 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
         /// Construct instance using initial claim date as input.
         /// </summary>
         /// <param name="initialClaimDate">The initial claim date.</param>
-        /// <param name="useAltBasePeriod">Calculate alternative.</param>
         /// <exception cref="ArgumentException">Throws a ArgumentException if the supplied initial claim date is not valid.</exception>
         public BasePeriod(DateTime initialClaimDate)
         {
@@ -50,7 +48,8 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
                 throw new ArgumentException(errorMessage);
             }
 
-            // Populate basePeriod with last 4 complete quarters, skipping most recent complete quarter
+            // Populate the standard base period with last 4 complete quarters, skipping most recent complete quarter
+            //  and populate the alternate base period with the last 4 complete quarters
             var currentQuarter = new UIQuarter(initialClaimDate);
             var tempQuarter = --currentQuarter;
 
@@ -67,31 +66,10 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
         /// </summary>
         public IEnumerable<IUIQuarter> BasePeriodQuarters => new List<IUIQuarter>(this.stdQuarters);
 
-
         /// <summary>
         /// Get base period quarters as IEnumerable of IUIQuarter.
         /// </summary>
         public IEnumerable<IUIQuarter> AltBasePeriodQuarters => new List<IUIQuarter>(this.altQuarters);
-
-        /// <summary>
-        /// Friendly getter for first quarter.
-        /// </summary>
-        public UIQuarter FirstQuarter => this.stdQuarters[0];
-
-        /// <summary>
-        /// Friendly getter for second quarter.
-        /// </summary>
-        public UIQuarter SecondQuarter => this.stdQuarters[1];
-
-        /// <summary>
-        /// Friendly getter for third quarter.
-        /// </summary>
-        public UIQuarter ThirdQuarter => this.stdQuarters[2];
-
-        /// <summary>
-        /// Friendly getter for fourth quarter.
-        /// </summary>
-        public UIQuarter FourthQuarter => this.stdQuarters[3];
 
         /// <summary>
         /// Determine if the claim date is invalid.
