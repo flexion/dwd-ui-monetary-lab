@@ -2,6 +2,7 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     // TODO: Add a method to get base period by year and week i.e. 2021 41, meaning 41st week of 2021.
 
@@ -23,13 +24,13 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
         /// <summary>
         /// Local storage for quarters.
         /// </summary>
-        private readonly UIQuarter[] stdQuarters = new UIQuarter[4];
+        private readonly UIQuarter[] standardQuarters = new UIQuarter[4];
 
 
         /// <summary>
         /// Local storage for quarters.
         /// </summary>
-        private readonly UIQuarter[] altQuarters = new UIQuarter[4];
+        private readonly UIQuarter[] alternateQuarters = new UIQuarter[4];
 
         /// <summary>
         /// Hidden default constructor.
@@ -50,48 +51,50 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
                 throw new ArgumentException(errorMessage);
             }
 
-            // Populate basePeriod with last 4 complete quarters, skipping most recent complete quarter
+            // Populate basePeriod with last 5 complete quarters, skipping most recent complete quarter
+            var previous5Quarters = new UIQuarter[5];
             var currentQuarter = new UIQuarter(initialClaimDate);
-            var tempQuarter = --currentQuarter;
 
-            for (var i = 3; i >= 0; i--)
+            for (var i = 4; i >= 0; i--)
             {
-                this.altQuarters[i] = new UIQuarter(tempQuarter.Year, tempQuarter.QuarterNumber);
-                tempQuarter = --tempQuarter;
-                this.stdQuarters[i] = new UIQuarter(tempQuarter.Year, tempQuarter.QuarterNumber);
+                currentQuarter = --currentQuarter;
+                previous5Quarters[i] = new UIQuarter(currentQuarter.Year, currentQuarter.QuarterNumber);
             }
+
+            this.standardQuarters = previous5Quarters.Take(4).ToArray();
+            this.alternateQuarters = previous5Quarters.Skip(1).ToArray();
         }
 
         /// <summary>
         /// Get base period quarters as IEnumerable of IUIQuarter.
         /// </summary>
-        public IEnumerable<IUIQuarter> BasePeriodQuarters => new List<IUIQuarter>(this.stdQuarters);
+        public IEnumerable<IUIQuarter> BasePeriodQuarters => new List<IUIQuarter>(this.standardQuarters);
 
 
         /// <summary>
         /// Get base period quarters as IEnumerable of IUIQuarter.
         /// </summary>
-        public IEnumerable<IUIQuarter> AltBasePeriodQuarters => new List<IUIQuarter>(this.altQuarters);
+        public IEnumerable<IUIQuarter> AltBasePeriodQuarters => new List<IUIQuarter>(this.alternateQuarters);
 
         /// <summary>
         /// Friendly getter for first quarter.
         /// </summary>
-        public UIQuarter FirstQuarter => this.stdQuarters[0];
+        public UIQuarter FirstQuarter => this.standardQuarters[0];
 
         /// <summary>
         /// Friendly getter for second quarter.
         /// </summary>
-        public UIQuarter SecondQuarter => this.stdQuarters[1];
+        public UIQuarter SecondQuarter => this.standardQuarters[1];
 
         /// <summary>
         /// Friendly getter for third quarter.
         /// </summary>
-        public UIQuarter ThirdQuarter => this.stdQuarters[2];
+        public UIQuarter ThirdQuarter => this.standardQuarters[2];
 
         /// <summary>
         /// Friendly getter for fourth quarter.
         /// </summary>
-        public UIQuarter FourthQuarter => this.stdQuarters[3];
+        public UIQuarter FourthQuarter => this.standardQuarters[3];
 
         /// <summary>
         /// Determine if the claim date is invalid.
