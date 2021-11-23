@@ -2,7 +2,7 @@
 namespace DWD.UI.Monetary.Domain.BusinessEntities
 {
     using System;
-    using Extensions;
+    using DWD.UI.Monetary.Domain.Extensions;
 
     /// <summary>
     /// Represents an unemployment insurance quarter.
@@ -93,6 +93,10 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
         public bool Equals(UIQuarter? other) =>
             this.Equals((object)other!);
 
+        /// <summary>
+        /// Provides the required equality test for this value object
+        /// </summary>
+        /// <param name="obj">The object to which this object is compared</param>
         public override bool Equals(object? obj)
         {
             if (obj == null)
@@ -104,6 +108,9 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
             return null != other && this.Year.Equals(other.Year) && this.QuarterNumber.Equals(other.QuarterNumber);
         }
 
+        /// <summary>
+        /// Gets the required hash code for this value object
+        /// </summary>
         public override int GetHashCode() => HashCode.Combine(this.Year, this.QuarterNumber);
     }
 }
