@@ -95,13 +95,12 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
 
         public override bool Equals(object? obj)
         {
-            if (obj == null)
+            if (obj is UIQuarter quarter)
             {
-                return false;
+                return this.Year.Equals(quarter.Year) && this.QuarterNumber.Equals(quarter.QuarterNumber);
             }
 
-            var other = obj as UIQuarter;
-            return null != other && this.Year.Equals(other.Year) && this.QuarterNumber.Equals(other.QuarterNumber);
+            return false;
         }
 
         public override int GetHashCode() => HashCode.Combine(this.Year, this.QuarterNumber);

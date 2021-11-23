@@ -10,44 +10,43 @@ namespace DWD.UI.Monetary.Tests
 
     public class MonetaryControllerTests
     {
-        ITestLoggerFactory loggerFactory;
-        ILogger<MonetaryController> logger;
+        private readonly ITestLoggerFactory loggerFactory;
+        private readonly ILogger<MonetaryController> logger;
 
+        /// <summary>
+        /// Instantiates the MonetaryController test class, injecting dependencies
+        /// Serves as the setup before each test
+        /// </summary>
         public MonetaryControllerTests()
         {
-            loggerFactory = TestLoggerFactory.Create();
-            logger = loggerFactory.CreateLogger<MonetaryController>();
-        }
-
-        public void Dispose()
-        {
-            loggerFactory.Dispose();
+            this.loggerFactory = TestLoggerFactory.Create();
+            this.logger = this.loggerFactory.CreateLogger<MonetaryController>();
         }
 
         [Fact]
-        public void GetBasePeriodFromInitialClaimDate_Should_ReturnSuccess_When_ValidInitialClaimDate()
+        public void GetBasePeriodFromInitialClaimDateShouldReturnSuccessWhenValidInitialClaimDate()
         {
-            var controller = new MonetaryController(logger, new CalculateBasePeriod());
+            var controller = new MonetaryController(this.logger, new CalculateBasePeriod());
             var testDate = new DateTime(1981, 6, 28);
 
             var result = controller.GetBasePeriodFromInitialClaimDate(testDate, false);
 
             Assert.NotNull(result);
             Assert.IsType<OkObjectResult>(result);
-            OkObjectResult okResult = (OkObjectResult)result;
+            var okResult = (OkObjectResult)result;
             Assert.Equal(200, okResult.StatusCode);
             Assert.NotNull(okResult.Value);
         }
 
         [Fact]
-        public void GetBasePeriodFromInitialClaimDate_Should_LogAnError_WhenInitialClaimDateInvalid()
+        public void GetBasePeriodFromInitialClaimDateShouldLogAnErrorWhenInitialClaimDateInvalid()
         {
-            var controller = new MonetaryController(logger, new CalculateBasePeriod());
+            var controller = new MonetaryController(this.logger, new CalculateBasePeriod());
             var testDate = new DateTime(1899, 1, 1);
 
             var result = controller.GetBasePeriodFromInitialClaimDate(testDate, false);
 
-            var log = Assert.Single(loggerFactory.Sink.LogEntries);
+            var log = Assert.Single(this.loggerFactory.Sink.LogEntries);
             Assert.IsType<ArgumentException>(log.Exception);
         }
     }
