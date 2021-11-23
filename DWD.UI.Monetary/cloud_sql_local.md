@@ -5,6 +5,8 @@
 
 ### Credentials from Google Secrets Manager
 
+*Be sure you are logged in as your Lab GCP user. Use incognito mode to be sure.*
+
 Get the [DAVE_DB_SERVICE_KEY](https://console.cloud.google.com/security/secret-manager/secret/DAVE_DB_SERVICE_KEY/versions?project=dwd-ui-modernizatioin) here and save the json to a file called key.json. You will need to refer to it later on.
 
 ![view_secret](doc_images/view_secret.png)
