@@ -1,3 +1,6 @@
+#pragma warning disable IDE0060
+#pragma warning disable CA1801
+
 namespace DWD.UI.Monetary.Tests.Controllers
 {
     using System;
