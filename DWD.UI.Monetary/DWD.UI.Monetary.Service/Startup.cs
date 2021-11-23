@@ -10,7 +10,6 @@ namespace DWD.UI.Monetary.Service
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.Hosting;
     using Microsoft.OpenApi.Models;
 
     /// <summary>
@@ -21,7 +20,7 @@ namespace DWD.UI.Monetary.Service
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="configuration"></param>
+        /// <param name="configuration">Reference to the app configuration provided by the runtime</param>
         public Startup(IConfiguration configuration) => this.Configuration = configuration;
 
         /// <summary>
@@ -59,18 +58,20 @@ namespace DWD.UI.Monetary.Service
         /// </summary>
         /// <param name="app">Application builder reference.</param>
         /// <param name="env">Environment reference.</param>
-        /// <remarks>This method gets called by the runtime. Use this method to configure the HTTP request pipeline.</remarks>
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        /// <remarks>This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        /// "IWebHostEnvironment env" could also be injected as a parameter to provide access to the environment if needed.
+        /// </remarks>
+        public void Configure(IApplicationBuilder app)
         {
             // if (env.IsDevelopment())
             // {
             app.UseDeveloperExceptionPage();
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "DWD.UI.Monetary.Service v1"));
+
             // }
 
             // app.UseHttpsRedirection();
-
             app.UseRouting();
 
             app.UseAuthorization();
