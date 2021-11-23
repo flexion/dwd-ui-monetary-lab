@@ -1,11 +1,13 @@
 #pragma warning disable IDE0052
+#pragma warning disable CA1801
+#pragma warning disable IDE0060
 
 namespace DWD.UI.Monetary.Service
 {
     using System;
     using System.IO;
     using System.Reflection;
-    using DWD.UI.Monetary.Domain.UseCases;
+    using Domain.UseCases;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
@@ -63,8 +65,12 @@ namespace DWD.UI.Monetary.Service
         /// </remarks>
         public void Configure(IApplicationBuilder app)
         {
-            // if (env.IsDevelopment())
-            // {
+            if (env.IsDevelopment())
+            {
+                // nothing yet
+            }
+
+            // always generate swagger doc
             app.UseDeveloperExceptionPage();
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "DWD.UI.Monetary.Service v1"));
