@@ -80,6 +80,7 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
                 quarter.QuarterNumber = 4;
                 quarter.Year--;
             }
+
             return quarter;
         }
 
@@ -90,6 +91,11 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
         /// <returns>The previous ui quarter.</returns>
         public static UIQuarter Decrement(UIQuarter item) => --item;
 
+        /// <summary>
+        /// Provides the required equality test for this value object
+        /// </summary>
+        /// <param name="other">The UIQuarter to which this object is compared</param>
+        /// <returns>True if equal</returns>
         public bool Equals(UIQuarter? other) =>
             this.Equals((object)other!);
 
@@ -97,6 +103,7 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
         /// Provides the required equality test for this value object
         /// </summary>
         /// <param name="obj">The object to which this object is compared</param>
+        /// <returns>True if equal</returns>
         public override bool Equals(object? obj)
         {
             if (obj == null)
@@ -111,6 +118,7 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
         /// <summary>
         /// Gets the required hash code for this value object
         /// </summary>
+        /// <returns>Integer hash code</returns>
         public override int GetHashCode() => HashCode.Combine(this.Year, this.QuarterNumber);
     }
 }
