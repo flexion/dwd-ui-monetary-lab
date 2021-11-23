@@ -2,12 +2,14 @@
 
 namespace DWD.UI.Monetary.Service
 {
+    using System.Diagnostics.CodeAnalysis;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Hosting;
 
     /// <summary>
     /// Main program class that creates the web host
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public class Program
     {
         /// <summary>
