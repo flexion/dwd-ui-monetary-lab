@@ -97,6 +97,11 @@ namespace DWD.UI.Monetary.Service
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
 
+        /// <summary>
+        /// Chooses where to get the DB credentials and creates the Connection.
+        /// </summary>
+        /// <param name="services">framework services collection</param>
+        /// <param name="config">framework config</param>
         private static void ConfigureDbContext(IServiceCollection services, IConfiguration config)
         {
             var instanceConnectionName = Environment.GetEnvironmentVariable("INSTANCE_CONNECTION_NAME");
