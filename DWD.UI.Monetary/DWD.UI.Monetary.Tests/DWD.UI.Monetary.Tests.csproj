@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk.web">
 
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
@@ -15,14 +15,23 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="3.1.17" />
         <PackageReference Include="coverlet.collector" Version="3.0.2">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
+      <PackageReference Include="AngleSharp" Version="0.16.0" />
+      <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.17" />
+      <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.17" />
+      <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.17" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.17" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="3.1.17" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.17" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\DWD.UI.Monetary.Domain\DWD.UI.Monetary.Domain.csproj" />
+      <ProjectReference Include="..\DWD.UI.Monetary.Service\DWD.UI.Monetary.Service.csproj" />
     </ItemGroup>
 
 </Project>
