@@ -20,10 +20,10 @@ namespace DWD.UI.Monetary.Service.Extensions
         /// See https://developers.google.com/accounts/docs/application-default-credentials for more information.
         /// </para>
         /// </summary>
-        /// <param name="services"></param>
-        /// <param name="configuration"></param>
+        /// <param name="services">Services collection</param>
+        /// <param name="configuration">Reference to app configuration</param>
         /// <exception cref="ArgumentNullException">Configuration is null</exception>
-        public static void AddGoogleLogging(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddGoogleLogging(this IServiceCollection services, IConfiguration configuration)
         {
             if (configuration is null)
                 throw new ArgumentNullException(nameof(configuration));
@@ -40,6 +40,8 @@ namespace DWD.UI.Monetary.Service.Extensions
                 ServiceName = serviceName,
                 Version = version
             });
+
+            return services;
         }
     }
 }
