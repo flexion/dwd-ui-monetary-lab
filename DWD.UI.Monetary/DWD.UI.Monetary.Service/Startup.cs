@@ -34,19 +34,19 @@ namespace DWD.UI.Monetary.Service
         /// <param name="configuration">Reference to the app configuration</param>
         public Startup(IWebHostEnvironment env, IConfiguration configuration)
         {
-            _env = env;
-            _config = configuration;
+            this.env = env;
+            this.config = configuration;
         }
 
         /// <summary>
         /// Reference to configuration data.
         /// </summary>
-        private readonly IConfiguration _config;
+        private readonly IConfiguration config;
 
         /// <summary>
         /// Reference to host environment.
         /// </summary>
-        private readonly IWebHostEnvironment _env;
+        private readonly IWebHostEnvironment env;
 
         /// <summary>
         /// Configure services in IoC container.
@@ -55,9 +55,9 @@ namespace DWD.UI.Monetary.Service
         /// <remarks>This method gets called by the runtime. Use this method to add services to the container.</remarks>
         public void ConfigureServices(IServiceCollection services)
         {
-            if (_env.IsStaging() || _env.IsProduction())
+            if (this.env.IsStaging() || this.env.IsProduction())
             {
-                services.AddGoogleLogging(_config);
+                services.AddGoogleLogging(this.config);
             }
 
             services.AddControllers();
@@ -76,7 +76,8 @@ namespace DWD.UI.Monetary.Service
                 c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
             });
 
-            services.AddDbContext<ClaimantWageContext>(options => options.UseNpgsql(GetPgConnectionString()));
+            var connectionString = GetPgConnectionString(this.config);
+            services.AddDbContext<ClaimantWageContext>(options => options.UseNpgsql(connectionString));
 
             services
                 .AddTransient<ICalculateBasePeriod, CalculateBasePeriod>()
@@ -113,19 +114,19 @@ namespace DWD.UI.Monetary.Service
         /// <summary>
         /// Chooses where to get the Postgres DB credentials.
         /// </summary>
-        private string GetPgConnectionString()
+        private static string GetPgConnectionString(IConfiguration config)
         {
-            var instanceConnectionName = _config.GetValue<string>("INSTANCE_CONNECTION_NAME");
+            var instanceConnectionName = config.GetValue<string>("INSTANCE_CONNECTION_NAME");
 
             NpgsqlConnectionStringBuilder connectionString;
             if (string.IsNullOrEmpty(instanceConnectionName))
             {
-                var dbSettings = _config.GetSection("SqlConnection");
+                var dbSettings = config.GetSection("SqlConnection");
                 connectionString = new NpgsqlConnectionStringBuilder
                 {
                     Host = dbSettings["Host"],
                     Username = dbSettings["User"],
-                    Password = _config["SqlConnection:Password"],
+                    Password = config["SqlConnection:Password"],
                     Database = dbSettings["Database"],
                     SslMode = SslMode.Disable,
                     Pooling = true
@@ -133,16 +134,16 @@ namespace DWD.UI.Monetary.Service
             }
             else
             {
-                var dbSocketDir = _config.GetValue<string>("DB_SOCKET_PATH") ?? "/cloudsql";
+                var dbSocketDir = config.GetValue<string>("DB_SOCKET_PATH") ?? "/cloudsql";
                 connectionString = new NpgsqlConnectionStringBuilder()
                 {
                     // Remember - storing secrets in plain text is potentially unsafe. Consider using
                     // something like https://cloud.google.com/secret-manager/docs/overview to help keep
                     // secrets secret.
                     Host = $"{dbSocketDir}/{instanceConnectionName}",
-                    Username = _config.GetValue<string>("DB_USER"), // e.g. 'my-db-user
-                    Password = _config.GetValue<string>("DB_PASS"), // e.g. 'my-db-password'
-                    Database = _config.GetValue<string>("DB_NAME"), // e.g. 'my-database'
+                    Username = config.GetValue<string>("DB_USER"), // e.g. 'my-db-user
+                    Password = config.GetValue<string>("DB_PASS"), // e.g. 'my-db-password'
+                    Database = config.GetValue<string>("DB_NAME"), // e.g. 'my-database'
                     SslMode = SslMode.Disable,
                     Pooling = true
                 };
