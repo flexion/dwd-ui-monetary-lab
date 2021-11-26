@@ -1,6 +1,6 @@
 #pragma warning disable CA1054
-#pragma warning disable CA2234
 #pragma warning disable CA2007
+#pragma warning disable CA2234
 namespace DWD.UI.Monetary.Tests.IntegrationTests
 {
     using System.Net;
@@ -8,27 +8,26 @@ namespace DWD.UI.Monetary.Tests.IntegrationTests
     using Service;
     using Xunit;
 
-    public class MonetaryControllerTests
-        : IClassFixture<CustomWebApplicationFactory<Startup>>
+    public class WageEntryControllerTests : IClassFixture<CustomWebApplicationFactory<Startup>>
     {
         private readonly CustomWebApplicationFactory<Startup> factory;
 
-        public MonetaryControllerTests(CustomWebApplicationFactory<Startup> factory) =>
+        public WageEntryControllerTests(CustomWebApplicationFactory<Startup> factory) =>
             this.factory = factory;
 
-        [Theory]
-        [InlineData("/BasePeriod/GetStandardBasePeriodFromInitialClaimDate?initialClaimDate=12/08/2019")]
-        public async Task EndpointsReturnSuccess(string url)
+        [Fact]
+        public async Task EndpointsReturnSuccess()
         {
             // Arrange
             var client = this.factory.CreateClient();
 
             // Act
-            var response = await client.GetAsync(url);
+            var response = await client.GetAsync("WageEntry/GetAllClaimantWages");
 
             // Assert
             Assert.NotNull(response);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
+
     }
 }

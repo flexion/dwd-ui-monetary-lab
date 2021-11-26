@@ -164,13 +164,6 @@ namespace DWD.UI.Monetary.Tests.Controllers
 
         private WageEntryController GetWageEntryController() => new(this.claimantWageDbRepository);
 
-        public void Dispose()
-        {
-            this.Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        private void Dispose(bool all) => this.dbContextOptions.Dispose();
-
+        public void Dispose() => this.dbContextOptions?.Dispose();
     }
 }
