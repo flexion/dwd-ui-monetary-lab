@@ -1,3 +1,6 @@
+#pragma warning disable IDE0055
+#pragma warning disable CS3016
+
 namespace DWD.UI.Monetary.Tests.Business
 {
     using System;
