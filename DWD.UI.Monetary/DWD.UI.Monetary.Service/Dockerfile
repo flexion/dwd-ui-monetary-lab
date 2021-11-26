@@ -1,22 +1,22 @@
-﻿FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS base
-WORKDIR /app
-EXPOSE 80
-EXPOSE 443
-
-FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
+﻿# SDK Version
+ARG sdk_ver=5.0
+# Use Microsoft's official build .NET image.
+FROM mcr.microsoft.com/dotnet/aspnet:${sdk_ver} AS base
 WORKDIR /src
-COPY ["DWD.UI.Monetary.Domain/DWD.UI.Monetary.Domain.csproj", "DWD.UI.Monetary.Domain/"]
-COPY ["DWD.UI.Monetary.Service/DWD.UI.Monetary.Service.csproj", "DWD.UI.Monetary.Service/"]
-RUN dotnet restore "DWD.UI.Monetary.Service/DWD.UI.Monetary.Service.csproj"
 
+FROM mcr.microsoft.com/dotnet/sdk:${sdk_ver} AS build
+WORKDIR /src
 COPY . .
-WORKDIR "/src/DWD.UI.Monetary.Service"
-RUN dotnet build "DWD.UI.Monetary.Service.csproj" -c Release -o /app/build
+RUN dotnet restore "DWD.UI.Monetary.Service/DWD.UI.Monetary.Service.csproj"
+RUN dotnet build "./DWD.UI.Monetary.Service/DWD.UI.Monetary.Service.csproj" -c Release -o /out
 
 FROM build AS publish
-RUN dotnet publish "DWD.UI.Monetary.Service.csproj" -c Release -o /app/publish
+RUN dotnet publish "DWD.UI.Monetary.Service/DWD.UI.Monetary.Service.csproj" -c Release -o /out
 
+# Building final image used in running container
 FROM base AS final
-WORKDIR /app
-COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "DWD.UI.Monetary.Service.dll"]
+RUN apt-get update \
+    && apt-get install -y unzip procps
+WORKDIR /src
+COPY --from=publish /out .
+CMD ASPNETCORE_URLS=http://*:$PORT dotnet DWD.UI.Monetary.Service.dll
