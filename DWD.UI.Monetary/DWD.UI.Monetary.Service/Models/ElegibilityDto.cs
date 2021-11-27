@@ -6,7 +6,7 @@ namespace DWD.UI.Monetary.Service.Models
 
     public class ElegibilityDto
     {
-        public IEnumerable<decimal> WagesOfQuarters { get; } = new List<decimal>();
+        public IEnumerable<decimal> WagesOfQuarters { get; set; } = new List<decimal>();
         public DateTime InitialClaimDate { get; set; }
         public string ClaimantId { get; set; }
         public int MinHighQuarterEarnings { get; set; }

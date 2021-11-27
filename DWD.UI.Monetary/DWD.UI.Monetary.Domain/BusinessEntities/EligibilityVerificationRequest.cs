@@ -5,7 +5,7 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
 
     public class EligibilityVerificationRequest
     {
-        public Collection<decimal> WagesOfQuarters { get;}
+        public Collection<decimal> WagesOfQuarters { get; }
         public DateTime InitialClaimDate { get; }
         public string ClaimantId { get; }
 
