@@ -38,7 +38,7 @@ namespace DWD.UI.Monetary.Tests.Controllers
 
         [Theory]
         [ClassData(typeof(WageData))]
-        public void TestElegibilityClassData(Collection<decimal> wages, bool expectedElegibility)
+        public void TestElegibilityClassData(Collection<decimal> wages, bool expectedElegibility, decimal? expectedWeeklyBenefitRate)
         {
             // Arrange
             this.data.WagesOfQuarters = wages;
@@ -51,6 +51,7 @@ namespace DWD.UI.Monetary.Tests.Controllers
             var okObjectResult = Assert.IsType<OkObjectResult>(resp);
             var elegibilityResult = Assert.IsType<EligibilityResult>(okObjectResult.Value);
             Assert.Equal(expectedElegibility, elegibilityResult.IsEligible);
+            Assert.Equal(expectedWeeklyBenefitRate, elegibilityResult.WeeklyBenefitRate);
         }
     }
 
@@ -58,8 +59,8 @@ namespace DWD.UI.Monetary.Tests.Controllers
     {
         public IEnumerator<object[]> GetEnumerator()
         {
-            yield return new object[] { new Collection<decimal>() { 1500M, 6500M, 250M, 2500M }, true };
-            yield return new object[] { new Collection<decimal>() { 42M, 250M, 1000M, 325M }, false };
+            yield return new object[] { new Collection<decimal>() { 1500M, 6500M, 250M, 2500M }, true, 260M };
+            yield return new object[] { new Collection<decimal>() { 42M, 250M, 1000M, 325M }, false, null };
         }
 
         IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
