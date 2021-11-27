@@ -4,7 +4,7 @@ namespace DWD.UI.Monetary.Service.Models
     using System;
     using System.Collections.Generic;
 
-    public class ElegibilityDto
+    public class EligibilityDto
     {
         public IEnumerable<decimal> WagesOfQuarters { get; set; } = new List<decimal>();
         public DateTime InitialClaimDate { get; set; }

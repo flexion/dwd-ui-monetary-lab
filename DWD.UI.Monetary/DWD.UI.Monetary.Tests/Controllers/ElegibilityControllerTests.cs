@@ -14,14 +14,14 @@ namespace DWD.UI.Monetary.Tests.Controllers
     /// Some throw away tests once we get the real object mode.
     /// Fluent tests would be preferable here.
     /// </summary>
-    public sealed class ElegibilityControllerTest
+    public sealed class EligibilityControllerTest
     {
-        private readonly ElegibilityDto data;
+        private readonly EligibilityDto data;
         private readonly EligibilityController controller;
 
-        public ElegibilityControllerTest()
+        public EligibilityControllerTest()
         {
-            this.data = new ElegibilityDto()
+            this.data = new EligibilityDto()
             {
                 InitialClaimDate = new DateTime(2021, 11, 26),
                 ClaimantId = "abc123",
@@ -38,20 +38,20 @@ namespace DWD.UI.Monetary.Tests.Controllers
 
         [Theory]
         [ClassData(typeof(WageData))]
-        public void TestElegibilityClassData(Collection<decimal> wages, bool expectedElegibility, decimal? expectedWeeklyBenefitRate)
+        public void TestEligibilityClassData(Collection<decimal> wages, bool expectedEligibility, decimal? expectedWeeklyBenefitRate)
         {
             // Arrange
             this.data.WagesOfQuarters = wages;
 
             // Act
-            var resp = this.controller.VerifyElegibility(this.data);
+            var resp = this.controller.VerifyEligibility(this.data);
 
             // Assert
             Assert.NotNull(resp);
             var okObjectResult = Assert.IsType<OkObjectResult>(resp);
-            var elegibilityResult = Assert.IsType<EligibilityResult>(okObjectResult.Value);
-            Assert.Equal(expectedElegibility, elegibilityResult.IsEligible);
-            Assert.Equal(expectedWeeklyBenefitRate, elegibilityResult.WeeklyBenefitRate);
+            var eligibilityResult = Assert.IsType<EligibilityResult>(okObjectResult.Value);
+            Assert.Equal(expectedEligibility, eligibilityResult.IsEligible);
+            Assert.Equal(expectedWeeklyBenefitRate, eligibilityResult.WeeklyBenefitRate);
         }
     }
 

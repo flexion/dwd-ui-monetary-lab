@@ -14,26 +14,26 @@ namespace DWD.UI.Monetary.Service.Controllers
     public class EligibilityController : ControllerBase
     {
         [HttpPost]
-        [Route("VerifyElegibility")]
-        public IActionResult VerifyElegibility([FromBody] ElegibilityDto elegibilityDto)
+        [Route("VerifyEligibility")]
+        public IActionResult VerifyEligibility([FromBody] EligibilityDto eligibilityDto)
         {
-            if (elegibilityDto is null)
+            if (eligibilityDto is null)
             {
-                var problem = this.Problem("Elegibility DTO was not given", null, 400);
+                var problem = this.Problem("Eligibility DTO was not given", null, 400);
                 return problem;
             }
 
-            if (elegibilityDto.WagesOfQuarters is null)
+            if (eligibilityDto.WagesOfQuarters is null)
             {
-                var problem = this.Problem("Elegibility Wages Of Quarters was not given", null, 400);
+                var problem = this.Problem("Eligibility Wages Of Quarters was not given", null, 400);
                 return problem;
             }
 
             var eligibilityVerificationRequest = new EligibilityVerificationRequest(
-                elegibilityDto.WagesOfQuarters.ToCollection<decimal>(), elegibilityDto.InitialClaimDate, elegibilityDto.ClaimantId);
-            var eligibilityBasis = new EligibilityBasis(elegibilityDto.MinHighQuarterEarnings, elegibilityDto.PercentWeeklyBenefitRate,
-                    elegibilityDto.MinQuarters, elegibilityDto.WagesOutsideOfHighQuarterFactor, elegibilityDto.BasePeriodWagesFactor,
-                    elegibilityDto.NumberOfWeeks, elegibilityDto.PercentOfBasePeriodWages);
+                eligibilityDto.WagesOfQuarters.ToCollection<decimal>(), eligibilityDto.InitialClaimDate, eligibilityDto.ClaimantId);
+            var eligibilityBasis = new EligibilityBasis(eligibilityDto.MinHighQuarterEarnings, eligibilityDto.PercentWeeklyBenefitRate,
+                    eligibilityDto.MinQuarters, eligibilityDto.WagesOutsideOfHighQuarterFactor, eligibilityDto.BasePeriodWagesFactor,
+                    eligibilityDto.NumberOfWeeks, eligibilityDto.PercentOfBasePeriodWages);
             var verifier = new CheckEligibilityOfMonetaryRequirements();
             var result = verifier.Verify(eligibilityVerificationRequest, eligibilityBasis);
             return this.Ok(result);
