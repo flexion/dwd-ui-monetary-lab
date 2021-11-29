@@ -14,18 +14,19 @@ namespace DWD.UI.Monetary.Domain.UseCases
         public EligibilityResult Verify(EligibilityVerificationRequest verificationRequest,
             EligibilityBasis eligibilityBasis)
         {
-            var eligibilityResult = new EligibilityResult(false, null, null);
+            var ineligibleResult = new EligibilityResult(false, null, null);
+
             //claimant must have been paid wages from covered employment in at least two quarters (BP)
             if (verificationRequest?.WagesOfQuarters == null || verificationRequest.WagesOfQuarters.Count(wage => wage > 0) < 2)
             {
-                return eligibilityResult;
+                return ineligibleResult;
             }
 
             var wagesOfHighQuarter = verificationRequest.WagesOfQuarters.Max();
             //Claimant has wages in their high quarter (BP)to meet the minimum high quarter earnings amount
             if (wagesOfHighQuarter < eligibilityBasis?.MinHighQuarterEarnings)
             {
-                return eligibilityResult;
+                return ineligibleResult;
             }
 
             //Weekly benefit rate is 4 percent of high quarter
@@ -35,17 +36,17 @@ namespace DWD.UI.Monetary.Domain.UseCases
             //wages outside their high quarter that equal to at least 4 times their WBR
             if (sumOfWagesOutsideHighQuarter < eligibilityBasis?.WagesOutsideOfHighQuarterFactor * weeklyBenefitRate)
             {
-                return eligibilityResult;
+                return ineligibleResult;
             }
 
             //Total base period wages equal to at least 35 times your WBR
             if (totalBasePeriodWages < eligibilityBasis?.BasePeriodWagesFactor * weeklyBenefitRate)
             {
-                return eligibilityResult;
+                return ineligibleResult;
             }
 
             //TOD0 this needs to be updated with actual calculation
-            decimal maxBenefitAmount = 321;
+            decimal? maxBenefitAmount = null;
             return new EligibilityResult(true, weeklyBenefitRate, maxBenefitAmount);
         }
     }
