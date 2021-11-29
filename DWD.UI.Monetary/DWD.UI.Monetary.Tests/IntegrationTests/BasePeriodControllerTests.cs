@@ -24,11 +24,11 @@ namespace DWD.UI.Monetary.Tests.IntegrationTests
         [InlineData("/BasePeriod/GetStandardBasePeriodFromInitialClaimDate?initialClaimDate=12/08/2019", HttpStatusCode.OK,
             "\"year\":2018,\"quarterNumber\":3")]
         [InlineData("/BasePeriod/GetStandardBasePeriodFromInitialClaimDate?initialClaimDate=12/08/1800", HttpStatusCode.BadRequest,
-            "The supplied initial claim date is not valid: Dates before 1/1/1900 12:00:00 AM are not supported")]
+            "The supplied initial claim date is not valid")]
         [InlineData("/BasePeriod/GetAlternateBasePeriodFromInitialClaimDate?initialClaimDate=12/08/2019", HttpStatusCode.OK,
             "\"year\":2019,\"quarterNumber\":3")]
         [InlineData("/BasePeriod/GetAlternateBasePeriodFromInitialClaimDate?initialClaimDate=12/08/1800", HttpStatusCode.BadRequest,
-            "The supplied initial claim date is not valid: Dates before 1/1/1900 12:00:00 AM are not supported")]
+            "The supplied initial claim date is not valid")]
         public async Task TestEndpointsResponse(string url, HttpStatusCode expectedStatusCode, string expectedContentSubString)
         {
             // Arrange
