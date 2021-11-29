@@ -25,6 +25,22 @@ namespace DWD.UI.Monetary.Tests.IntegrationTests
         }
 
         private static List<ClaimantWage> GetSeedingClaimantWages() =>
-            new();
+         new()
+         {
+             new ClaimantWage
+             {
+                 ClaimantId = "12345",
+                 WageYear = 2019,
+                 WageQuarter = 2,
+                 TotalWages = 150
+             },
+             new ClaimantWage
+             {
+                 ClaimantId = "12346",
+                 WageYear = 2019,
+                 WageQuarter = 4,
+                 TotalWages = 250
+             }
+         };
     }
 }
