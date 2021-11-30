@@ -1,3 +1,4 @@
+#pragma warning disable CS3016
 namespace DWD.UI.Monetary.Tests
 {
     using System;
