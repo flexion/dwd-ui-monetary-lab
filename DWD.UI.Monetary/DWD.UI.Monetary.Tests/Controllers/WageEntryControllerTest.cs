@@ -20,7 +20,6 @@ namespace DWD.UI.Monetary.Tests.Controllers
         private readonly ClaimantWageContext dbContextOptions;
         private readonly ClaimantWageDbRepository claimantWageDbRepository;
 
-
         public WageEntryControllerTest()
         {
             this.dbContextOptions =
