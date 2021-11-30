@@ -12,10 +12,7 @@ namespace DWD.UI.Monetary.Service
     using Domain.Utilities;
     using Frameworks;
     using Gateways;
-    using DWD.UI.Monetary.Domain.UseCases;
-    using DWD.UI.Monetary.Service.Extensions;
-    using DWD.UI.Monetary.Service.Frameworks;
-    using DWD.UI.Monetary.Service.Gateways;
+    using Extensions;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.EntityFrameworkCore;
