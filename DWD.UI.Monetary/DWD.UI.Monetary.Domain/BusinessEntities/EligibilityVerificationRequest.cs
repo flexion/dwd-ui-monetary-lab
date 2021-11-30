@@ -2,9 +2,11 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
 {
     using System;
     using System.Collections.ObjectModel;
+    using System.ComponentModel.DataAnnotations;
 
     public class EligibilityVerificationRequest
     {
+        [Required]
         public Collection<decimal> WagesOfQuarters { get; }
         public DateTime InitialClaimDate { get; }
         public string ClaimantId { get; }

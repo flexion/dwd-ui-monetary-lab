@@ -1,5 +1,7 @@
 namespace DWD.UI.Monetary.Domain.UseCases
 {
+    using System;
+    using System.Collections.ObjectModel;
     using System.Linq;
     using BusinessEntities;
 
@@ -14,19 +16,24 @@ namespace DWD.UI.Monetary.Domain.UseCases
         public EligibilityResult Verify(EligibilityVerificationRequest verificationRequest,
             EligibilityBasis eligibilityBasis)
         {
-            var ineligibleResult = new EligibilityResult(false, null, null);
+            var ineligibilityReasons = new Collection<IneligibilityReason>();
+
+            if (verificationRequest is null)
+            {
+                throw new ArgumentNullException(nameof(verificationRequest));
+            }
 
             //claimant must have been paid wages from covered employment in at least two quarters (BP)
-            if (verificationRequest?.WagesOfQuarters == null || verificationRequest.WagesOfQuarters.Count(wage => wage > 0) < 2)
+            if (verificationRequest.WagesOfQuarters.Count(wage => wage > 0) < 2)
             {
-                return ineligibleResult;
+                ineligibilityReasons.Add(IneligibilityReason.InsufficientQuarterWages);
             }
 
             var wagesOfHighQuarter = verificationRequest.WagesOfQuarters.Max();
             //Claimant has wages in their high quarter (BP)to meet the minimum high quarter earnings amount
             if (wagesOfHighQuarter < eligibilityBasis?.MinHighQuarterEarnings)
             {
-                return ineligibleResult;
+                ineligibilityReasons.Add(IneligibilityReason.InsufficientHighQuarterWage);
             }
 
             //Weekly benefit rate is 4 percent of high quarter
@@ -36,18 +43,16 @@ namespace DWD.UI.Monetary.Domain.UseCases
             //wages outside their high quarter that equal to at least 4 times their WBR
             if (sumOfWagesOutsideHighQuarter < eligibilityBasis?.WagesOutsideOfHighQuarterFactor * weeklyBenefitRate)
             {
-                return ineligibleResult;
+                ineligibilityReasons.Add(IneligibilityReason.InsufficientNonHighQuarterWages);
             }
 
             //Total base period wages equal to at least 35 times your WBR
             if (totalBasePeriodWages < eligibilityBasis?.BasePeriodWagesFactor * weeklyBenefitRate)
             {
-                return ineligibleResult;
+                ineligibilityReasons.Add(IneligibilityReason.InsufficientTotalBasePeriodWages);
             }
 
-            //TOD0 this needs to be updated with actual calculation
-            decimal? maxBenefitAmount = null;
-            return new EligibilityResult(true, weeklyBenefitRate, maxBenefitAmount);
+            return ineligibilityReasons.Any() ? new EligibilityResult(ineligibilityReasons) : new EligibilityResult(weeklyBenefitRate);
         }
     }
 }

@@ -18,7 +18,7 @@ namespace DWD.UI.Monetary.Tests.Business
          new List<object[]>
         {
             new object[] {new Collection<decimal>(){1500, 6500,250,2500}, true},
-            new object[] {new Collection<decimal>(), false},
+            //new object[] {new Collection<decimal>(), false},
             new object[] {new Collection<decimal>(){0, 0,0,2500}, false},
             new object[] {new Collection<decimal>(){0, 6500,0,2600}, true},
         };
