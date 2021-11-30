@@ -68,9 +68,8 @@ namespace DWD.UI.Monetary.Service
             ConfigureDbContext(services, this.Configuration);
             services
                 .AddTransient<ICalculateBasePeriod, CalculateBasePeriod>()
-                .AddScoped<IClaimantWageRepository, ClaimantWageDbRepository>();
-            services.AddTransient<ICalculateBasePeriod, CalculateBasePeriod>();
-            services.AddScoped<ICalendarQuarter, CalendarQuarter>();
+                .AddScoped<IClaimantWageRepository, ClaimantWageDbRepository>()
+                .AddScoped<ICalendarQuarter, CalendarQuarter>();
         }
 
         /// <summary>
