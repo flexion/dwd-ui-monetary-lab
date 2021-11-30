@@ -33,7 +33,7 @@ namespace DWD.UI.Monetary.Domain.Utilities
         /// Set the first day of the calendar quarter.
         /// </summary>
         /// <param name="date">date.</param>
-        private void SetFirstDayOfCalendarQuarter(DateTime date)=>
+        private void SetFirstDayOfCalendarQuarter(DateTime date) =>
             this.FirstDayOfCalendarQuarter = this.QuarterNumber switch
             {
                 1 => new DateTime(date.Year, 1, 1),
