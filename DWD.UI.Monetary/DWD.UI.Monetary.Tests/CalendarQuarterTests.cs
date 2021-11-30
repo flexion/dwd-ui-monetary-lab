@@ -1,4 +1,3 @@
-#pragma warning disable CS3016
 namespace DWD.UI.Monetary.Tests
 {
     using System;
@@ -25,6 +24,8 @@ namespace DWD.UI.Monetary.Tests
                 };
             }
         }
+
+        [CLSCompliant(false)]
         [Theory]
         [MemberData(nameof(DataForFirstDayOfCalendarQuarter))]
         public void ShouldReturnFirstDayOfCalendarQuarter(int year, int quarterNumber, DateTime expected)
@@ -50,6 +51,8 @@ namespace DWD.UI.Monetary.Tests
                 };
             }
         }
+
+        [CLSCompliant(false)]
         [Theory]
         [MemberData(nameof(DataForQuarterNumber))]
         public void ShouldReturnQuarterNumber(DateTime input, int expected) =>
