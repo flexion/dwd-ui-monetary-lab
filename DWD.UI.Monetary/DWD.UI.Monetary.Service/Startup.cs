@@ -5,20 +5,26 @@
 namespace DWD.UI.Monetary.Service
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Reflection;
     using Domain.UseCases;
     using Domain.Utilities;
+    using Frameworks;
+    using Gateways;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
+    using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
     using Microsoft.OpenApi.Models;
+    using Npgsql;
 
     /// <summary>
     /// Configure the service during start up.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public class Startup
     {
         /// <summary>
@@ -40,6 +46,10 @@ namespace DWD.UI.Monetary.Service
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            // var sqlConnectionString = this.Configuration["PostgreSqlConnectionString"];
+
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo
@@ -54,6 +64,11 @@ namespace DWD.UI.Monetary.Service
                 c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
             });
 
+            // services.AddDbContext<ClaimantWageContext>(options => options.UseNpgsql(sqlConnectionString));
+            ConfigureDbContext(services, this.Configuration);
+            services
+                .AddTransient<ICalculateBasePeriod, CalculateBasePeriod>()
+                .AddScoped<IClaimantWageRepository, ClaimantWageDbRepository>();
             services.AddTransient<ICalculateBasePeriod, CalculateBasePeriod>();
             services.AddScoped<ICalendarQuarter, CalendarQuarter>();
         }
@@ -83,6 +98,50 @@ namespace DWD.UI.Monetary.Service
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+        }
+
+        /// <summary>
+        /// Chooses where to get the DB credentials and creates the Connection.
+        /// </summary>
+        /// <param name="services">framework services collection</param>
+        /// <param name="config">framework config</param>
+        private static void ConfigureDbContext(IServiceCollection services, IConfiguration config)
+        {
+            var instanceConnectionName = Environment.GetEnvironmentVariable("INSTANCE_CONNECTION_NAME");
+
+            NpgsqlConnectionStringBuilder connectionString;
+            if (string.IsNullOrEmpty(instanceConnectionName))
+            {
+                var dbSettings = config.GetSection("SqlConnection");
+                connectionString = new NpgsqlConnectionStringBuilder
+                {
+                    Host = dbSettings["Host"],
+                    Username = dbSettings["User"],
+                    Password = config["SqlConnection:Password"],
+                    Database = dbSettings["Database"],
+                    SslMode = SslMode.Disable,
+                    Pooling = true
+                };
+            }
+            else
+            {
+                var dbSocketDir = Environment.GetEnvironmentVariable("DB_SOCKET_PATH") ?? "/cloudsql";
+                connectionString = new NpgsqlConnectionStringBuilder()
+                {
+                    // Remember - storing secrets in plain text is potentially unsafe. Consider using
+                    // something like https://cloud.google.com/secret-manager/docs/overview to help keep
+                    // secrets secret.
+                    Host = $"{dbSocketDir}/{instanceConnectionName}",
+                    Username = Environment.GetEnvironmentVariable("DB_USER"), // e.g. 'my-db-user
+                    Password = Environment.GetEnvironmentVariable("DB_PASS"), // e.g. 'my-db-password'
+                    Database = Environment.GetEnvironmentVariable("DB_NAME"), // e.g. 'my-database'
+                    SslMode = SslMode.Disable,
+                    Pooling = true
+                };
+            }
+
+            _ = services.AddDbContext<ClaimantWageContext>(options =>
+                  options.UseNpgsql(connectionString.ToString()));
         }
     }
 }
