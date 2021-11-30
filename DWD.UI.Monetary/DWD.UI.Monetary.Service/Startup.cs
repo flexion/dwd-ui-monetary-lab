@@ -9,6 +9,7 @@ namespace DWD.UI.Monetary.Service
     using System.IO;
     using System.Reflection;
     using DWD.UI.Monetary.Domain.UseCases;
+    using DWD.UI.Monetary.Service.Extensions;
     using DWD.UI.Monetary.Service.Frameworks;
     using DWD.UI.Monetary.Service.Gateways;
     using Microsoft.AspNetCore.Builder;
@@ -29,13 +30,23 @@ namespace DWD.UI.Monetary.Service
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="configuration">Reference to the app configuration provided by the runtime</param>
-        public Startup(IConfiguration configuration) => this.Configuration = configuration;
+        /// <param name="env">Reference to hosting environment</param>
+        /// <param name="configuration">Reference to the app configuration</param>
+        public Startup(IWebHostEnvironment env, IConfiguration configuration)
+        {
+            this.env = env;
+            this.config = configuration;
+        }
 
         /// <summary>
         /// Reference to configuration data.
         /// </summary>
-        private IConfiguration Configuration { get; }
+        private readonly IConfiguration config;
+
+        /// <summary>
+        /// Reference to host environment.
+        /// </summary>
+        private readonly IWebHostEnvironment env;
 
         /// <summary>
         /// Configure services in IoC container.
@@ -46,7 +57,11 @@ namespace DWD.UI.Monetary.Service
         {
             services.AddControllers();
 
-            // var sqlConnectionString = this.Configuration["PostgreSqlConnectionString"];
+            if (this.env.IsStaging() || this.env.IsProduction())
+            {
+                services.AddGoogleLogging(this.config);
+            }
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo
@@ -61,8 +76,9 @@ namespace DWD.UI.Monetary.Service
                 c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
             });
 
-            // services.AddDbContext<ClaimantWageContext>(options => options.UseNpgsql(sqlConnectionString));
-            ConfigureDbContext(services, this.Configuration);
+            var connectionString = GetPgConnectionString(this.config);
+            services.AddDbContext<ClaimantWageContext>(options => options.UseNpgsql(connectionString));
+
             services
                 .AddTransient<ICalculateBasePeriod, CalculateBasePeriod>()
                 .AddScoped<IClaimantWageRepository, ClaimantWageDbRepository>();
@@ -96,13 +112,11 @@ namespace DWD.UI.Monetary.Service
         }
 
         /// <summary>
-        /// Chooses where to get the DB credentials and creates the Connection.
+        /// Chooses where to get the Postgres DB credentials.
         /// </summary>
-        /// <param name="services">framework services collection</param>
-        /// <param name="config">framework config</param>
-        private static void ConfigureDbContext(IServiceCollection services, IConfiguration config)
+        private static string GetPgConnectionString(IConfiguration config)
         {
-            var instanceConnectionName = Environment.GetEnvironmentVariable("INSTANCE_CONNECTION_NAME");
+            var instanceConnectionName = config.GetValue<string>("INSTANCE_CONNECTION_NAME");
 
             NpgsqlConnectionStringBuilder connectionString;
             if (string.IsNullOrEmpty(instanceConnectionName))
@@ -120,23 +134,22 @@ namespace DWD.UI.Monetary.Service
             }
             else
             {
-                var dbSocketDir = Environment.GetEnvironmentVariable("DB_SOCKET_PATH") ?? "/cloudsql";
+                var dbSocketDir = config.GetValue<string>("DB_SOCKET_PATH") ?? "/cloudsql";
                 connectionString = new NpgsqlConnectionStringBuilder()
                 {
                     // Remember - storing secrets in plain text is potentially unsafe. Consider using
                     // something like https://cloud.google.com/secret-manager/docs/overview to help keep
                     // secrets secret.
                     Host = $"{dbSocketDir}/{instanceConnectionName}",
-                    Username = Environment.GetEnvironmentVariable("DB_USER"), // e.g. 'my-db-user
-                    Password = Environment.GetEnvironmentVariable("DB_PASS"), // e.g. 'my-db-password'
-                    Database = Environment.GetEnvironmentVariable("DB_NAME"), // e.g. 'my-database'
+                    Username = config.GetValue<string>("DB_USER"), // e.g. 'my-db-user
+                    Password = config.GetValue<string>("DB_PASS"), // e.g. 'my-db-password'
+                    Database = config.GetValue<string>("DB_NAME"), // e.g. 'my-database'
                     SslMode = SslMode.Disable,
                     Pooling = true
                 };
             }
 
-            _ = services.AddDbContext<ClaimantWageContext>(options =>
-                  options.UseNpgsql(connectionString.ToString()));
+            return connectionString.ToString();
         }
     }
 }

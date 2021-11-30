@@ -162,23 +162,25 @@ namespace DWD.UI.Monetary.Tests.Controllers
             Assert.Equal("33", wages[0].ClaimantId);
         }
 
+        private WageEntryController GetWageEntryController() => new(this.claimantWageDbRepository);
+
         private void Dispose(bool disposing)
         {
-            if (!disposedValue)
+            if (!this.disposedValue)
             {
                 if (disposing)
                 {
                     this.dbContextOptions.Dispose();
                 }
 
-                disposedValue = true;
+                this.disposedValue = true;
             }
         }
 
         public void Dispose()
         {
             // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-            Dispose(disposing: true);
+            this.Dispose(disposing: true);
             GC.SuppressFinalize(this);
         }
     }
