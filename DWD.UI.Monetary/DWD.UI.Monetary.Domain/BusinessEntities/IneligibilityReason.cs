@@ -2,7 +2,7 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
 {
     public enum IneligibilityReason
     {
-        InsufficientQuarterWages,
+        InsufficientQuartersWithWages,
         InsufficientHighQuarterWage,
         InsufficientNonHighQuarterWages,
         InsufficientTotalBasePeriodWages,

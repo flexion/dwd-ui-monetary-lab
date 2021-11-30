@@ -26,7 +26,7 @@ namespace DWD.UI.Monetary.Domain.UseCases
             //claimant must have been paid wages from covered employment in at least two quarters (BP)
             if (verificationRequest.WagesOfQuarters.Count(wage => wage > 0) < 2)
             {
-                ineligibilityReasons.Add(IneligibilityReason.InsufficientQuarterWages);
+                ineligibilityReasons.Add(IneligibilityReason.InsufficientQuartersWithWages);
             }
 
             var wagesOfHighQuarter = verificationRequest.WagesOfQuarters.Max();
