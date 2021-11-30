@@ -19,7 +19,7 @@ namespace DWD.UI.Monetary.Tests.Controllers
 
         private readonly ClaimantWageContext dbContextOptions;
         private readonly ClaimantWageDbRepository claimantWageDbRepository;
-
+        private bool disposedValue;
 
         public WageEntryControllerTest()
         {
@@ -164,13 +164,24 @@ namespace DWD.UI.Monetary.Tests.Controllers
 
         private WageEntryController GetWageEntryController() => new(this.claimantWageDbRepository);
 
-        public void Dispose()
+        private void Dispose(bool disposing)
         {
-            this.Dispose(true);
-            GC.SuppressFinalize(this);
+            if (!this.disposedValue)
+            {
+                if (disposing)
+                {
+                    this.dbContextOptions.Dispose();
+                }
+
+                this.disposedValue = true;
+            }
         }
 
-        private void Dispose(bool all) => this.dbContextOptions.Dispose();
-
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+            this.Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
     }
 }
