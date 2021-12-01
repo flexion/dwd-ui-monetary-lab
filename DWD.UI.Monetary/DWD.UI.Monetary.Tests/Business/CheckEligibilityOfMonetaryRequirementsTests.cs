@@ -6,14 +6,26 @@ namespace DWD.UI.Monetary.Tests.Business
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.Threading.Tasks;
     using Domain.BusinessEntities;
     using Domain.UseCases;
+    using Moq;
+    using Service.Gateways;
     using Xunit;
 
     public class CheckEligibilityOfMonetaryRequirementsTests
     {
-        private readonly ICheckEligibilityOfMonetaryRequirements objectUnderTest = new CheckEligibilityOfMonetaryRequirements();
 
+        private readonly ICheckEligibilityOfMonetaryRequirements objectUnderTest;
+
+        public CheckEligibilityOfMonetaryRequirementsTests()
+        {
+            var mockEligibilityBasisGateway = new Mock<IEligibilityBasisGateway>();
+            mockEligibilityBasisGateway.Setup(m => m.GetEligibilityBasisAsync())
+                .ReturnsAsync(new EligibilityBasis(1350, 4, 2,
+                    4, 35, 26, 40));
+            this.objectUnderTest = new CheckEligibilityOfMonetaryRequirements(mockEligibilityBasisGateway.Object);
+        }
         public static IEnumerable<object[]> DataForAtLeastTwoQuartersEligibilityVerification =>
          new List<object[]>
         {
@@ -24,28 +36,27 @@ namespace DWD.UI.Monetary.Tests.Business
 
         [Theory]
         [MemberData(nameof(DataForAtLeastTwoQuartersEligibilityVerification))]
-        public void ShouldHaveAtLeastTwoQuarters(Collection<decimal> wagesOfQuarters, bool expected)
+        public async Task ShouldHaveAtLeastTwoQuarters(Collection<decimal> wagesOfQuarters, bool expected)
         {
             var eligibilityVerificationRequest = new EligibilityVerificationRequest(wagesOfQuarters, new DateTime(2020,5,7), "1234567890");
-            var eligibilityBasis = new EligibilityBasis(54, 4, 2, 4, 35, 26, 40);
-            var result = this.objectUnderTest.Verify(eligibilityVerificationRequest, eligibilityBasis);
+            var result = await this.objectUnderTest.VerifyAsync(eligibilityVerificationRequest);
             Assert.NotNull(result);
             Assert.Equal(expected, result.IsEligible);
-            if (!result.IsEligible)
+            if (expected)
             {
-                Assert.Contains(IneligibilityReason.InsufficientQuartersWithWages, result.IneligibilityReasons);
+                Assert.IsType<EligibleResult>(result);
             }
             else
             {
-                Assert.Empty(result.IneligibilityReasons);
+                var ineligibilityResult = Assert.IsType<IneligibleResult>(result);
+                Assert.Contains(IneligibilityReason.InsufficientQuartersWithWages, ineligibilityResult.IneligibilityReasons);
             }
         }
 
         [Fact]
         public void ShouldThrowInvalidOperationExceptionWhenQuarterWagesIsEmpty(){
             var eligibilityVerificationRequest = new EligibilityVerificationRequest(new Collection<decimal>(), new DateTime(2020,5,7), "1234567890");
-            var eligibilityBasis = new EligibilityBasis(1350, 4, 2, 4, 35, 26, 40);
-            Assert.Throws<InvalidOperationException>(() => this.objectUnderTest.Verify(eligibilityVerificationRequest, eligibilityBasis));
+            Assert.ThrowsAsync<InvalidOperationException>(() => this.objectUnderTest.VerifyAsync(eligibilityVerificationRequest));
         }
 
         public static IEnumerable<object[]> DataForHighQuarterEligibilityVerification =>
@@ -57,20 +68,20 @@ namespace DWD.UI.Monetary.Tests.Business
 
         [Theory]
         [MemberData(nameof(DataForHighQuarterEligibilityVerification))]
-        public void ShouldHaveWagesOfHighQuarterAtLeastMinHighQuarterEarnings(Collection<decimal> wagesOfQuarters, bool expected)
+        public async Task ShouldHaveWagesOfHighQuarterAtLeastMinHighQuarterEarnings(Collection<decimal> wagesOfQuarters, bool expected)
         {
             var eligibilityVerificationRequest = new EligibilityVerificationRequest(wagesOfQuarters, new DateTime(2020,5,7), "1234567890");
-            var eligibilityBasis = new EligibilityBasis(1350, 4, 2, 4, 35, 26, 40);
-            var result = this.objectUnderTest.Verify(eligibilityVerificationRequest, eligibilityBasis);
+            var result = await this.objectUnderTest.VerifyAsync(eligibilityVerificationRequest);
             Assert.NotNull(result);
             Assert.Equal(expected, result.IsEligible);
-            if (!result.IsEligible)
+            if (expected)
             {
-                Assert.Contains(IneligibilityReason.InsufficientHighQuarterWage, result.IneligibilityReasons);
+                Assert.IsType<EligibleResult>(result);
             }
             else
             {
-                Assert.Empty(result.IneligibilityReasons);
+                var ineligibilityResult = Assert.IsType<IneligibleResult>(result);
+                Assert.Contains(IneligibilityReason.InsufficientHighQuarterWage, ineligibilityResult.IneligibilityReasons);
             }
         }
 
@@ -81,14 +92,14 @@ namespace DWD.UI.Monetary.Tests.Business
             };
         [Theory]
         [MemberData(nameof(DataForPercentHighQuarterEligibilityVerification))]
-        public void ShouldCalculateWeeklyBenifitRateCorrectly(Collection<decimal> wagesOfQuarters, bool expected, decimal? expectedWeeklyBenefitRate)
+        public async Task ShouldCalculateWeeklyBenifitRateCorrectly(Collection<decimal> wagesOfQuarters, bool expected, decimal? expectedWeeklyBenefitRate)
         {
             var eligibilityVerificationRequest = new EligibilityVerificationRequest(wagesOfQuarters, new DateTime(2020,5,7), "1234567890");
-            var eligibilityBasis = new EligibilityBasis(1350, 4, 2, 4, 35, 26, 40);
-            var result = this.objectUnderTest.Verify(eligibilityVerificationRequest, eligibilityBasis);
+            var result = await this.objectUnderTest.VerifyAsync(eligibilityVerificationRequest);
             Assert.NotNull(result);
             Assert.Equal(expected, result.IsEligible);
-            Assert.Equal(expectedWeeklyBenefitRate, result.WeeklyBenefitRate);
+            var eligibleResult = Assert.IsType<EligibleResult>(result);
+            Assert.Equal(expectedWeeklyBenefitRate, eligibleResult.WeeklyBenefitRate);
         }
 
         public static IEnumerable<object[]> DataForWagesOutsideHighQuarterEligibilityVerification =>
@@ -99,21 +110,21 @@ namespace DWD.UI.Monetary.Tests.Business
             };
         [Theory]
         [MemberData(nameof(DataForWagesOutsideHighQuarterEligibilityVerification))]
-        public void ShouldHaveWagesOutsideHighQuarter(Collection<decimal> wagesOfQuarters, bool expected, decimal? expectedWeeklyBenefitRate)
+        public async Task ShouldHaveWagesOutsideHighQuarter(Collection<decimal> wagesOfQuarters, bool expected, decimal? expectedWeeklyBenefitRate)
         {
             var eligibilityVerificationRequest = new EligibilityVerificationRequest(wagesOfQuarters, new DateTime(2020,5,7), "1234567890");
-            var eligibilityBasis = new EligibilityBasis(1350, 4, 2, 4, 35, 26, 40);
-            var result = this.objectUnderTest.Verify(eligibilityVerificationRequest, eligibilityBasis);
+            var result = await this.objectUnderTest.VerifyAsync(eligibilityVerificationRequest);
             Assert.NotNull(result);
             Assert.Equal(expected, result.IsEligible);
-            Assert.Equal(expectedWeeklyBenefitRate, result.WeeklyBenefitRate);
             if (!result.IsEligible)
             {
-                Assert.Contains(IneligibilityReason.InsufficientNonHighQuarterWages, result.IneligibilityReasons);
+                var ineligibleResult = Assert.IsType<IneligibleResult>(result);
+                Assert.Contains(IneligibilityReason.InsufficientNonHighQuarterWages, ineligibleResult.IneligibilityReasons);
             }
             else
             {
-                Assert.Empty(result.IneligibilityReasons);
+                var eligibleResult = Assert.IsType<EligibleResult>(result);
+                Assert.Equal(expectedWeeklyBenefitRate, eligibleResult.WeeklyBenefitRate);
             }
         }
 
@@ -125,21 +136,22 @@ namespace DWD.UI.Monetary.Tests.Business
             };
         [Theory]
         [MemberData(nameof(DataForTotalBasePeriodEligibilityVerification))]
-        public void ShouldHaveTotalBasePeriodWagesAtLeastBasePeriodWagesFactorTimesWeeklyBenefitRate(Collection<decimal> wagesOfQuarters, bool expected, decimal? expectedWeeklyBenefitRate)
+        public async Task ShouldHaveTotalBasePeriodWagesAtLeastBasePeriodWagesFactorTimesWeeklyBenefitRate(Collection<decimal> wagesOfQuarters, bool expected, decimal? expectedWeeklyBenefitRate)
         {
             var eligibilityVerificationRequest = new EligibilityVerificationRequest(wagesOfQuarters, new DateTime(2020,5,7), "1234567890");
-            var eligibilityBasis = new EligibilityBasis(1350, 4, 2, 4, 35, 26, 40);
-            var result = this.objectUnderTest.Verify(eligibilityVerificationRequest, eligibilityBasis);
+            var result = await this.objectUnderTest.VerifyAsync(eligibilityVerificationRequest);
             Assert.NotNull(result);
             Assert.Equal(expected, result.IsEligible);
-            Assert.Equal(expectedWeeklyBenefitRate, result.WeeklyBenefitRate);
+
             if (!result.IsEligible)
             {
-                Assert.Contains(IneligibilityReason.InsufficientTotalBasePeriodWages, result.IneligibilityReasons);
+                var ineligibleResult = Assert.IsType<IneligibleResult>(result);
+                Assert.Contains(IneligibilityReason.InsufficientTotalBasePeriodWages, ineligibleResult.IneligibilityReasons);
             }
             else
             {
-                Assert.Empty(result.IneligibilityReasons);
+                var eligibleResult = Assert.IsType<EligibleResult>(result);
+                Assert.Equal(expectedWeeklyBenefitRate, eligibleResult.WeeklyBenefitRate);
             }
         }
     }

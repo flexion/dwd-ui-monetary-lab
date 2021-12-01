@@ -1,5 +1,6 @@
 namespace DWD.UI.Monetary.Domain.UseCases
 {
+    using System.Threading.Tasks;
     using BusinessEntities;
 
     public interface ICheckEligibilityOfMonetaryRequirements
@@ -8,6 +9,6 @@ namespace DWD.UI.Monetary.Domain.UseCases
         /// Verify all the monetary requirements
         /// </summary>
         /// <returns>EligibilityResult</returns>
-        public EligibilityResult Verify(EligibilityVerificationRequest verificationRequest, EligibilityBasis eligibilityBasis);
+        public Task<EligibilityResult> VerifyAsync(EligibilityVerificationRequest verificationRequest);
     }
 }
