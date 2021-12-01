@@ -1,7 +1,9 @@
+#pragma warning disable 1998
 namespace DWD.UI.Monetary.Service.Gateways
 {
     using System.Threading.Tasks;
     using Domain.BusinessEntities;
+    using Domain.Interfaces;
 
     /// <summary>
     /// A new EligibilityBasisGateway will replace this one and actually call the appropriate data store for the eligibility information.

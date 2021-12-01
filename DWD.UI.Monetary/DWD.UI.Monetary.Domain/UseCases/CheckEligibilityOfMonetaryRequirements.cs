@@ -5,7 +5,7 @@ namespace DWD.UI.Monetary.Domain.UseCases
     using System.Linq;
     using System.Threading.Tasks;
     using BusinessEntities;
-    using Service.Gateways;
+    using Interfaces;
 
     public class CheckEligibilityOfMonetaryRequirements : ICheckEligibilityOfMonetaryRequirements
     {
@@ -35,7 +35,7 @@ namespace DWD.UI.Monetary.Domain.UseCases
             }
 
             var wagesOfHighQuarter = verificationRequest.WagesOfQuarters.Max();
-            var eligibilityBasis = await this.eligibilityBasisGateway.GetEligibilityBasisAsync();
+            var eligibilityBasis = await this.eligibilityBasisGateway.GetEligibilityBasisAsync().ConfigureAwait(true);
             //Claimant has wages in their high quarter (BP)to meet the minimum high quarter earnings amount
             if (wagesOfHighQuarter < eligibilityBasis.MinHighQuarterEarnings)
             {

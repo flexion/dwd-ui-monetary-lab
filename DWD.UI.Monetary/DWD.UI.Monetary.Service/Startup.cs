@@ -8,6 +8,7 @@ namespace DWD.UI.Monetary.Service
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Reflection;
+    using Domain.Interfaces;
     using DWD.UI.Monetary.Domain.UseCases;
     using DWD.UI.Monetary.Service.Extensions;
     using DWD.UI.Monetary.Service.Frameworks;

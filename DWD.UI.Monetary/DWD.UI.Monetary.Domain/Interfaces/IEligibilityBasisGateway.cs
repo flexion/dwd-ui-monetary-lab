@@ -1,4 +1,4 @@
-namespace DWD.UI.Monetary.Service.Gateways
+namespace DWD.UI.Monetary.Domain.Interfaces
 {
     using System.Threading.Tasks;
     using Domain.BusinessEntities;

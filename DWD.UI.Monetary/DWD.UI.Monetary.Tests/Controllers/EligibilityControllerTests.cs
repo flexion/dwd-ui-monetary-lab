@@ -5,12 +5,14 @@ namespace DWD.UI.Monetary.Tests.Controllers
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Threading.Tasks;
+    using Domain.Interfaces;
     using DWD.UI.Monetary.Domain.BusinessEntities;
     using DWD.UI.Monetary.Service.Controllers;
     using DWD.UI.Monetary.Service.Models;
+    using MELT;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Logging;
     using Moq;
-    using Service.Gateways;
     using Xunit;
 
     /// <summary>
@@ -19,6 +21,14 @@ namespace DWD.UI.Monetary.Tests.Controllers
     /// </summary>
     public sealed class EligibilityControllerTest
     {
+        private readonly ILogger<BasePeriodController> logger;
+
+        public EligibilityControllerTest()
+        {
+            using var loggerFactory = TestLoggerFactory.Create();
+            this.logger = loggerFactory.CreateLogger<BasePeriodController>();
+        }
+
         [Theory]
         [ClassData(typeof(WageData))]
         public async Task TestEligibilityClassData(Collection<decimal> wages, bool expectedEligibility, decimal? expectedWeeklyBenefitRate)
@@ -34,24 +44,24 @@ namespace DWD.UI.Monetary.Tests.Controllers
             mockEligibilityBasisGateway.Setup(m => m.GetEligibilityBasisAsync())
                 .ReturnsAsync(new EligibilityBasis(1350, 4, 2,
                     4, 35, 26, 40));
-            var controller = new EligibilityController(mockEligibilityBasisGateway.Object);
+            var controller = new EligibilityController(mockEligibilityBasisGateway.Object, this.logger);
 
             // Act
-            var resp = await controller.VerifyEligibilityAsync(data);
+            var resp = await controller.VerifyEligibilityAsync(data).ConfigureAwait(true);
 
             // Assert
             Assert.NotNull(resp);
             var okObjectResult = Assert.IsType<OkObjectResult>(resp);
             if (expectedEligibility)
             {
-                var eligibilityResult = Assert.IsType<EligibleResult>(okObjectResult.Value);
+                var eligibilityResult = Assert.IsType<EligibleResultDto>(okObjectResult.Value);
                 Assert.Equal(expectedEligibility, eligibilityResult.IsEligible);
                 Assert.Equal(expectedWeeklyBenefitRate, eligibilityResult.WeeklyBenefitRate);
             }
             else
             {
-                var eligibilityResult = Assert.IsType<IneligibleResult>(okObjectResult.Value);
-                Assert.NotEmpty(eligibilityResult.IneligibilityReasons);
+                var eligibilityResultDto = Assert.IsType<IneligibleResultDto>(okObjectResult.Value);
+                Assert.NotEmpty(eligibilityResultDto.IneligibleReasons);
             }
         }
     }
