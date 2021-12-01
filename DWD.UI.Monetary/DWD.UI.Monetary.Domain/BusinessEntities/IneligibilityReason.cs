@@ -5,15 +5,15 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
     public enum IneligibilityReason
     {
         [Description("Claimant does not have at least two quarters' wages")]
-        InsufficientQuartersWithWages,
+        InsufficientQuartersWithWages = 0,
 
         [Description("Claimant's high quarter wage is not at least minimum High Quarter Earnings")]
-        InsufficientHighQuarterWage,
+        InsufficientHighQuarterWage = 1,
 
         [Description("Claimant's outside High Quarter wages are too low relative to Weekly Benefit Rate")]
-        InsufficientNonHighQuarterWages,
+        InsufficientNonHighQuarterWages = 2,
 
         [Description("Claimant's Total Base Period Wages are too low relative to Weekly Benefit Rate")]
-        InsufficientTotalBasePeriodWages,
+        InsufficientTotalBasePeriodWages = 3,
     }
 }

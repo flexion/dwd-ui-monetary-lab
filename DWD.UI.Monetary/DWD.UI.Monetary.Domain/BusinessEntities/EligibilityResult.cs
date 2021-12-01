@@ -5,7 +5,7 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
     public abstract class EligibilityResult
     {
         public bool IsEligible { get; protected set; }
-    };
+    }
 
     /// <summary>
     /// This is the concrete class returned when the claimant is eligible.
@@ -22,7 +22,7 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
             this.WeeklyBenefitRate = weeklyBenefitRate;
             //this.MaxBenefitAmount = null;
         }
-    };
+    }
 
     /// <summary>
     /// This is the concrete class returned when the claimant is ineligible.
@@ -36,5 +36,5 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
             this.IsEligible = false;
             this.IneligibilityReasons = reasons ?? new Collection<IneligibilityReason>();
         }
-    };
+    }
 }

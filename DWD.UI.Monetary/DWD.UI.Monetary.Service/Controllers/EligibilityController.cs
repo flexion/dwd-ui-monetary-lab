@@ -44,7 +44,6 @@ namespace DWD.UI.Monetary.Service.Controllers
         /// <note type="tip"><em>** - Actual values may vary depending on state law</em></note>
         /// </remarks>
         /// <param name="eligibilityRequestDto"></param>
-        /// <returns></returns>
         [SwaggerResponse((int)HttpStatusCode.OK,
             description: "If eligible then weekly benefit rate is returned. Otherwise reasons for ineligibility")]
         [SwaggerResponse((int)HttpStatusCode.BadRequest, "Bad Initial Claim Date or wagesOfQuarter is empty", typeof(ProblemDetails), "application/problem+json")]
@@ -56,18 +55,16 @@ namespace DWD.UI.Monetary.Service.Controllers
         {
             if (eligibilityRequestDto is null)
             {
-                var problem = this.Problem("Eligibility DTO was not given", null, 400);
-                return problem;
+                return this.Problem("Eligibility DTO was not given", null, 400);
             }
 
             if (eligibilityRequestDto.WagesOfQuarters is null)
             {
-                var problem = this.Problem("Eligibility Wages Of Quarters was not given", null, 400);
-                return problem;
+                return this.Problem("Eligibility Wages Of Quarters was not given", null, 400);
             }
 
             var eligibilityVerificationRequest = new EligibilityVerificationRequest(
-                eligibilityRequestDto.WagesOfQuarters.ToCollection<decimal>(), eligibilityRequestDto.InitialClaimDate,
+                eligibilityRequestDto.WagesOfQuarters.ToCollection(), eligibilityRequestDto.InitialClaimDate,
                 eligibilityRequestDto.ClaimantId);
             try
             {
@@ -82,8 +79,7 @@ namespace DWD.UI.Monetary.Service.Controllers
 #pragma warning restore CA1031
             {
                 this.logger.LogError(exception, "Error determining the eligibility for benefits");
-                var problem = this.Problem(exception.Message, null, 400);
-                return problem;
+                return this.Problem(exception.Message, null, 400);
             }
         }
     }

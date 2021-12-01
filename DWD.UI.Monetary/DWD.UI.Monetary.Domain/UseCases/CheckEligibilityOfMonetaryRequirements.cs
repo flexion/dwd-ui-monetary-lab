@@ -19,6 +19,7 @@ namespace DWD.UI.Monetary.Domain.UseCases
         /// </summary>
         /// <param name="verificationRequest">Claimant information</param>
         /// <returns>EligibilityResult</returns>
+        /// <exception cref="ArgumentNullException">The verification request was null</exception>
         public async Task<EligibilityResult> VerifyAsync(EligibilityVerificationRequest verificationRequest)
         {
             var ineligibilityReasons = new Collection<IneligibilityReason>();
@@ -58,7 +59,7 @@ namespace DWD.UI.Monetary.Domain.UseCases
                 ineligibilityReasons.Add(IneligibilityReason.InsufficientTotalBasePeriodWages);
             }
 
-            return ineligibilityReasons.Any() ? new IneligibleResult(ineligibilityReasons) : new EligibleResult(weeklyBenefitRate);
+            return ineligibilityReasons.Count > 0 ? new IneligibleResult(ineligibilityReasons) : new EligibleResult(weeklyBenefitRate);
         }
     }
 }

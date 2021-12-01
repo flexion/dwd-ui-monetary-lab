@@ -1,5 +1,3 @@
-#pragma warning disable IDE0009
-
 namespace DWD.UI.Monetary.Service.Controllers
 {
     using System;
@@ -75,8 +73,7 @@ namespace DWD.UI.Monetary.Service.Controllers
             {
                 // Log and return http 400
                 this.logger.LogError(argumentException, "Error calculating standard base period from initialClaimDate={0}", initialClaimDate);
-                var problem = this.Problem(argumentException.Message, null, 400);
-                return problem;
+                return this.Problem(argumentException.Message, null, 400);
             }
         }
 
@@ -117,10 +114,8 @@ namespace DWD.UI.Monetary.Service.Controllers
             {
                 // Log and return http 400
                 this.logger.LogError(argumentException, "Error calculating alternate base period from initialClaimDate={0}", initialClaimDate);
-                var problem = this.Problem(argumentException.Message, null, 400);
-                return problem;
+                return this.Problem(argumentException.Message, null, 400);
             }
         }
-
     }
 }

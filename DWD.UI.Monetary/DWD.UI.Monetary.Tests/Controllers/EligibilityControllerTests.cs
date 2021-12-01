@@ -40,11 +40,10 @@ namespace DWD.UI.Monetary.Tests.Controllers
                 ClaimantId = "abc123",
                 WagesOfQuarters = wages
             };
-            var mockEligibilityBasisGateway = new Mock<IEligibilityBasisGateway>();
-            mockEligibilityBasisGateway.Setup(m => m.GetEligibilityBasisAsync())
-                .ReturnsAsync(new EligibilityBasis(1350, 4, 2,
-                    4, 35, 26, 40));
-            var controller = new EligibilityController(mockEligibilityBasisGateway.Object, this.logger);
+            var mock = new Mock<IEligibilityBasisGateway>();
+            _ = mock.Setup(m => m.GetEligibilityBasisAsync())
+                    .ReturnsAsync(new EligibilityBasis(1350, 4, 2, 4, 35, 26, 40));
+            var controller = new EligibilityController(mock.Object, this.logger);
 
             // Act
             var resp = await controller.VerifyEligibilityAsync(data).ConfigureAwait(true);
