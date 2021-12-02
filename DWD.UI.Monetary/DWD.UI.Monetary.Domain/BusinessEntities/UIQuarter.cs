@@ -23,7 +23,7 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
         /// </summary>
         public int QuarterNumber { get; private set; }
 
-        public ICalendarQuarter? CalendarQuarter { get; private set; }
+        public ICalendarQuarter CalendarQuarter { get; }
 
         /// <summary>
         /// Construct from year and quarter number.
