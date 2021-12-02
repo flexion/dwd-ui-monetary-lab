@@ -9,6 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="JunitXml.TestLogger" Version="3.0.98" />
         <PackageReference Include="MELT" Version="0.8.0" />
         <PackageReference Include="MELT.Xunit" Version="0.8.0" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.1" />

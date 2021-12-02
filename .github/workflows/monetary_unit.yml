@@ -16,7 +16,7 @@ jobs:
       DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: 0
       DOTNET_RUNNING_IN_CONTAINER: true
       ASPNETCORE_URLS: http://+:8080
-      
+
     steps:
     - uses: actions/checkout@v2
     - name: Setup .NET
@@ -37,7 +37,18 @@ jobs:
     - name: Test
       run: |-
         cd DWD.UI.Monetary
-        dotnet test --no-build --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./coverage
+        dotnet test --no-build --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./coverage --logger:"junit;LogFilePath=TestResults/results.junit.xml" --logger html
+
+    - uses: actions/upload-artifact@v2
+      with:
+        name: my-artifact
+        path: ./**/coverage/TestResult__*.html
+
+    - name: Publish Unit Test Results
+      uses: EnricoMi/publish-unit-test-result-action@v1
+      if: always()
+      with:
+        files: ./**/TestResults/*.junit.xml
 
     - name: Make var for comma separated coverage files
       id: set_cov_files
