@@ -20,13 +20,13 @@ namespace DWD.UI.Monetary.Service.Controllers
     [Route("[controller]")]
     public class EligibilityController : ControllerBase
     {
-        private readonly IEligibilityBasisGateway eligibilityBasisGateway;
+        private readonly ICheckEligibilityOfMonetaryRequirements checkEligibilityRequirements;
         private readonly ILogger<BasePeriodController> logger;
 
-        public EligibilityController(IEligibilityBasisGateway eligibilityBasisGateway,
+        public EligibilityController(ICheckEligibilityOfMonetaryRequirements checkEligibilityRequirements,
             ILogger<BasePeriodController> logger)
         {
-            this.eligibilityBasisGateway = eligibilityBasisGateway;
+            this.checkEligibilityRequirements = checkEligibilityRequirements;
             this.logger = logger;
         }
 
@@ -68,12 +68,12 @@ namespace DWD.UI.Monetary.Service.Controllers
                 eligibilityRequestDto.ClaimantId);
             try
             {
-                var verifier = new CheckEligibilityOfMonetaryRequirements(this.eligibilityBasisGateway);
-                var result = await verifier.VerifyAsync(eligibilityVerificationRequest).ConfigureAwait(true);
+                var result = await this.checkEligibilityRequirements.VerifyAsync(eligibilityVerificationRequest).ConfigureAwait(true);
                 return result.IsEligible
                     ? this.Ok(EligibilityResultMapper.MapToDto((EligibleResult)result))
                     : this.Ok(EligibilityResultMapper.MapToDto((IneligibleResult)result));
             }
+            //When we implement EligibilityBasisGateway, we will update this to catch the specific exception
 #pragma warning disable CA1031
             catch (Exception exception)
 #pragma warning restore CA1031

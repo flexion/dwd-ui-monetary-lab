@@ -1,11 +1,9 @@
 namespace DWD.UI.Monetary.Tests.Controllers
 {
     using System;
-    using System.Collections;
-    using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Threading.Tasks;
-    using Domain.Interfaces;
+    using Domain.UseCases;
     using DWD.UI.Monetary.Domain.BusinessEntities;
     using DWD.UI.Monetary.Service.Controllers;
     using DWD.UI.Monetary.Service.Models;
@@ -29,20 +27,20 @@ namespace DWD.UI.Monetary.Tests.Controllers
             this.logger = loggerFactory.CreateLogger<BasePeriodController>();
         }
 
-        [Theory]
-        [ClassData(typeof(WageData))]
-        public async Task TestEligibilityClassData(Collection<decimal> wages, bool expectedEligibility, decimal? expectedWeeklyBenefitRate)
+        [Fact]
+        public async Task ShouldReturnEligibleResultDtoWhenVerifiedEligible()
         {
             // Arrange
             var data = new EligibilityRequestDto()
             {
                 InitialClaimDate = new DateTime(2021, 11, 26),
                 ClaimantId = "abc123",
-                WagesOfQuarters = wages
+                WagesOfQuarters = new Collection<decimal>() { 1500M, 6500M, 250M, 2500M }
             };
-            var mock = new Mock<IEligibilityBasisGateway>();
-            _ = mock.Setup(m => m.GetEligibilityBasisAsync())
-                    .ReturnsAsync(new EligibilityBasis(1350, 4, 2, 4, 35, 26, 40));
+            var expectedWeeklyBenefitRate = 260M;
+            var mock = new Mock<ICheckEligibilityOfMonetaryRequirements>();
+            _ = mock.Setup(m => m.VerifyAsync(It.IsAny<EligibilityVerificationRequest>()))
+                    .ReturnsAsync(new EligibleResult(expectedWeeklyBenefitRate));
             var controller = new EligibilityController(mock.Object, this.logger);
 
             // Act
@@ -51,28 +49,39 @@ namespace DWD.UI.Monetary.Tests.Controllers
             // Assert
             Assert.NotNull(resp);
             var okObjectResult = Assert.IsType<OkObjectResult>(resp);
-            if (expectedEligibility)
-            {
-                var eligibilityResult = Assert.IsType<EligibleResultDto>(okObjectResult.Value);
-                Assert.Equal(expectedEligibility, eligibilityResult.IsEligible);
-                Assert.Equal(expectedWeeklyBenefitRate, eligibilityResult.WeeklyBenefitRate);
-            }
-            else
-            {
-                var eligibilityResultDto = Assert.IsType<IneligibleResultDto>(okObjectResult.Value);
-                Assert.NotEmpty(eligibilityResultDto.IneligibleReasons);
-            }
+            var eligibilityResult = Assert.IsType<EligibleResultDto>(okObjectResult.Value);
+            Assert.True(eligibilityResult.IsEligible);
+            Assert.Equal(expectedWeeklyBenefitRate, eligibilityResult.WeeklyBenefitRate);
         }
-    }
 
-    public class WageData : IEnumerable<object[]>
-    {
-        public IEnumerator<object[]> GetEnumerator()
+        [Fact]
+        public async Task ShouldReturnIneligibleResultDtoWhenVerifiedIneligible()
         {
-            yield return new object[] { new Collection<decimal>() { 1500M, 6500M, 250M, 2500M }, true, 260M };
-            yield return new object[] { new Collection<decimal>() { 42M, 250M, 1000M, 325M }, false, null };
-        }
+            // Arrange
+            var data = new EligibilityRequestDto()
+            {
+                InitialClaimDate = new DateTime(2021, 11, 26),
+                ClaimantId = "abc123",
+                WagesOfQuarters = new Collection<decimal>() { 42M, 250M, 1000M, 325M }
+            };
 
-        IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
+            var mock = new Mock<ICheckEligibilityOfMonetaryRequirements>();
+            _ = mock.Setup(m => m.VerifyAsync(It.IsAny<EligibilityVerificationRequest>()))
+                .ReturnsAsync(new IneligibleResult(new Collection<IneligibilityReason>()
+                {
+                    IneligibilityReason.InsufficientHighQuarterWage
+                }));
+            var controller = new EligibilityController(mock.Object, this.logger);
+
+            // Act
+            var resp = await controller.VerifyEligibilityAsync(data).ConfigureAwait(true);
+
+            // Assert
+            Assert.NotNull(resp);
+            var okObjectResult = Assert.IsType<OkObjectResult>(resp);
+            var ineligibleResult = Assert.IsType<IneligibleResultDto>(okObjectResult.Value);
+            Assert.False(ineligibleResult.IsEligible);
+            Assert.NotEmpty(ineligibleResult.IneligibleReasons);
+        }
     }
 }

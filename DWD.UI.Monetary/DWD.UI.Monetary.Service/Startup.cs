@@ -83,6 +83,7 @@ namespace DWD.UI.Monetary.Service
             services
                 .AddTransient<ICalculateBasePeriod, CalculateBasePeriod>()
                 .AddScoped<IClaimantWageRepository, ClaimantWageDbRepository>()
+                .AddScoped<ICheckEligibilityOfMonetaryRequirements, CheckEligibilityOfMonetaryRequirements>()
                 .AddScoped<IEligibilityBasisGateway, StubEligibilityBasisGateway>();
         }
 
