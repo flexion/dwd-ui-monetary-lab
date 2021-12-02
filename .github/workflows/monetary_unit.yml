@@ -1,6 +1,9 @@
 name: Monetary Unit tests
 
 on:
+  push:
+    branches:
+    - tstone-unit-test-reporting
   pull_request:
     branches: [ '*' ]
     paths:
