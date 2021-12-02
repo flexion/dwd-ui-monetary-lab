@@ -37,10 +37,10 @@ namespace DWD.UI.Monetary.Tests.Controllers
                 ClaimantId = "abc123",
                 WagesOfQuarters = new Collection<decimal>() { 1500M, 6500M, 250M, 2500M }
             };
-            var expectedWeeklyBenefitRate = 260M;
+            const decimal expectedWeeklyBenefitRate = 260M;
             var mock = new Mock<ICheckEligibilityOfMonetaryRequirements>();
             _ = mock.Setup(m => m.VerifyAsync(It.IsAny<EligibilityVerificationRequest>()))
-                    .ReturnsAsync(new EligibleResult(expectedWeeklyBenefitRate));
+                                 .ReturnsAsync(new EligibleResult(expectedWeeklyBenefitRate));
             var controller = new EligibilityController(mock.Object, this.logger);
 
             // Act
@@ -67,10 +67,10 @@ namespace DWD.UI.Monetary.Tests.Controllers
 
             var mock = new Mock<ICheckEligibilityOfMonetaryRequirements>();
             _ = mock.Setup(m => m.VerifyAsync(It.IsAny<EligibilityVerificationRequest>()))
-                .ReturnsAsync(new IneligibleResult(new Collection<IneligibilityReason>()
-                {
-                    IneligibilityReason.InsufficientHighQuarterWage
-                }));
+                    .ReturnsAsync(new IneligibleResult(new Collection<IneligibilityReason>()
+                    {
+                        IneligibilityReason.InsufficientHighQuarterWage
+                    }));
             var controller = new EligibilityController(mock.Object, this.logger);
 
             // Act

@@ -1,4 +1,4 @@
-#pragma warning disable 1998
+#pragma warning disable 1998  // suppress lack of await in sync stub; will not be needed with real gateway
 namespace DWD.UI.Monetary.Service.Gateways
 {
     using System.Threading.Tasks;
