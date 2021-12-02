@@ -5,7 +5,6 @@ namespace DWD.UI.Monetary.Service.Controllers
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Mvc;
     using Domain.BusinessEntities;
-    using Domain.Interfaces;
     using Domain.UseCases;
     using Models;
     using Extensions;
