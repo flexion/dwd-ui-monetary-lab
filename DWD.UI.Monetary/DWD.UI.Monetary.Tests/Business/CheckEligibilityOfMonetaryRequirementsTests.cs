@@ -92,7 +92,7 @@ namespace DWD.UI.Monetary.Tests.Business
         [Theory]
         [MemberData(nameof(DataForPercentHighQuarterEligibilityVerification))]
         [CLSCompliant(false)]
-        public async Task ShouldCalculateWeeklyBenifitRateCorrectly(Collection<decimal> wagesOfQuarters, bool expectedIsEligible, decimal? expectedWeeklyBenefitRate)
+        public async Task ShouldCalculateWeeklyBenefitRateCorrectly(Collection<decimal> wagesOfQuarters, bool expectedIsEligible, decimal? expectedWeeklyBenefitRate)
         {
             var eligibilityVerificationRequest = new EligibilityVerificationRequest(wagesOfQuarters, new DateTime(2020, 5, 7), "1234567890");
             var result = await this.objectUnderTest.VerifyAsync(eligibilityVerificationRequest).ConfigureAwait(true);
@@ -160,8 +160,8 @@ namespace DWD.UI.Monetary.Tests.Business
         public static IEnumerable<object[]> DataForMBACalculation =>
             new List<object[]>
             {
-                new object[] {new Collection<decimal>(){800, 2650, 800, 215}, 2560M },    // Case 1: 40% of total base period wages is the lesser amount
-                new object[] {new Collection<decimal>(){1500, 2500, 2500, 2500}, 2600M},  // Case 2: 26 times WBR is the lesser amount
+                new object[] {new Collection<decimal>(){1500, 6500,  250, 2500}, 4300M },  // Case 1: 40% of total base period wages is the lesser amount
+                new object[] {new Collection<decimal>(){1500, 2500, 2500, 2500}, 2600M},   // Case 2: 26 times WBR is the lesser amount
             };
 
         /// <summary>
