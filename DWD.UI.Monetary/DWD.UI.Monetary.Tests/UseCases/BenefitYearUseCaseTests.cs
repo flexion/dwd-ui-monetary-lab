@@ -29,7 +29,7 @@ namespace DWD.UI.Monetary.Tests.UseCases
                                                     YearWeek expectedEndYearWeek,
                                                     int expectedWeeks)
         {
-            var basePeriodUseCase = new CalculateBenefitYear(new CalculateBasePeriod());
+            var basePeriodUseCase = new CalculateBenefitYear();
 
             var result = basePeriodUseCase.CalculateBenefitYearFromDate(requestedStartDate);
 

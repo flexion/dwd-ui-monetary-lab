@@ -4,7 +4,6 @@ namespace DWD.UI.Monetary.Tests.Controllers
     using Domain.BusinessEntities;
     using Domain.UseCases;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.Extensions.Logging;
     using Moq;
     using Service.Controllers;
     using Xunit;
@@ -15,9 +14,9 @@ namespace DWD.UI.Monetary.Tests.Controllers
         public void ShouldReturnValidBenefitYear()
         {
 
-            var mock = new Mock<ILogger<BenefitYearContoller>>();
+            var mockCalculateBenefitYear = new Mock<CalculateBenefitYear>().Object;
 
-            var controller = new BenefitYearContoller(mock.Object, new CalculateBenefitYear(new CalculateBasePeriod()));
+            var controller = new BenefitYearContoller(mockCalculateBenefitYear);
 
             // Act
             var actionResult = controller.GetBenefitYearForRequestedDate(new DateTime(2021, 2, 1));
@@ -29,22 +28,7 @@ namespace DWD.UI.Monetary.Tests.Controllers
             var okResultValue = okResult.Value as BenefitYear;
             Assert.NotNull(okResultValue);
             Assert.Equal(52, okResultValue.BenefitWeeks);
-        }
-
-        [Fact]
-        public void ShouldReturn400Error()
-        {
-            var mock = new Mock<ILogger<BenefitYearContoller>>();
-            var controller = new BenefitYearContoller(mock.Object, new CalculateBenefitYear(new CalculateBasePeriod()));
-
-            var actionResult = controller.GetBenefitYearForRequestedDate(new DateTime(1898, 2, 1));
-
-            Assert.NotNull(actionResult);
-            // We cast it to the expected response type
-            var notOkResult = actionResult.Result as ObjectResult;
-            Assert.NotNull(notOkResult);
-            Assert.Equal(400, notOkResult.StatusCode);
-
+            Assert.Equal(200, okResult.StatusCode);
         }
     }
 }

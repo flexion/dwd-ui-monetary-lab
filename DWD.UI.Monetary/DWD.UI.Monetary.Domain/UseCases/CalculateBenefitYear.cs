@@ -14,14 +14,6 @@ namespace DWD.UI.Monetary.Domain.UseCases
         /// The usual number of week in a benefit period.
         /// </summary>
         public const int StandardBenefitWeeks = 52;
-        private readonly ICalculateBasePeriod calculateBasePeriod;
-
-        /// <summary>
-        /// Public constructor to include DI.
-        /// </summary>
-        /// <param name="aCalculateBasePeriod">Use Case needs a base period.</param>
-        public CalculateBenefitYear(ICalculateBasePeriod aCalculateBasePeriod)
-                                => this.calculateBasePeriod = aCalculateBasePeriod;
 
         /// <summary>
         /// Calculate the benefit period based on requested start date.
@@ -30,7 +22,7 @@ namespace DWD.UI.Monetary.Domain.UseCases
         /// <returns></returns>
         public BenefitYear CalculateBenefitYearFromDate(DateTime requestedClaimStartDate)
         {
-            var calculatedBenefitWeeks = this.CalculateBenefitWeeks(requestedClaimStartDate);
+            var calculatedBenefitWeeks = StandardBenefitWeeks;
             var claimRequestedDate = requestedClaimStartDate;
             // Move the Begin Date to the Sunday of the first benefit week
             var claimBeginDate = claimRequestedDate.AddDays(-1 * (claimRequestedDate.DayOfWeek - DayOfWeek.Sunday));
@@ -62,22 +54,6 @@ namespace DWD.UI.Monetary.Domain.UseCases
                 CalendarWeekRule.FirstFullWeek,
                 DayOfWeek.Saturday);
             return new YearWeek(inDate.Year, week);
-        }
-
-        /// <summary>
-        /// Calculates the number of benefit weeks for a begin date.
-        ///
-        /// This is a placeholder for using the base period to determine whether the
-        /// the benefit year has 52  or 53 weeks.
-        /// </summary>
-        /// <param name="requestedClaimStartDate">Regested start date.</param>
-        /// <returns>weeks</returns>
-        public int CalculateBenefitWeeks(DateTime requestedClaimStartDate)
-        {
-            _ = this.calculateBasePeriod.CalculateBasePeriodFromInitialClaimDate(requestedClaimStartDate);
-            // This is the number of weeks until we have business information on Base Period overlap
-            var result = StandardBenefitWeeks;
-            return result;
         }
     }
 }

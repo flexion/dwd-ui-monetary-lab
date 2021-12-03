@@ -6,7 +6,6 @@ namespace DWD.UI.Monetary.Service.Controllers
     using Domain.UseCases;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.Extensions.Logging;
 
     /// <summary>
     /// Provides endpoints for Benefit Year.
@@ -17,11 +16,6 @@ namespace DWD.UI.Monetary.Service.Controllers
     public class BenefitYearContoller : ControllerBase
     {
         /// <summary>
-        /// Local logger reference.
-        /// </summary>
-        private readonly ILogger<BenefitYearContoller> logger;
-
-        /// <summary>
         /// Local reference to domain logic.
         /// </summary>
         private readonly ICalculateBenefitYear calculateBenefitYear;
@@ -29,13 +23,8 @@ namespace DWD.UI.Monetary.Service.Controllers
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="logger">A logger reference.</param>
-        /// <param name="aCalculateBenefitYear">A domain logic reference.</param>
-        public BenefitYearContoller(ILogger<BenefitYearContoller> logger, ICalculateBenefitYear aCalculateBenefitYear)
-        {
-            this.logger = logger;
-            this.calculateBenefitYear = aCalculateBenefitYear;
-        }
+        /// <param name="calculateBenefitYear">A domain logic reference.</param>
+        public BenefitYearContoller(ICalculateBenefitYear calculateBenefitYear) => this.calculateBenefitYear = calculateBenefitYear;
 
         /// <summary>
         /// Calculate benefit year for requested date.
@@ -91,26 +80,11 @@ namespace DWD.UI.Monetary.Service.Controllers
         [Consumes(MediaTypeNames.Text.Plain)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
         [HttpGet]
         [Route("lookup-by-date")]
-        public ActionResult<BenefitYear> GetBenefitYearForRequestedDate(DateTime requestedDate)
-        {
-            ActionResult<BenefitYear> response;
-            try
-            {
-                response = this.Ok(this.calculateBenefitYear.CalculateBenefitYearFromDate(requestedDate));
-            }
-            catch (ArgumentException argumentException)
-            {
-                // Log and return http 400
-                this.logger.LogError(argumentException,
-                    "Error calculating alternate base period from requestedDate={0}", requestedDate);
-                response = this.Problem(argumentException.Message, null, 400);
-            }
+        public ActionResult<BenefitYear> GetBenefitYearForRequestedDate(DateTime requestedDate) =>
+            this.Ok(this.calculateBenefitYear.CalculateBenefitYearFromDate(requestedDate));
 
-            return response;
-
-        }
     }
 }
