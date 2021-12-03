@@ -8,11 +8,11 @@ namespace DWD.UI.Monetary.Service
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Reflection;
-    using Domain.UseCases;
-    using Domain.Utilities;
-    using Frameworks;
-    using Gateways;
-    using Extensions;
+    using Domain.Interfaces;
+    using DWD.UI.Monetary.Domain.UseCases;
+    using DWD.UI.Monetary.Service.Extensions;
+    using DWD.UI.Monetary.Service.Frameworks;
+    using DWD.UI.Monetary.Service.Gateways;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.EntityFrameworkCore;
@@ -83,7 +83,10 @@ namespace DWD.UI.Monetary.Service
             services
                 .AddTransient<ICalculateBasePeriod, CalculateBasePeriod>()
                 .AddScoped<IClaimantWageRepository, ClaimantWageDbRepository>()
-                .AddScoped<ICalendarQuarter, CalendarQuarter>();
+                .AddScoped<ICalendarQuarter, CalendarQuarter>()
+                .AddScoped<IClaimantWageRepository, ClaimantWageDbRepository>()
+                .AddScoped<ICheckEligibilityOfMonetaryRequirements, CheckEligibilityOfMonetaryRequirements>()
+                .AddScoped<IEligibilityBasisGateway, StubEligibilityBasisGateway>();
         }
 
         /// <summary>
