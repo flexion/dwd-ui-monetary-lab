@@ -85,7 +85,7 @@ namespace DWD.UI.Monetary.Service.Controllers
         ///     which is always a Saturday.
         ///
         /// </remarks>
-        /// <param name="requestedDate">The requested benefit date in static route format YYYY-MM-DD.</param>
+        /// <param name="requestedDate">The requested benefit date in standard formats (MM/DD/YYYY, MM-DD-YYYY, YYYY-MM-DD, etc.).</param>
 
         /// <returns>The calculated benefit year.</returns>
         [Consumes(MediaTypeNames.Text.Plain)]
@@ -93,7 +93,7 @@ namespace DWD.UI.Monetary.Service.Controllers
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpGet]
-        [Route("{requestedDate}")]
+        [Route("lookup-by-date")]
         public ActionResult<BenefitYear> GetBenefitYearForRequestedDate(DateTime requestedDate)
         {
             ActionResult<BenefitYear> response;
