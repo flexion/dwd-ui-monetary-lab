@@ -34,7 +34,7 @@ namespace DWD.UI.Monetary.Service.Mappers
                 throw new ArgumentNullException(nameof(eligibleResult));
             }
 
-            return new EligibleResultDto(eligibleResult.IsEligible, eligibleResult.WeeklyBenefitRate);
+            return new EligibleResultDto(eligibleResult.IsEligible, eligibleResult.WeeklyBenefitRate, eligibleResult.MaximumBenefitAmount);
         }
     }
 }

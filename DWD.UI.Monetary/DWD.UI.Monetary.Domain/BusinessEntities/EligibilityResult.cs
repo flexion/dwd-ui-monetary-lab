@@ -32,10 +32,12 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
         /// Instantiates a new EligibleReason to report values associated with the determination
         /// </summary>
         /// <param name="weeklyBenefitRate"></param>
-        public EligibleResult(decimal weeklyBenefitRate)
+        /// <param name="maximumBenefitAmount"></param>
+        public EligibleResult(decimal weeklyBenefitRate, decimal maximumBenefitAmount)
         {
             this.IsEligible = true;
             this.WeeklyBenefitRate = weeklyBenefitRate;
+            this.MaximumBenefitAmount = maximumBenefitAmount;
         }
     }
 

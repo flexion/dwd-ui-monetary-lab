@@ -157,7 +157,7 @@ namespace DWD.UI.Monetary.Tests.Business
         public static IEnumerable<object[]> DataForMBACalculation =>
             new List<object[]>
             {
-                new object[] {new Collection<decimal>(){1500, 6500,250,2500}, 42M},
+                new object[] {new Collection<decimal>(){1500, 6500,250,2500}, 4300M},
             };
 
         [Theory]
