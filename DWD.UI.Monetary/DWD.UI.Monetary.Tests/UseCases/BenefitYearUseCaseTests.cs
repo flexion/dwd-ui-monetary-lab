@@ -8,10 +8,19 @@ namespace DWD.UI.Monetary.Tests.UseCases
     using Domain.BusinessEntities;
     using Domain.UseCases;
     using Xunit;
-
-    public class BenefitPeriodUseCaseTests
+    /// <summary>
+    /// Created tests for calculating the benefit year.
+    /// </summary>
+    public class BenefitYearUseCaseTests
     {
-
+        /// <summary>
+        /// Base on the criteria matrix for user story 33.
+        /// </summary>
+        /// <param name="requestedStartDate">The request start day</param>
+        /// <param name="expectedBeginDate">Expected benefit begin date (Sunday)</param>
+        /// <param name="expectedEndDate">Expected benefit begin date (Saturday)</param>
+        /// <param name="expectedBeginYearWeek">Expected benefit begin week</param>
+        /// <param name="expectedEndYearWeek">Expected benefit end week</param>
         [Theory]
         [ClassData(typeof(TestDataGenerator))]
         public void CalculateBenefitPeriodFromDate(DateTime requestedStartDate,
@@ -20,24 +29,21 @@ namespace DWD.UI.Monetary.Tests.UseCases
                                                     YearWeek expectedBeginYearWeek,
                                                     YearWeek expectedEndYearWeek)
         {
-            var basePeriodUseCase = new CalculateBenefitPeriod(new CalculateBasePeriod());
+            var basePeriodUseCase = new CalculateBenefitYear(new CalculateBasePeriod());
 
-            var result = basePeriodUseCase.CalculateBenefitPeriodFromDate(requestedStartDate, null, null, null);
+            var result = basePeriodUseCase.CalculateBenefitYearFromDate(requestedStartDate);
 
             Assert.NotNull(result);
             Assert.Equal(expectedBeginDate, result.BeginDate);
             Assert.Equal(expectedBeginYearWeek, result.BeginYearWeek);
             Assert.Equal(expectedEndDate, result.EndDate);
             Assert.Equal(expectedEndYearWeek, result.EndYearWeek);
-
-            var options = new JsonSerializerOptions { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault };
-            var serialize = JsonSerializer.Serialize(result, options);
-            Console.Out.WriteLine(serialize);
-
         }
-
     }
 
+    /// <summary>
+    /// PO acceptance criteria dates.
+    /// </summary>
     public class TestDataGenerator : IEnumerable<object[]>
     {
         private readonly List<object[]> data = new()

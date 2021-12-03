@@ -3,13 +3,12 @@ namespace DWD.UI.Monetary.Domain.UseCases
     using System;
     using System.Diagnostics;
     using System.Globalization;
-    using System.Linq;
     using BusinessEntities;
 
     /// <summary>
     ///
     /// </summary>
-    public class CalculateBenefitPeriod : ICalculateBenefitPeriod
+    public class CalculateBenefitYear : ICalculateBenefitYear
     {
         private readonly ICalculateBasePeriod calculateBasePeriod;
 
@@ -17,18 +16,17 @@ namespace DWD.UI.Monetary.Domain.UseCases
         /// Public constructor to include DI.
         /// </summary>
         /// <param name="aCalculateBasePeriod">Use Case needs a base period.</param>
-        public CalculateBenefitPeriod(ICalculateBasePeriod aCalculateBasePeriod)
+        public CalculateBenefitYear(ICalculateBasePeriod aCalculateBasePeriod)
                                 => this.calculateBasePeriod = aCalculateBasePeriod;
 
         /// <summary>
         /// Calculate the benefit period based on requested start date.
         /// </summary>
         /// <param name="requestedClaimStartDate">The requested start date for the UI claim</param>
-        /// <param name="nextRequestedClaimStartDate">The requested start date for the next UI claim (nullable)</param>
         /// <returns></returns>
-        public BenefitYear CalculateBenefitPeriodFromDate(DateTime requestedClaimStartDate, bool? useAlternateBasePeriodRequested, DateTime? nextRequestedClaimStartDate, bool? useAlternateBasePeriodNext)
+        public BenefitYear CalculateBenefitYearFromDate(DateTime requestedClaimStartDate)
         {
-            var calculatedBenefitWeeks = this.CalculateBenefitWeeks(requestedClaimStartDate, useAlternateBasePeriodRequested, nextRequestedClaimStartDate, useAlternateBasePeriodNext);
+            var calculatedBenefitWeeks = this.CalculateBenefitWeeks();
             var claimRequestedDate = requestedClaimStartDate;
             // Move the Begin Date to the Sunday of the first benefit week
             var claimBeginDate = claimRequestedDate.AddDays(-1 * (claimRequestedDate.DayOfWeek - DayOfWeek.Sunday));
@@ -64,38 +62,14 @@ namespace DWD.UI.Monetary.Domain.UseCases
 
         /// <summary>
         /// Calculates the number of benefit weeks for a begin date.
+        ///
+        /// This is a placeholder for using the base period to determine whether the
+        /// the benefit year has 52  or 53 weeks.
         /// </summary>
-        /// <param name="requestedClaimStartDate"></param>
-        /// <param name="useAlternateBasePeriodRequested"></param>
-        /// <param name="nextRequestedClaimStartDate"></param>
-        /// <param name="useAlternateBasePeriodNext"></param>
         /// <returns>weeks</returns>
-        public virtual int CalculateBenefitWeeks(DateTime requestedClaimStartDate, bool? useAlternateBasePeriodRequested, DateTime? nextRequestedClaimStartDate, bool? useAlternateBasePeriodNext)
+        public int CalculateBenefitWeeks()
         {
             var result = 52;
-            if (nextRequestedClaimStartDate.HasValue)
-            {
-                var requestedClaimStartDateBasePeriod = this.calculateBasePeriod.CalculateBasePeriodFromInitialClaimDate(requestedClaimStartDate);
-                var nextRequestedClaimStartDateBasePeriod = this.calculateBasePeriod.CalculateBasePeriodFromInitialClaimDate(nextRequestedClaimStartDate.Value);
-
-                var firstPeriodLastQuarter = useAlternateBasePeriodRequested.HasValue && useAlternateBasePeriodRequested.Value
-                                                                            ? requestedClaimStartDateBasePeriod.AltBasePeriodQuarters.Last()
-                                                                                : requestedClaimStartDateBasePeriod.BasePeriodQuarters.Last();
-                var nextPeriodFirstQuarter = useAlternateBasePeriodNext.HasValue && useAlternateBasePeriodNext.Value
-                                                                            ? nextRequestedClaimStartDateBasePeriod.AltBasePeriodQuarters.First()
-                                                                                : nextRequestedClaimStartDateBasePeriod.BasePeriodQuarters.First();
-
-                if (firstPeriodLastQuarter.CompareTo(nextPeriodFirstQuarter) >= 0)
-                {
-                    result = 53;
-                }
-                else
-                {
-                    result = 52;
-                }
-
-            }
-
             return result;
         }
     }
