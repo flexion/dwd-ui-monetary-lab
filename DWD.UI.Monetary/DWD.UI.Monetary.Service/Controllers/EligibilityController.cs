@@ -1,6 +1,5 @@
 namespace DWD.UI.Monetary.Service.Controllers
 {
-    using System;
     using System.Net;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Mvc;
@@ -9,7 +8,6 @@ namespace DWD.UI.Monetary.Service.Controllers
     using Models;
     using Extensions;
     using Mappers;
-    using Microsoft.Extensions.Logging;
     using Swashbuckle.AspNetCore.Annotations;
 
     /// <summary>
@@ -20,14 +18,9 @@ namespace DWD.UI.Monetary.Service.Controllers
     public class EligibilityController : ControllerBase
     {
         private readonly ICheckEligibilityOfMonetaryRequirements checkEligibilityRequirements;
-        private readonly ILogger<BasePeriodController> logger;
 
-        public EligibilityController(ICheckEligibilityOfMonetaryRequirements checkEligibilityRequirements,
-            ILogger<BasePeriodController> logger)
-        {
+        public EligibilityController(ICheckEligibilityOfMonetaryRequirements checkEligibilityRequirements) =>
             this.checkEligibilityRequirements = checkEligibilityRequirements;
-            this.logger = logger;
-        }
 
         /// <summary>
         ///  Determine eligibility for benefits
@@ -65,21 +58,12 @@ namespace DWD.UI.Monetary.Service.Controllers
             var eligibilityVerificationRequest = new EligibilityVerificationRequest(
                 eligibilityRequestDto.WagesOfQuarters.ToCollection(), eligibilityRequestDto.InitialClaimDate,
                 eligibilityRequestDto.ClaimantId);
-            try
-            {
-                var result = await this.checkEligibilityRequirements.VerifyAsync(eligibilityVerificationRequest).ConfigureAwait(true);
-                return result.IsEligible
-                    ? this.Ok(EligibilityResultMapper.MapToDto((EligibleResult)result))
-                    : this.Ok(EligibilityResultMapper.MapToDto((IneligibleResult)result));
-            }
-            //When we implement EligibilityBasisGateway, we will update this to catch the specific exception
-#pragma warning disable CA1031
-            catch (Exception exception)
-#pragma warning restore CA1031
-            {
-                this.logger.LogError(exception, "Error determining the eligibility for benefits");
-                return this.Problem(exception.Message, null, 400);
-            }
+
+            var result = await this.checkEligibilityRequirements.VerifyAsync(eligibilityVerificationRequest).ConfigureAwait(true);
+
+            return result.IsEligible
+                ? this.Ok(EligibilityResultMapper.MapToDto((EligibleResult)result))
+                : this.Ok(EligibilityResultMapper.MapToDto((IneligibleResult)result));
         }
     }
 }

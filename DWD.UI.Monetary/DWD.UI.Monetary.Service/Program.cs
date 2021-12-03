@@ -1,6 +1,7 @@
-#pragma warning disable IDE0130 // Namespace does not match folder structure
+// Namespace does not match folder structure, possible Roslyn analyzer bug - see: https://github.com/dotnet/roslyn/issues/55014
+#pragma warning disable IDE0130
 namespace DWD.UI.Monetary.Service
-#pragma warning restore IDE0130 // Namespace does not match folder structure
+#pragma warning restore IDE0130
 {
     using System.Diagnostics.CodeAnalysis;
     using Microsoft.AspNetCore.Hosting;

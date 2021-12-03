@@ -18,10 +18,10 @@ namespace DWD.UI.Monetary.Service.Mappers
                 throw new ArgumentNullException(nameof(ineligibleResult));
             }
 
-            var ineligibleDisplayReasons = new Collection<IneligibleDisplayReason>();
+            var ineligibleDisplayReasons = new Collection<IneligibilityDisplayReason>();
             foreach (var reason in ineligibleResult.IneligibilityReasons)
             {
-                ineligibleDisplayReasons.Add(new IneligibleDisplayReason(reason, reason.GetDescription()));
+                ineligibleDisplayReasons.Add(new IneligibilityDisplayReason(reason, reason.GetDescription()));
             }
 
             return new IneligibleResultDto(ineligibleResult.IsEligible, ineligibleDisplayReasons);

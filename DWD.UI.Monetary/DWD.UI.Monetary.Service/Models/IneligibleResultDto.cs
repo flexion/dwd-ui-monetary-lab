@@ -6,21 +6,21 @@ namespace DWD.UI.Monetary.Service.Models
     public class IneligibleResultDto
     {
         public bool IsEligible { get; }
-        public Collection<IneligibleDisplayReason> IneligibleReasons { get; }
+        public Collection<IneligibilityDisplayReason> IneligibilityReasons { get; }
 
-        public IneligibleResultDto(bool isEligible, Collection<IneligibleDisplayReason> ineligibleReasons)
+        public IneligibleResultDto(bool isEligible, Collection<IneligibilityDisplayReason> ineligibilityReasons)
         {
             this.IsEligible = isEligible;
-            this.IneligibleReasons = ineligibleReasons;
+            this.IneligibilityReasons = ineligibilityReasons;
         }
     }
 
-    public class IneligibleDisplayReason
+    public class IneligibilityDisplayReason
     {
         public IneligibilityReason Code { get; }
         public string Description { get; }
 
-        public IneligibleDisplayReason(IneligibilityReason code, string description)
+        public IneligibilityDisplayReason(IneligibilityReason code, string description)
         {
             this.Code = code;
             this.Description = description;

@@ -7,9 +7,7 @@ namespace DWD.UI.Monetary.Tests.Controllers
     using DWD.UI.Monetary.Domain.BusinessEntities;
     using DWD.UI.Monetary.Service.Controllers;
     using DWD.UI.Monetary.Service.Models;
-    using MELT;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.Extensions.Logging;
     using Moq;
     using Xunit;
 
@@ -19,14 +17,6 @@ namespace DWD.UI.Monetary.Tests.Controllers
     /// </summary>
     public sealed class EligibilityControllerTest
     {
-        private readonly ILogger<BasePeriodController> logger;
-
-        public EligibilityControllerTest()
-        {
-            using var loggerFactory = TestLoggerFactory.Create();
-            this.logger = loggerFactory.CreateLogger<BasePeriodController>();
-        }
-
         [Fact]
         public async Task ShouldReturnEligibleResultDtoWhenVerifiedEligible()
         {
@@ -41,7 +31,7 @@ namespace DWD.UI.Monetary.Tests.Controllers
             var mock = new Mock<ICheckEligibilityOfMonetaryRequirements>();
             _ = mock.Setup(m => m.VerifyAsync(It.IsAny<EligibilityVerificationRequest>()))
                                  .ReturnsAsync(new EligibleResult(expectedWeeklyBenefitRate));
-            var controller = new EligibilityController(mock.Object, this.logger);
+            var controller = new EligibilityController(mock.Object);
 
             // Act
             var resp = await controller.VerifyEligibilityAsync(data).ConfigureAwait(true);
@@ -71,7 +61,7 @@ namespace DWD.UI.Monetary.Tests.Controllers
                     {
                         IneligibilityReason.InsufficientHighQuarterWage
                     }));
-            var controller = new EligibilityController(mock.Object, this.logger);
+            var controller = new EligibilityController(mock.Object);
 
             // Act
             var resp = await controller.VerifyEligibilityAsync(data).ConfigureAwait(true);
@@ -81,7 +71,7 @@ namespace DWD.UI.Monetary.Tests.Controllers
             var okObjectResult = Assert.IsType<OkObjectResult>(resp);
             var ineligibleResult = Assert.IsType<IneligibleResultDto>(okObjectResult.Value);
             Assert.False(ineligibleResult.IsEligible);
-            Assert.NotEmpty(ineligibleResult.IneligibleReasons);
+            Assert.NotEmpty(ineligibleResult.IneligibilityReasons);
         }
     }
 }
