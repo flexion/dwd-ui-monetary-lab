@@ -96,17 +96,20 @@ namespace DWD.UI.Monetary.Service.Controllers
         [Route("{requestedDate}")]
         public ActionResult<BenefitYear> GetBenefitYearForRequestedDate(DateTime requestedDate)
         {
+            ActionResult<BenefitYear> response;
             try
             {
-                return this.Ok(this.calculateBenefitYear.CalculateBenefitYearFromDate(requestedDate));
+                response = this.Ok(this.calculateBenefitYear.CalculateBenefitYearFromDate(requestedDate));
             }
             catch (ArgumentException argumentException)
             {
                 // Log and return http 400
                 this.logger.LogError(argumentException,
                     "Error calculating alternate base period from requestedDate={0}", requestedDate);
-                return this.Problem(argumentException.Message, null, 400);
+                response = this.Problem(argumentException.Message, null, 400);
             }
+
+            return response;
 
         }
     }
