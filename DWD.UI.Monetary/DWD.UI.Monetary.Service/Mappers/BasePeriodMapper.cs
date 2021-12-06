@@ -16,6 +16,7 @@ namespace DWD.UI.Monetary.Service.Mappers
         /// </summary>
         /// <param name="quarters">The base period quarters.</param>
         /// <returns>An IBasePeriodDto instance.</returns>
+        /// <exception cref="ArgumentNullException">If the quarters collection is null</exception>
         public static IBasePeriodDto MapToDto(IEnumerable<IUIQuarter> quarters)
         {
             if (quarters == null)

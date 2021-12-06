@@ -1,9 +1,8 @@
 #nullable enable
-#pragma warning disable IDE0078
 namespace DWD.UI.Monetary.Domain.BusinessEntities
 {
     using System;
-    using Extensions;
+    using Utilities;
 
     /// <summary>
     /// Represents an unemployment insurance quarter.
@@ -12,7 +11,7 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
     /// Example: October of 2021. The first full week of October was Sunday-Saturday 10/3-10/9 so that is when the quarter 4
     /// would start for unemployment purposes.  The week of 9/26-10/2 would be considered to be apart of Q3.
     /// </remarks>
-    internal class UIQuarter : IUIQuarter, IEquatable<UIQuarter>
+    internal class UIQuarter : IUIQuarter
     {
         // TODO: Ask Helen if this is needed, and if so what the correct minimum should be.
         /// <summary>
@@ -42,6 +41,8 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
         /// </summary>
         public int QuarterNumber { get; private set; }
 
+        public ICalendarQuarter CalendarQuarter { get; }
+
         /// <summary>
         /// Construct from year and quarter number.
         /// </summary>
@@ -63,7 +64,8 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
         /// Construct from calendar date.
         /// </summary>
         /// <param name="date">date.</param>
-        public UIQuarter(DateTime date)
+        /// <param name="calendarQuarter">calendarQuarter.</param>
+        public UIQuarter(DateTime date, ICalendarQuarter calendarQuarter)
         {
             // Check if date is invalid
             if (DateInvalid(date, out var errorMessage))
@@ -71,11 +73,12 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
                 throw new ArgumentException(errorMessage);
             }
 
+            this.CalendarQuarter = calendarQuarter;
             this.Year = date.Year;
-            this.QuarterNumber = date.CalendarQuarterNumber();
+            this.QuarterNumber = this.CalendarQuarter.CalendarQuarterNumber(date);
 
             // Find first Sunday of calendar quarter
-            var firstSundayOfQuarter = date.FirstDayOfCalendarQuarter();
+            var firstSundayOfQuarter = this.CalendarQuarter.FirstDayOfCalendarQuarter(date.Year, this.QuarterNumber);
             while (firstSundayOfQuarter.DayOfWeek != DayOfWeek.Sunday)
             {
                 firstSundayOfQuarter = firstSundayOfQuarter.AddDays(1);
@@ -122,11 +125,32 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
         public static UIQuarter Decrement(UIQuarter item) => --item;
 
         /// <summary>
+        /// Compare two UIQuarter objects.
+        /// </summary>
+        /// <param name="other">Another UIQuarter</param>
+        /// <returns>comparison</returns>
+        public int CompareTo(IUIQuarter? other)
+        {
+            var result = -1;
+            if (other is UIQuarter quarter)
+            {
+                result = this.Year.CompareTo(quarter.Year);
+
+                if (0 == result)
+                {
+                    result = this.QuarterNumber.CompareTo(quarter.QuarterNumber);
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
         /// Check for value equality.
         /// </summary>
         /// <param name="other">The other UIQuarter to check for equality.</param>
         /// <returns>True if the values are equal, false otherwise.</returns>
-        public bool Equals(UIQuarter? other) =>
+        public bool Equals(IUIQuarter? other) =>
             this.Equals((object)other!);
 
         /// <summary>
