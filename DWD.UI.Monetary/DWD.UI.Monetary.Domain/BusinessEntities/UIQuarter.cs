@@ -2,7 +2,7 @@
 namespace DWD.UI.Monetary.Domain.BusinessEntities
 {
     using System;
-    using DWD.UI.Monetary.Domain.Extensions;
+    using Utilities;
 
     /// <summary>
     /// Represents an unemployment insurance quarter.
@@ -11,7 +11,7 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
     /// Example: October of 2021. The first full week of October was Sunday-Saturday 10/3-10/9 so that is when the quarter 4
     /// would start for unemployment purposes.  The week of 9/26-10/2 would be considered to be apart of Q3.
     /// </remarks>
-    internal class UIQuarter : IUIQuarter, IEquatable<UIQuarter>
+    internal class UIQuarter : IUIQuarter
     {
         /// <summary>
         /// The quarter's year.
@@ -22,6 +22,8 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
         /// The quarter number.
         /// </summary>
         public int QuarterNumber { get; private set; }
+
+        public ICalendarQuarter CalendarQuarter { get; }
 
         /// <summary>
         /// Construct from year and quarter number.
@@ -38,13 +40,15 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
         /// Construct from calendar date.
         /// </summary>
         /// <param name="date">date.</param>
-        public UIQuarter(DateTime date)
+        /// <param name="calendarQuarter">calendarQuarter.</param>
+        public UIQuarter(DateTime date, ICalendarQuarter calendarQuarter)
         {
+            this.CalendarQuarter = calendarQuarter;
             this.Year = date.Year;
-            this.QuarterNumber = date.CalendarQuarterNumber();
+            this.QuarterNumber = this.CalendarQuarter.CalendarQuarterNumber(date);
 
             // Find first Sunday of calendar quarter
-            var firstSundayOfQuarter = date.FirstDayOfCalendarQuarter();
+            var firstSundayOfQuarter = this.CalendarQuarter.FirstDayOfCalendarQuarter(date.Year, this.QuarterNumber);
             while (firstSundayOfQuarter.DayOfWeek != DayOfWeek.Sunday)
             {
                 firstSundayOfQuarter = firstSundayOfQuarter.AddDays(1);
@@ -80,7 +84,6 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
                 quarter.QuarterNumber = 4;
                 quarter.Year--;
             }
-
             return quarter;
         }
 
@@ -92,18 +95,39 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
         public static UIQuarter Decrement(UIQuarter item) => --item;
 
         /// <summary>
-        /// Provides the required equality test for this value object
+        /// Compare two UIQuarter objects.
         /// </summary>
-        /// <param name="other">The UIQuarter to which this object is compared</param>
-        /// <returns>True if equal</returns>
-        public bool Equals(UIQuarter? other) =>
+        /// <param name="other">Another UIQuarter</param>
+        /// <returns>comparison</returns>
+        public int CompareTo(IUIQuarter? other)
+        {
+            var result = -1;
+            if (other is UIQuarter quarter)
+            {
+                result = this.Year.CompareTo(quarter.Year);
+
+                if (0 == result)
+                {
+                    result = this.QuarterNumber.CompareTo(quarter.QuarterNumber);
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Generics Equals.
+        /// </summary>
+        /// <param name="other">the other</param>
+        /// <returns>true/false</returns>
+        public bool Equals(IUIQuarter? other) =>
             this.Equals((object)other!);
 
         /// <summary>
-        /// Provides the required equality test for this value object
+        /// Override base equals.
         /// </summary>
-        /// <param name="obj">The object to which this object is compared</param>
-        /// <returns>True if equal</returns>
+        /// <param name="obj">other obj</param>
+        /// <returns>true/false</returns>
         public override bool Equals(object? obj)
         {
             if (obj is UIQuarter quarter)
@@ -115,9 +139,9 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
         }
 
         /// <summary>
-        /// Gets the required hash code for this value object
+        /// Hash code override.
         /// </summary>
-        /// <returns>Integer hash code</returns>
+        /// <returns>hash</returns>
         public override int GetHashCode() => HashCode.Combine(this.Year, this.QuarterNumber);
     }
 }

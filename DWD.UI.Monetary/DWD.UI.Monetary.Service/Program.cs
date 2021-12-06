@@ -1,6 +1,7 @@
-#pragma warning disable CA1052
-
+// Namespace does not match folder structure, possible Roslyn analyzer bug - see: https://github.com/dotnet/roslyn/issues/55014
+#pragma warning disable IDE0130
 namespace DWD.UI.Monetary.Service
+#pragma warning restore IDE0130
 {
     using System.Diagnostics.CodeAnalysis;
     using Microsoft.AspNetCore.Hosting;
@@ -10,7 +11,7 @@ namespace DWD.UI.Monetary.Service
     /// Main program class that creates the web host
     /// </summary>
     [ExcludeFromCodeCoverage]
-    public class Program
+    public static class Program
     {
         /// <summary>
         /// Application entry point
@@ -25,6 +26,6 @@ namespace DWD.UI.Monetary.Service
         /// <returns>A host builder</returns>
         private static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
+                .ConfigureWebHostDefaults(webBuilder => webBuilder.UseStartup<Startup>());
     }
 }
