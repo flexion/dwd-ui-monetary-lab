@@ -11,7 +11,7 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
     /// Example: October of 2021. The first full week of October was Sunday-Saturday 10/3-10/9 so that is when the quarter 4
     /// would start for unemployment purposes.  The week of 9/26-10/2 would be considered to be apart of Q3.
     /// </remarks>
-    internal class UIQuarter : IUIQuarter, IEquatable<UIQuarter>
+    internal class UIQuarter : IUIQuarter
     {
         /// <summary>
         /// The quarter's year.
@@ -94,9 +94,40 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
         /// <returns>The previous ui quarter.</returns>
         public static UIQuarter Decrement(UIQuarter item) => --item;
 
-        public bool Equals(UIQuarter? other) =>
+        /// <summary>
+        /// Compare two UIQuarter objects.
+        /// </summary>
+        /// <param name="other">Another UIQuarter</param>
+        /// <returns>comparison</returns>
+        public int CompareTo(IUIQuarter? other)
+        {
+            var result = -1;
+            if (other is UIQuarter quarter)
+            {
+                result = this.Year.CompareTo(quarter.Year);
+
+                if (0 == result)
+                {
+                    result = this.QuarterNumber.CompareTo(quarter.QuarterNumber);
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Generics Equals.
+        /// </summary>
+        /// <param name="other">the other</param>
+        /// <returns>true/false</returns>
+        public bool Equals(IUIQuarter? other) =>
             this.Equals((object)other!);
 
+        /// <summary>
+        /// Override base equals.
+        /// </summary>
+        /// <param name="obj">other obj</param>
+        /// <returns>true/false</returns>
         public override bool Equals(object? obj)
         {
             if (obj is UIQuarter quarter)
@@ -107,6 +138,10 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
             return false;
         }
 
+        /// <summary>
+        /// Hash code override.
+        /// </summary>
+        /// <returns>hash</returns>
         public override int GetHashCode() => HashCode.Combine(this.Year, this.QuarterNumber);
     }
 }
