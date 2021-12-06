@@ -1,6 +1,9 @@
 namespace DWD.UI.Monetary.Tests.Unit.UseCases
 {
     using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Linq;
     using Domain.BusinessEntities;
     using Domain.UseCases;
@@ -11,120 +14,80 @@ namespace DWD.UI.Monetary.Tests.Unit.UseCases
     /// </summary>
     public class StandardBasePeriodUseCaseTests
     {
-        [Fact]
-        public void CalculateBasePeriodFromInitialClaimDate_ShouldReturnCorrectStandardQuartersForClaimDate_WhenValidClaimDate()
+        [Theory]
+        [ClassData(typeof(StandardBasePeriodUseCaseTestData))]
+        public void TestStandardBasePeriodUseCase_ClassData(string testDescription,
+            DateTime initialClaimDate, Collection<Quarter> expectedQuarters)
         {
-            var testClaimDate = new DateTime(2021, 10, 15);
+            // Arrange
             var basePeriodUseCase = new CalculateBasePeriod();
-            var result = basePeriodUseCase.CalculateBasePeriodFromInitialClaimDate(testClaimDate);
 
+            // Act
+            var result = basePeriodUseCase.CalculateBasePeriodFromInitialClaimDate(initialClaimDate);
+
+            // Assert
             Assert.NotNull(result);
-            Assert.NotNull(result.BasePeriodQuarters);
+            var quarters = result.BasePeriodQuarters;
+            Assert.NotNull(quarters);
 
-            var actualQuarters = result.BasePeriodQuarters
+            var actualQuarters = quarters
                 .OrderBy(q => q.Year)
                 .ThenBy(q => q.QuarterNumber)
                 .ToArray();
 
-            var testQuarters = new UIQuarter[4];
-            testQuarters[0] = new UIQuarter(2020, 3);
-            testQuarters[1] = new UIQuarter(2020, 4);
-            testQuarters[2] = new UIQuarter(2021, 1);
-            testQuarters[3] = new UIQuarter(2021, 2);
-
-            Assert.Equal(testQuarters[0], actualQuarters[0]);
-            Assert.Equal(testQuarters[1], actualQuarters[1]);
-            Assert.Equal(testQuarters[2], actualQuarters[2]);
-            Assert.Equal(testQuarters[3], actualQuarters[3]);
-        }
-
-        [Fact]
-        public void CalculateBasePeriodFromInitialClaimDate_ShouldReturnPriorStandardBaseQuarters_WhenClaimDatePriorToFirstSundayOfQuarter()
-        {
-            var priorToFirstSundayOfQuarter = new DateTime(2021, 1, 1);
-            var basePeriodUseCase = new CalculateBasePeriod();
-            var result = basePeriodUseCase.CalculateBasePeriodFromInitialClaimDate(priorToFirstSundayOfQuarter);
-
-            Assert.NotNull(result);
-            Assert.NotNull(result.BasePeriodQuarters);
-
-            var actualQuarters = result.BasePeriodQuarters
-                .OrderBy(q => q.Year)
-                .ThenBy(q => q.QuarterNumber)
+            var expectedUIQuarters = expectedQuarters
+                .Select(x => new UIQuarter(x.Year, x.QuarterNumber))
                 .ToArray();
 
-            var testQuarters = new UIQuarter[4];
-            testQuarters[0] = new UIQuarter(2019, 3);
-            testQuarters[1] = new UIQuarter(2019, 4);
-            testQuarters[2] = new UIQuarter(2020, 1);
-            testQuarters[3] = new UIQuarter(2020, 2);
-
-            Assert.Equal(testQuarters[0], actualQuarters[0]);
-            Assert.Equal(testQuarters[1], actualQuarters[1]);
-            Assert.Equal(testQuarters[2], actualQuarters[2]);
-            Assert.Equal(testQuarters[3], actualQuarters[3]);
+            Assert.True(expectedUIQuarters[0].Equals(actualQuarters[0]), testDescription);
+            Assert.True(expectedUIQuarters[1].Equals(actualQuarters[1]), testDescription);
+            Assert.True(expectedUIQuarters[2].Equals(actualQuarters[2]), testDescription);
+            Assert.True(expectedUIQuarters[3].Equals(actualQuarters[3]), testDescription);
         }
+    }
 
-        [Fact]
-        public void CalculateBasePeriodFromInitialClaimDate_ShouldReturnCurrentStandardBaseQuarters_WhenClaimDateOnFirstSundayOfQuarter()
+    public class StandardBasePeriodUseCaseTestData : IEnumerable<object[]>
+    {
+        public IEnumerator<object[]> GetEnumerator()
         {
-            var firstSundayOfQuarter = new DateTime(2021, 1, 3);
-            var basePeriodUseCase = new CalculateBasePeriod();
-            var result = basePeriodUseCase.CalculateBasePeriodFromInitialClaimDate(firstSundayOfQuarter);
-
-            Assert.NotNull(result);
-            Assert.NotNull(result.BasePeriodQuarters);
-
-            var actualQuarters = result.BasePeriodQuarters
-                .OrderBy(q => q.Year)
-                .ThenBy(q => q.QuarterNumber)
-                .ToArray();
-
-            var testQuarters = new UIQuarter[4];
-            testQuarters[0] = new UIQuarter(2019, 4);
-            testQuarters[1] = new UIQuarter(2020, 1);
-            testQuarters[2] = new UIQuarter(2020, 2);
-            testQuarters[3] = new UIQuarter(2020, 3);
-
-            Assert.Equal(testQuarters[0], actualQuarters[0]);
-            Assert.Equal(testQuarters[1], actualQuarters[1]);
-            Assert.Equal(testQuarters[2], actualQuarters[2]);
-            Assert.Equal(testQuarters[3], actualQuarters[3]);
+            yield return new object[]
+            {
+                "CalculateBasePeriodFromInitialClaimDate_ShouldReturnCorrectStandardQuartersForClaimDate_WhenValidClaimDate",
+                new DateTime(2021, 10, 15),
+                new Collection<Quarter>()
+                {
+                    new() {Year = 2020, QuarterNumber = 3}, new() {Year = 2020, QuarterNumber = 4}, new() {Year=2021, QuarterNumber = 1}, new() {Year=2021, QuarterNumber = 2}
+                }
+            };
+            yield return new object[]
+            {
+                "CalculateBasePeriodFromInitialClaimDate_ShouldReturnPriorStandardBaseQuarters_WhenClaimDatePriorToFirstSundayOfQuarter",
+                new DateTime(2021, 1, 1),
+                new Collection<Quarter>()
+                {
+                    new() {Year = 2019, QuarterNumber = 3}, new() {Year = 2019, QuarterNumber = 4}, new(){Year=2020, QuarterNumber = 1}, new(){Year=2020, QuarterNumber = 2}
+                }
+            };
+            yield return new object[]
+            {
+                "CalculateBasePeriodFromInitialClaimDate_ShouldReturnCurrentStandardBaseQuarters_WhenClaimDateOnFirstSundayOfQuarter",
+                new DateTime(2021, 1, 3),
+                new Collection<Quarter>()
+                {
+                    new() {Year = 2019, QuarterNumber = 4}, new() {Year = 2020, QuarterNumber = 1}, new(){Year=2020, QuarterNumber = 2}, new(){Year=2020, QuarterNumber = 3}
+                }
+            };
+            yield return new object[]
+            {
+                "CalculateBasePeriodFromInitialClaimDate_ShouldReturnCurrentStandardBaseQuarters_WhenClaimDateAfterFirstSundayOfQuarter",
+                new DateTime(2021, 1, 15),
+                new Collection<Quarter>()
+                {
+                    new() {Year = 2019, QuarterNumber = 4}, new() {Year = 2020, QuarterNumber = 1}, new(){Year=2020, QuarterNumber = 2}, new(){Year=2020, QuarterNumber = 3}
+                }
+            };
         }
 
-        [Fact]
-        public void CalculateBasePeriodFromInitialClaimDate_ShouldReturnCurrentStandardBaseQuarters_WhenClaimDateAfterFirstSundayOfQuarter()
-        {
-            var afterFirstSundayOfQuarter = new DateTime(2021, 1, 15);
-            var basePeriodUseCase = new CalculateBasePeriod();
-            var result = basePeriodUseCase.CalculateBasePeriodFromInitialClaimDate(afterFirstSundayOfQuarter);
-
-            Assert.NotNull(result);
-            Assert.NotNull(result.BasePeriodQuarters);
-
-            var actualQuarters = result.BasePeriodQuarters
-                .OrderBy(q => q.Year)
-                .ThenBy(q => q.QuarterNumber)
-                .ToArray();
-
-            var testQuarters = new UIQuarter[4];
-            testQuarters[0] = new UIQuarter(2019, 4);
-            testQuarters[1] = new UIQuarter(2020, 1);
-            testQuarters[2] = new UIQuarter(2020, 2);
-            testQuarters[3] = new UIQuarter(2020, 3);
-
-            Assert.Equal(testQuarters[0], actualQuarters[0]);
-            Assert.Equal(testQuarters[1], actualQuarters[1]);
-            Assert.Equal(testQuarters[2], actualQuarters[2]);
-            Assert.Equal(testQuarters[3], actualQuarters[3]);
-        }
-
-        [Fact]
-        public void CalculateBasePeriodFromInitialClaimDate_ShouldReturnArgumentException_WhenInvalidClaimDate()
-        {
-            var testClaimDate = new DateTime(1776, 7, 4);
-            var basePeriodUseCase = new CalculateBasePeriod();
-            Assert.Throws<ArgumentException>(() => basePeriodUseCase.CalculateBasePeriodFromInitialClaimDate(testClaimDate));
-        }
+        IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
     }
 }
