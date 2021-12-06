@@ -25,12 +25,12 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
         /// <summary>
         /// Local storage for quarters.
         /// </summary>
-        private readonly UIQuarter[] standardQuarters = new UIQuarter[4];
+        private UIQuarter[] standardQuarters = new UIQuarter[4];
 
         /// <summary>
         /// Local storage for quarters.
         /// </summary>
-        private readonly UIQuarter[] alternateQuarters = new UIQuarter[4];
+        private UIQuarter[] alternateQuarters = new UIQuarter[4];
 
         /// <summary>
         /// Hidden default constructor.
@@ -42,7 +42,15 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
         /// </summary>
         /// <param name="initialClaimDate">The initial claim date.</param>
         /// <exception cref="ArgumentException">Throws a ArgumentException if the supplied initial claim date is not valid.</exception>
-        public BasePeriod(DateTime initialClaimDate)
+        public BasePeriod(DateTime initialClaimDate) =>
+            this.PopulateBasePeriods(initialClaimDate);
+
+        /// <summary>
+        ///  Populate standard and alternate base periods
+        /// </summary>
+        /// <param name="initialClaimDate">The initial claim date.</param>
+        /// <exception cref="ArgumentException">Throws a ArgumentException if the supplied initial claim date is not valid.</exception>
+        private void PopulateBasePeriods(DateTime initialClaimDate)
         {
             // Check if claim date is invalid
             if (ClaimDateInvalid(initialClaimDate, out var errorMessage))
@@ -62,6 +70,12 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
 
             this.standardQuarters = previous5Quarters.Take(4).ToArray();
             this.alternateQuarters = previous5Quarters.Skip(1).ToArray();
+        }
+
+        public BasePeriod(int year, int weekOfYear)
+        {
+            var initialClaimDate = new CalendarQuarter().GetDateTimeFromYearAndWeek(year, weekOfYear);
+            this.PopulateBasePeriods(initialClaimDate);
         }
 
         /// <summary>

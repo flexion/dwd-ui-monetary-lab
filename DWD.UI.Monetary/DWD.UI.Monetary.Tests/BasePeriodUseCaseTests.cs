@@ -1,8 +1,6 @@
 namespace DWD.UI.Monetary.Tests
 {
     using System;
-    using System.Linq;
-    using Domain.BusinessEntities;
     using Domain.UseCases;
     using Xunit;
 
@@ -15,7 +13,25 @@ namespace DWD.UI.Monetary.Tests
             // Get base period from date
             var myClaimDate = new DateTime(2021, 10, 31);
             var basePeriodUseCase = new CalculateBasePeriod();
-            var result = basePeriodUseCase.CalculateBasePeriodFromInitialClaimDate(myClaimDate);
+            var result = basePeriodUseCase.CalculateBasePeriodFromInitialClaimDate(myClaimDate, 0, 0);
+
+            // Check result
+            Assert.NotNull(result);
+            var quarters = result.BasePeriodQuarters;
+            Assert.NotNull(quarters);
+            foreach (var basePeriod in quarters)
+            {
+                Assert.NotNull(basePeriod);
+            }
+        }
+
+        [Fact]
+        public void CalculateBasePeriodFromYearAndWeek()
+        {
+            //Claim date is set to 1/1/1 which is invalid
+            var myClaimDate = new DateTime(1, 1, 1);
+            var basePeriodUseCase = new CalculateBasePeriod();
+            var result = basePeriodUseCase.CalculateBasePeriodFromInitialClaimDate(myClaimDate, 2021, 8);
 
             // Check result
             Assert.NotNull(result);
