@@ -23,15 +23,18 @@ namespace DWD.UI.Monetary.Domain.UseCases
         /// Calculate the benefit period based on requested start date.
         /// </summary>
         /// <param name="requestedClaimStartDate">The requested start date for the UI claim</param>
-        /// <returns></returns>
+        /// <returns>benefit year</returns>
         public BenefitYear CalculateBenefitYearFromDate(DateTime requestedClaimStartDate)
         {
             var calculatedBenefitWeeks = StandardBenefitWeeks;
             var claimRequestedDate = requestedClaimStartDate;
+
             // Move the Begin Date to the Sunday of the first benefit week
             var claimBeginDate = claimRequestedDate.AddDays(-1 * (claimRequestedDate.DayOfWeek - DayOfWeek.Sunday));
+
             // Move the Begin Date to the Saturday of the last benefit week
             var claimEndDate = claimBeginDate.AddDays((7 * calculatedBenefitWeeks) - 1);
+
             // The first week of the year is the first full week
             // so use the last day of the week (Saturday) to compute
             var claimBeginYearWeek = GetYearWeekFromDate(claimBeginDate.AddDays(DayOfWeek.Saturday - claimBeginDate.DayOfWeek));
@@ -48,7 +51,7 @@ namespace DWD.UI.Monetary.Domain.UseCases
         /// Therefore, if the week begins (Sunday) on 12/25 and ends (Saturday) on 1/1
         /// then that is the first week of the year.
         /// </summary>
-        /// <param name="inDate"></param>
+        /// <param name="inDate">the date</param>
         /// <returns>Year week</returns>
         private static YearWeek GetYearWeekFromDate(DateTime inDate)
         {

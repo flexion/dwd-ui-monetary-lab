@@ -75,7 +75,6 @@ namespace DWD.UI.Monetary.Service.Controllers
         ///
         /// </remarks>
         /// <param name="requestedDate">The requested benefit date in standard formats (MM/DD/YYYY, MM-DD-YYYY, YYYY-MM-DD, etc.).</param>
-
         /// <returns>The calculated benefit year.</returns>
         [Consumes(MediaTypeNames.Text.Plain)]
         [ProducesResponseType(StatusCodes.Status200OK)]
