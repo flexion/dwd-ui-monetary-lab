@@ -52,7 +52,7 @@ namespace DWD.UI.Monetary.Service.Controllers
         /// </remarks>
         /// <param name="initialClaimDate">The initial claim date in standard formats (MM/DD/YYYY, MM-DD-YYYY, YYYY-MM-DD, etc.). Default value is 1/1/1.</param>
         /// <param name="year">Year to calculate the base periods. Default value is 0.</param>
-        /// <param name="weekOfYear">Week number of the year. Must be between 1 and 52 or 53(If first day of the year lands on saturday). Default value is 0.</param>
+        /// <param name="week">Week number of the year. Must be between 1 and 52 or 53(If first day of the year lands on saturday). Default value is 0.</param>
         /// <returns>The calculated base period.</returns>
         [SwaggerResponse((int)HttpStatusCode.OK, "OK", typeof(IBasePeriodDto), "application/json")]
         [SwaggerResponse((int)HttpStatusCode.BadRequest, "Bad Initial Claim Date", typeof(ProblemDetails), "application/problem+json")]
@@ -60,12 +60,12 @@ namespace DWD.UI.Monetary.Service.Controllers
         [Produces("application/json")]
         [HttpGet]
         [Route("GetStandardBasePeriodFromInitialClaimDate")]
-        public IActionResult GetStandardBasePeriodFromInitialClaimDate(DateTime initialClaimDate, int year, int weekOfYear)
+        public IActionResult GetStandardBasePeriodFromInitialClaimDate(DateTime initialClaimDate, int year, int week)
         {
             try
             {
                 // Calculate the base period
-                var basePeriod = this.calculateBasePeriod.CalculateBasePeriodFromInitialClaimDate(initialClaimDate, year, weekOfYear);
+                var basePeriod = initialClaimDate.Year == 1 ? this.calculateBasePeriod.CalculateBasePeriodFromYearAndWeek(year, week) : this.calculateBasePeriod.CalculateBasePeriodFromInitialClaimDate(initialClaimDate);
 
                 // Map from IBasePeriod to BasePeriodDto and return
                 var result = BasePeriodMapper.MapToDto(basePeriod.BasePeriodQuarters);
@@ -95,7 +95,7 @@ namespace DWD.UI.Monetary.Service.Controllers
         /// </remarks>
         /// <param name="initialClaimDate">The initial claim date in standard formats (MM/DD/YYYY, MM-DD-YYYY, YYYY-MM-DD, etc.). Default value is 1/1/1.</param>
         /// <param name="year">Year to calculate the base periods. Default value is 0.</param>
-        /// <param name="weekOfYear">Week number of the year. Must be between 1 and 52 or 53(If first day of the year lands on saturday). Default value is 0.</param>
+        /// <param name="week">Week number of the year. Must be between 1 and 52 or 53(If first day of the year lands on saturday). Default value is 0.</param>
         /// <returns>The calculated base period.</returns>
         [SwaggerResponse((int)HttpStatusCode.OK, "OK", typeof(IBasePeriodDto), "application/json")]
         [SwaggerResponse((int)HttpStatusCode.BadRequest, "Bad Initial Claim Date", typeof(ProblemDetails), "application/problem+json")]
@@ -103,12 +103,12 @@ namespace DWD.UI.Monetary.Service.Controllers
         [Produces("application/json")]
         [HttpGet]
         [Route("GetAlternateBasePeriodFromInitialClaimDate")]
-        public IActionResult GetAlternateBasePeriodFromInitialClaimDate(DateTime initialClaimDate, int year, int weekOfYear)
+        public IActionResult GetAlternateBasePeriodFromInitialClaimDate(DateTime initialClaimDate, int year, int week)
         {
             try
             {
                 // Calculate the base period
-                var basePeriod = this.calculateBasePeriod.CalculateBasePeriodFromInitialClaimDate(initialClaimDate, year, weekOfYear);
+                var basePeriod = initialClaimDate.Year == 1 ? this.calculateBasePeriod.CalculateBasePeriodFromYearAndWeek(year, week) : this.calculateBasePeriod.CalculateBasePeriodFromInitialClaimDate(initialClaimDate);
 
                 // Map from IBasePeriod to BasePeriodDto and return
                 var result = BasePeriodMapper.MapToDto(basePeriod.AltBasePeriodQuarters);

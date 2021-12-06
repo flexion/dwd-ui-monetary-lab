@@ -15,7 +15,7 @@ namespace DWD.UI.Monetary.Tests
             // Get base period from date
             var myClaimDate = new DateTime(2020, 11, 22);
             var basePeriodUseCase = new CalculateBasePeriod();
-            var result = basePeriodUseCase.CalculateBasePeriodFromInitialClaimDate(myClaimDate, 0, 0);
+            var result = basePeriodUseCase.CalculateBasePeriodFromInitialClaimDate(myClaimDate);
 
             // Check result
             Assert.NotNull(result);
@@ -41,7 +41,7 @@ namespace DWD.UI.Monetary.Tests
             // Get base period from date
             var myClaimDate = new DateTime(2021, 1, 02);
             var basePeriodUseCase = new CalculateBasePeriod();
-            var result = basePeriodUseCase.CalculateBasePeriodFromInitialClaimDate(myClaimDate, 0, 0);
+            var result = basePeriodUseCase.CalculateBasePeriodFromInitialClaimDate(myClaimDate);
 
             // Check result
             Assert.NotNull(result);
@@ -64,10 +64,9 @@ namespace DWD.UI.Monetary.Tests
         [Fact]
         public void CalculateAltBasePeriodFromYearAndWeek()
         {
-            // Get base period from date
-            var myClaimDate = new DateTime(1, 1, 1);
+            // Get base period from year and week
             var basePeriodUseCase = new CalculateBasePeriod();
-            var result = basePeriodUseCase.CalculateBasePeriodFromInitialClaimDate(myClaimDate, 2020, 48);
+            var result = basePeriodUseCase.CalculateBasePeriodFromYearAndWeek(2020, 48);
 
             // Check result
             Assert.NotNull(result);

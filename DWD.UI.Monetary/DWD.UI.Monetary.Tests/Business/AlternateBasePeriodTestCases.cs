@@ -20,7 +20,7 @@ namespace DWD.UI.Monetary.Tests.Business
             // Get base period from date
             var myClaimDate = new DateTime(2021, 10, 31);
             var basePeriodUseCase = new CalculateBasePeriod();
-            var result = basePeriodUseCase.CalculateBasePeriodFromInitialClaimDate(myClaimDate, 0, 0);
+            var result = basePeriodUseCase.CalculateBasePeriodFromInitialClaimDate(myClaimDate);
 
             // Check result
             Assert.NotNull(result);
@@ -48,7 +48,7 @@ namespace DWD.UI.Monetary.Tests.Business
             // Get base period from date
             var myClaimDate = new DateTime(2021, 1, 3);
             var basePeriodUseCase = new CalculateBasePeriod();
-            var result = basePeriodUseCase.CalculateBasePeriodFromInitialClaimDate(myClaimDate, 0, 0);
+            var result = basePeriodUseCase.CalculateBasePeriodFromInitialClaimDate(myClaimDate);
 
             // Check result
             Assert.NotNull(result);
@@ -77,7 +77,7 @@ namespace DWD.UI.Monetary.Tests.Business
             // Get base period from date
             var myClaimDate = new DateTime(2020, 12, 6);
             var basePeriodUseCase = new CalculateBasePeriod();
-            var result = basePeriodUseCase.CalculateBasePeriodFromInitialClaimDate(myClaimDate, 0, 0);
+            var result = basePeriodUseCase.CalculateBasePeriodFromInitialClaimDate(myClaimDate);
 
             // Check result
             Assert.NotNull(result);
@@ -106,7 +106,7 @@ namespace DWD.UI.Monetary.Tests.Business
             // Get base period from date
             var myClaimDate = new DateTime(2021, 4, 1);
             var basePeriodUseCase = new CalculateBasePeriod();
-            var result = basePeriodUseCase.CalculateBasePeriodFromInitialClaimDate(myClaimDate, 0, 0);
+            var result = basePeriodUseCase.CalculateBasePeriodFromInitialClaimDate(myClaimDate);
 
             // Check result
             Assert.NotNull(result);
@@ -134,7 +134,7 @@ namespace DWD.UI.Monetary.Tests.Business
             // Get base period from date
             var myClaimDate = new DateTime(2021, 4, 6);
             var basePeriodUseCase = new CalculateBasePeriod();
-            var result = basePeriodUseCase.CalculateBasePeriodFromInitialClaimDate(myClaimDate, 0, 0);
+            var result = basePeriodUseCase.CalculateBasePeriodFromInitialClaimDate(myClaimDate);
 
             // Check result
             Assert.NotNull(result);
@@ -162,7 +162,7 @@ namespace DWD.UI.Monetary.Tests.Business
             // Get base period from date
             var myClaimDate = new DateTime(2022, 1, 1);
             var basePeriodUseCase = new CalculateBasePeriod();
-            var result = basePeriodUseCase.CalculateBasePeriodFromInitialClaimDate(myClaimDate, 0, 0);
+            var result = basePeriodUseCase.CalculateBasePeriodFromInitialClaimDate(myClaimDate);
 
             // Check result
             Assert.NotNull(result);
@@ -191,7 +191,7 @@ namespace DWD.UI.Monetary.Tests.Business
             // Get base period from date
             var myClaimDate = new DateTime(2021, 11, 25);
             var basePeriodUseCase = new CalculateBasePeriod();
-            var result = basePeriodUseCase.CalculateBasePeriodFromInitialClaimDate(myClaimDate, 0, 0);
+            var result = basePeriodUseCase.CalculateBasePeriodFromInitialClaimDate(myClaimDate);
 
             // Check result
             Assert.NotNull(result);
@@ -220,7 +220,7 @@ namespace DWD.UI.Monetary.Tests.Business
             // Get base period from date
             var myClaimDate = new DateTime(2021, 7, 4);
             var basePeriodUseCase = new CalculateBasePeriod();
-            var result = basePeriodUseCase.CalculateBasePeriodFromInitialClaimDate(myClaimDate, 0, 0);
+            var result = basePeriodUseCase.CalculateBasePeriodFromInitialClaimDate(myClaimDate);
 
             // Check result
             Assert.NotNull(result);
@@ -251,16 +251,15 @@ namespace DWD.UI.Monetary.Tests.Business
             var basePeriodUseCase = new CalculateBasePeriod();
             // Expect ArgumentException
             Assert.Throws<ArgumentException>(() =>
-                basePeriodUseCase.CalculateBasePeriodFromInitialClaimDate(myClaimDate, 0, 0));
+                basePeriodUseCase.CalculateBasePeriodFromInitialClaimDate(myClaimDate));
         }
 
         [Fact]
         public void ShouldReturnAlternateBasePeriodsWhenYearAndWeekValid()
         {
-            // Get base period from date
-            var myClaimDate = new DateTime(1, 1, 1);
+            // Get base period from year and week
             var basePeriodUseCase = new CalculateBasePeriod();
-            var result = basePeriodUseCase.CalculateBasePeriodFromInitialClaimDate(myClaimDate, 2021, 28);
+            var result = basePeriodUseCase.CalculateBasePeriodFromYearAndWeek(2021, 28);
 
             // Check result
             Assert.NotNull(result);
