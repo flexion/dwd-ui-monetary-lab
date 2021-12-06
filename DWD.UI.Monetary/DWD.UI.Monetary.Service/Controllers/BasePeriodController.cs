@@ -51,8 +51,6 @@ namespace DWD.UI.Monetary.Service.Controllers
         /// would be considered to be apart of Q3.<br /><br />
         /// </remarks>
         /// <param name="initialClaimDate">The initial claim date in standard formats (MM/DD/YYYY, MM-DD-YYYY, YYYY-MM-DD, etc.). Default value is 1/1/1.</param>
-        /// <param name="year">Year to calculate the base periods. Default value is 0.</param>
-        /// <param name="week">Week number of the year. Must be between 1 and 52 or 53(If first day of the year lands on saturday). Default value is 0.</param>
         /// <returns>The calculated base period.</returns>
         [SwaggerResponse((int)HttpStatusCode.OK, "OK", typeof(IBasePeriodDto), "application/json")]
         [SwaggerResponse((int)HttpStatusCode.BadRequest, "Bad Initial Claim Date", typeof(ProblemDetails), "application/problem+json")]
@@ -60,12 +58,12 @@ namespace DWD.UI.Monetary.Service.Controllers
         [Produces("application/json")]
         [HttpGet]
         [Route("GetStandardBasePeriodFromInitialClaimDate")]
-        public IActionResult GetStandardBasePeriodFromInitialClaimDate(DateTime initialClaimDate, int year, int week)
+        public IActionResult GetStandardBasePeriodFromInitialClaimDate(DateTime initialClaimDate)
         {
             try
             {
                 // Calculate the base period
-                var basePeriod = initialClaimDate.Year == 1 ? this.calculateBasePeriod.CalculateBasePeriodFromYearAndWeek(year, week) : this.calculateBasePeriod.CalculateBasePeriodFromInitialClaimDate(initialClaimDate);
+                var basePeriod = this.calculateBasePeriod.CalculateBasePeriodFromInitialClaimDate(initialClaimDate);
 
                 // Map from IBasePeriod to BasePeriodDto and return
                 var result = BasePeriodMapper.MapToDto(basePeriod.BasePeriodQuarters);
@@ -75,6 +73,47 @@ namespace DWD.UI.Monetary.Service.Controllers
             {
                 // Log and return http 400
                 this.logger.LogError(argumentException, "Error calculating standard base period from initialClaimDate={0}", initialClaimDate);
+                return this.Problem(argumentException.Message, null, 400);
+            }
+        }
+
+        /// <summary>
+        /// Calculate standard base period from Year and Week.
+        /// </summary>
+        /// <remarks>
+        /// <b>Standard Calculation:</b><br />
+        /// The first four of the last five completed calendar quarters before the week a claimant
+        /// files an initial claim application for a new benefit year.<br /><br />
+        /// Quarters - For unemployment purposes the quarter does not start until the first full week of that month.<br /><br />
+        /// Example -  October of 2021.<br />
+        /// The first full week of October was Sunday-Saturday 10/3-10/9 so
+        /// that is when the quarter 4 would start for unemployment purposes. The week of 9/26-10/2
+        /// would be considered to be apart of Q3.<br /><br />
+        /// </remarks>
+        /// <param name="year">Year to calculate the base periods. Default value is 0.</param>
+        /// <param name="week">Week number of the year. Must be between 1 and 52 or 53(If first day of the year lands on saturday). Default value is 0.</param>
+        /// <returns>The calculated base period.</returns>
+        [SwaggerResponse((int)HttpStatusCode.OK, "OK", typeof(IBasePeriodDto), "application/json")]
+        [SwaggerResponse((int)HttpStatusCode.BadRequest, "Bad Year and Week", typeof(ProblemDetails), "application/problem+json")]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError, "Internal Server Error", typeof(ProblemDetails), "application/problem+json")]
+        [Produces("application/json")]
+        [HttpGet]
+        [Route("GetStandardBasePeriodFromInitialClaimDate")]
+        public IActionResult GetStandardBasePeriodFromYearAndWeek(int year, int week)
+        {
+            try
+            {
+                // Calculate the base period
+                var basePeriod = this.calculateBasePeriod.CalculateBasePeriodFromYearAndWeek(year, week);
+
+                // Map from IBasePeriod to BasePeriodDto and return
+                var result = BasePeriodMapper.MapToDto(basePeriod.BasePeriodQuarters);
+                return this.Ok(result);
+            }
+            catch (ArgumentException argumentException)
+            {
+                // Log and return http 400
+                this.logger.LogError(argumentException, "Error calculating standard base period from year={0} and week={1}", year, week);
                 return this.Problem(argumentException.Message, null, 400);
             }
         }
@@ -94,8 +133,6 @@ namespace DWD.UI.Monetary.Service.Controllers
         /// He does not qualify for a standard base period so the system will check for the alternate base period.
         /// </remarks>
         /// <param name="initialClaimDate">The initial claim date in standard formats (MM/DD/YYYY, MM-DD-YYYY, YYYY-MM-DD, etc.). Default value is 1/1/1.</param>
-        /// <param name="year">Year to calculate the base periods. Default value is 0.</param>
-        /// <param name="week">Week number of the year. Must be between 1 and 52 or 53(If first day of the year lands on saturday). Default value is 0.</param>
         /// <returns>The calculated base period.</returns>
         [SwaggerResponse((int)HttpStatusCode.OK, "OK", typeof(IBasePeriodDto), "application/json")]
         [SwaggerResponse((int)HttpStatusCode.BadRequest, "Bad Initial Claim Date", typeof(ProblemDetails), "application/problem+json")]
@@ -103,12 +140,12 @@ namespace DWD.UI.Monetary.Service.Controllers
         [Produces("application/json")]
         [HttpGet]
         [Route("GetAlternateBasePeriodFromInitialClaimDate")]
-        public IActionResult GetAlternateBasePeriodFromInitialClaimDate(DateTime initialClaimDate, int year, int week)
+        public IActionResult GetAlternateBasePeriodFromInitialClaimDate(DateTime initialClaimDate)
         {
             try
             {
                 // Calculate the base period
-                var basePeriod = initialClaimDate.Year == 1 ? this.calculateBasePeriod.CalculateBasePeriodFromYearAndWeek(year, week) : this.calculateBasePeriod.CalculateBasePeriodFromInitialClaimDate(initialClaimDate);
+                var basePeriod = this.calculateBasePeriod.CalculateBasePeriodFromInitialClaimDate(initialClaimDate);
 
                 // Map from IBasePeriod to BasePeriodDto and return
                 var result = BasePeriodMapper.MapToDto(basePeriod.AltBasePeriodQuarters);
@@ -118,6 +155,48 @@ namespace DWD.UI.Monetary.Service.Controllers
             {
                 // Log and return http 400
                 this.logger.LogError(argumentException, "Error calculating alternate base period from initialClaimDate={0}", initialClaimDate);
+                return this.Problem(argumentException.Message, null, 400);
+            }
+        }
+
+        /// <summary>
+        /// Calculate alternate base period from year and week.
+        /// </summary>
+        /// <remarks>
+        /// <b>Alternate Calculation:</b><br />
+        /// The alternate base period will be the four most recently completed calendar quarters before the
+        /// week you filed your initial claim application for a new benefit year<br /><br />
+        /// Quarters - For unemployment purposes the quarter does not start until the first full week of that month.<br /><br />
+        /// Example - October of 2021.<br />
+        /// The first full week of October was 10/3-10/9 so that is when the quarter 4 would start for unemployment purposes.
+        /// The week of 9/26-10/2 would be considered to be apart of Q3.<br /><br />
+        /// Example - Claimant files a claim 11/10/21 (quarter 4).<br />
+        /// He does not qualify for a standard base period so the system will check for the alternate base period.
+        /// </remarks>
+        /// <param name="year">Year to calculate the base periods. Default value is 0.</param>
+        /// <param name="week">Week number of the year. Must be between 1 and 52 or 53(If first day of the year lands on saturday). Default value is 0.</param>
+        /// <returns>The calculated base period.</returns>
+        [SwaggerResponse((int)HttpStatusCode.OK, "OK", typeof(IBasePeriodDto), "application/json")]
+        [SwaggerResponse((int)HttpStatusCode.BadRequest, "Bad year and week", typeof(ProblemDetails), "application/problem+json")]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError, "Internal Server Error", typeof(ProblemDetails), "application/problem+json")]
+        [Produces("application/json")]
+        [HttpGet]
+        [Route("GetAlternateBasePeriodFromYearAndWeek")]
+        public IActionResult GetAlternateBasePeriodFromYearAndWeek(int year, int week)
+        {
+            try
+            {
+                // Calculate the base period
+                var basePeriod = this.calculateBasePeriod.CalculateBasePeriodFromYearAndWeek(year, week);
+
+                // Map from IBasePeriod to BasePeriodDto and return
+                var result = BasePeriodMapper.MapToDto(basePeriod.AltBasePeriodQuarters);
+                return this.Ok(result);
+            }
+            catch (ArgumentException argumentException)
+            {
+                // Log and return http 400
+                this.logger.LogError(argumentException, "Error calculating alternate base period from year={0} and week={1}", year, week);
                 return this.Problem(argumentException.Message, null, 400);
             }
         }

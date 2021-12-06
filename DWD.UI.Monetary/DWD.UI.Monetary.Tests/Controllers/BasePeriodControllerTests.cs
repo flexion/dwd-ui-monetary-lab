@@ -29,7 +29,7 @@ namespace DWD.UI.Monetary.Tests.Controllers
             var controller = new BasePeriodController(this.logger, new CalculateBasePeriod());
             var testDate = new DateTime(1981, 6, 28);
 
-            var result = controller.GetStandardBasePeriodFromInitialClaimDate(testDate, 0, 0);
+            var result = controller.GetStandardBasePeriodFromInitialClaimDate(testDate);
 
             Assert.NotNull(result);
             Assert.IsType<OkObjectResult>(result);
@@ -44,7 +44,7 @@ namespace DWD.UI.Monetary.Tests.Controllers
             var controller = new BasePeriodController(this.logger, new CalculateBasePeriod());
             var testDate = new DateTime(1899, 1, 1);
 
-            controller.GetStandardBasePeriodFromInitialClaimDate(testDate, 0, 0);
+            controller.GetStandardBasePeriodFromInitialClaimDate(testDate);
 
             var log = Assert.Single(this.loggerFactory.Sink.LogEntries);
             Assert.IsType<ArgumentException>(log.Exception);
@@ -54,9 +54,8 @@ namespace DWD.UI.Monetary.Tests.Controllers
         public void GetStandardBasePeriodFromYearAndWeekShouldLogAnErrorForInvalidYear()
         {
             var controller = new BasePeriodController(this.logger, new CalculateBasePeriod());
-            var testDate = new DateTime(1, 1, 1);
 
-            controller.GetStandardBasePeriodFromInitialClaimDate(testDate, 1899, 8);
+            controller.GetStandardBasePeriodFromYearAndWeek(1899, 8);
 
             var log = Assert.Single(this.loggerFactory.Sink.LogEntries);
             Assert.IsType<ArgumentException>(log.Exception);
@@ -66,9 +65,8 @@ namespace DWD.UI.Monetary.Tests.Controllers
         public void GetStandardBasePeriodFromYearAndWeekShouldLogAnErrorForInvalidWeek()
         {
             var controller = new BasePeriodController(this.logger, new CalculateBasePeriod());
-            var testDate = new DateTime(1, 1, 1);
 
-            controller.GetStandardBasePeriodFromInitialClaimDate(testDate, 1981, 53);
+            controller.GetStandardBasePeriodFromYearAndWeek(1981, 53);
 
             var log = Assert.Single(this.loggerFactory.Sink.LogEntries);
             Assert.IsType<ArgumentException>(log.Exception);
@@ -78,9 +76,8 @@ namespace DWD.UI.Monetary.Tests.Controllers
         public void GetStandardBasePeriodFromYearAndWeekShouldReturnSuccessWhenYearAndWeekValid()
         {
             var controller = new BasePeriodController(this.logger, new CalculateBasePeriod());
-            var testDate = new DateTime(1, 1, 1);
 
-            var result = controller.GetStandardBasePeriodFromInitialClaimDate(testDate, 2021, 15);
+            var result = controller.GetStandardBasePeriodFromYearAndWeek(2021, 15);
 
             Assert.NotNull(result);
             Assert.IsType<OkObjectResult>(result);
@@ -95,7 +92,7 @@ namespace DWD.UI.Monetary.Tests.Controllers
             var controller = new BasePeriodController(this.logger, new CalculateBasePeriod());
             var testDate = new DateTime(1981, 6, 28);
 
-            var result = controller.GetAlternateBasePeriodFromInitialClaimDate(testDate, 0, 0);
+            var result = controller.GetAlternateBasePeriodFromInitialClaimDate(testDate);
 
             Assert.NotNull(result);
             Assert.IsType<OkObjectResult>(result);
@@ -110,7 +107,7 @@ namespace DWD.UI.Monetary.Tests.Controllers
             var controller = new BasePeriodController(this.logger, new CalculateBasePeriod());
             var testDate = new DateTime(1899, 1, 1);
 
-            controller.GetAlternateBasePeriodFromInitialClaimDate(testDate, 0, 0);
+            controller.GetAlternateBasePeriodFromInitialClaimDate(testDate);
 
             var log = Assert.Single(this.loggerFactory.Sink.LogEntries);
             Assert.IsType<ArgumentException>(log.Exception);
@@ -120,9 +117,8 @@ namespace DWD.UI.Monetary.Tests.Controllers
         public void GetAlternateBasePeriodFromYearAndWeekShouldLogAnErrorForInvalidYear()
         {
             var controller = new BasePeriodController(this.logger, new CalculateBasePeriod());
-            var testDate = new DateTime(1, 1, 1);
 
-            controller.GetAlternateBasePeriodFromInitialClaimDate(testDate, 1899, 8);
+            controller.GetAlternateBasePeriodFromYearAndWeek(1899, 8);
 
             var log = Assert.Single(this.loggerFactory.Sink.LogEntries);
             Assert.IsType<ArgumentException>(log.Exception);
@@ -132,9 +128,8 @@ namespace DWD.UI.Monetary.Tests.Controllers
         public void GetAlternateBasePeriodFromYearAndWeekShouldLogAnErrorForInvalidWeek()
         {
             var controller = new BasePeriodController(this.logger, new CalculateBasePeriod());
-            var testDate = new DateTime(1, 1, 1);
 
-            controller.GetAlternateBasePeriodFromInitialClaimDate(testDate, 1981, 53);
+            controller.GetAlternateBasePeriodFromYearAndWeek(1981, 53);
 
             var log = Assert.Single(this.loggerFactory.Sink.LogEntries);
             Assert.IsType<ArgumentException>(log.Exception);
@@ -144,9 +139,8 @@ namespace DWD.UI.Monetary.Tests.Controllers
         public void GetAlternateBasePeriodFromYearAndWeekShouldReturnSuccessWhenYearAndWeekValid()
         {
             var controller = new BasePeriodController(this.logger, new CalculateBasePeriod());
-            var testDate = new DateTime(1, 1, 1);
 
-            var result = controller.GetAlternateBasePeriodFromInitialClaimDate(testDate, 2021, 15);
+            var result = controller.GetAlternateBasePeriodFromYearAndWeek(2021, 15);
 
             Assert.NotNull(result);
             Assert.IsType<OkObjectResult>(result);
