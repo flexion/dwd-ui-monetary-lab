@@ -83,6 +83,7 @@ namespace DWD.UI.Monetary.Service
 
             services
                 .AddTransient<ICalculateBasePeriod, CalculateBasePeriod>()
+                .AddSingleton<ICalculateBenefitYear, CalculateBenefitYear>()
                 .AddScoped<IClaimantWageRepository, ClaimantWageDbRepository>()
                 .AddScoped<ICalendarQuarter, CalendarQuarter>()
                 .AddScoped<IClaimantWageRepository, ClaimantWageDbRepository>()
@@ -106,7 +107,13 @@ namespace DWD.UI.Monetary.Service
             // always generate swagger doc
             app.UseDeveloperExceptionPage();
             app.UseSwagger();
-            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "DWD.UI.Monetary.Service v1"));
+            app.UseSwaggerUI(c =>
+            {
+                c.DocumentTitle = "Monetary API - Swagger docs";
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "DWD.UI.Monetary.Service v1");
+                c.EnableDeepLinking();
+                c.DefaultModelsExpandDepth(0);
+            });
 
             // app.UseHttpsRedirection();
 
