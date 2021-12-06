@@ -3,7 +3,8 @@
 namespace DWD.UI.Monetary.Domain.Utilities
 {
     using System;
-    using System.Globalization;
+    using BusinessEntities;
+    using Interfaces;
 
     /// <summary>
     /// Additional methods to be used on any DateTime.
@@ -49,35 +50,29 @@ namespace DWD.UI.Monetary.Domain.Utilities
         /// <exception cref="ArgumentException"></exception>
         public DateTime GetDateTimeFromYearAndWeek(int year, int weekOfYear)
         {
-            var minYear = 1900;
-            if (year < minYear)
+            if (year < Constants.MinBenefitYear)
             {
-                throw new ArgumentException($"Year before {minYear} not supported");
+                throw new ArgumentException($"Year before {Constants.MinBenefitYear} not supported");
             }
 
-            var firstDayInWeek = new DateTime(year, 1, 1);
-
-            var totalWeeksOfYear = 52;
+            var firstDayOfYear = new DateTime(year, 1, 1);
 
             //There will be 53 weeks in a year if the first day of the year is Saturday
-            if (firstDayInWeek.DayOfWeek == DayOfWeek.Saturday)
-            {
-                totalWeeksOfYear = 53;
-            }
+            var totalWeeksOfYear = firstDayOfYear.DayOfWeek == DayOfWeek.Saturday ? 53 : 52;
 
             if (weekOfYear < 1 || weekOfYear > totalWeeksOfYear)
             {
                 throw new ArgumentException($"Week number must be between 1 and {totalWeeksOfYear}!");
             }
 
-            //Set the firstDayInWeek to previous Sunday if it is not sunday.
-            if (firstDayInWeek.DayOfWeek != DayOfWeek.Sunday)
+            //Set the firstDayOfYear to previous Sunday if it is not sunday.
+            if (firstDayOfYear.DayOfWeek != DayOfWeek.Sunday)
             {
-                var offset = firstDayInWeek.DayOfWeek - DayOfWeek.Sunday;
-                firstDayInWeek = firstDayInWeek.AddDays(-1 * offset);
+                var offset = firstDayOfYear.DayOfWeek - DayOfWeek.Sunday;
+                firstDayOfYear = firstDayOfYear.AddDays(-1 * offset);
             }
 
-            return firstDayInWeek.AddDays((weekOfYear - 1) * 7);
+            return firstDayOfYear.AddDays((weekOfYear - 1) * 7);
         }
     }
 }

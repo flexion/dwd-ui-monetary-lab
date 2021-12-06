@@ -50,9 +50,9 @@ namespace DWD.UI.Monetary.Service.Controllers
         /// that is when the quarter 4 would start for unemployment purposes. The week of 9/26-10/2
         /// would be considered to be apart of Q3.<br /><br />
         /// </remarks>
-        /// <param name="initialClaimDate">The initial claim date in standard formats (MM/DD/YYYY, MM-DD-YYYY, YYYY-MM-DD, etc.).</param>
-        /// <param name="year">Year to calculate the base periods</param>
-        /// <param name="weekOfYear">Week number of the year. Must be between 1 and 52 or 53(If first day of the year lands on saturday)</param>
+        /// <param name="initialClaimDate">The initial claim date in standard formats (MM/DD/YYYY, MM-DD-YYYY, YYYY-MM-DD, etc.). Default value is 1/1/1.</param>
+        /// <param name="year">Year to calculate the base periods. Default value is 0.</param>
+        /// <param name="weekOfYear">Week number of the year. Must be between 1 and 52 or 53(If first day of the year lands on saturday). Default value is 0.</param>
         /// <returns>The calculated base period.</returns>
         [SwaggerResponse((int)HttpStatusCode.OK, "OK", typeof(IBasePeriodDto), "application/json")]
         [SwaggerResponse((int)HttpStatusCode.BadRequest, "Bad Initial Claim Date", typeof(ProblemDetails), "application/problem+json")]
@@ -93,9 +93,9 @@ namespace DWD.UI.Monetary.Service.Controllers
         /// Example - Claimant files a claim 11/10/21 (quarter 4).<br />
         /// He does not qualify for a standard base period so the system will check for the alternate base period.
         /// </remarks>
-        /// <param name="initialClaimDate">The initial claim date in standard formats (MM/DD/YYYY, MM-DD-YYYY, YYYY-MM-DD, etc.).</param>
-        /// <param name="year">Year to calculate the base periods</param>
-        /// <param name="weekOfYear">Week number of the year. Must be between 1 and 52 or 53(If first day of the year lands on saturday)</param>
+        /// <param name="initialClaimDate">The initial claim date in standard formats (MM/DD/YYYY, MM-DD-YYYY, YYYY-MM-DD, etc.). Default value is 1/1/1.</param>
+        /// <param name="year">Year to calculate the base periods. Default value is 0.</param>
+        /// <param name="weekOfYear">Week number of the year. Must be between 1 and 52 or 53(If first day of the year lands on saturday). Default value is 0.</param>
         /// <returns>The calculated base period.</returns>
         [SwaggerResponse((int)HttpStatusCode.OK, "OK", typeof(IBasePeriodDto), "application/json")]
         [SwaggerResponse((int)HttpStatusCode.BadRequest, "Bad Initial Claim Date", typeof(ProblemDetails), "application/problem+json")]
