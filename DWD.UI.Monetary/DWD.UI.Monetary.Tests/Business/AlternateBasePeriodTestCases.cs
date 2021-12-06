@@ -25,8 +25,6 @@ namespace DWD.UI.Monetary.Tests.Business
             var result = basePeriodUseCase.CalculateBasePeriodFromInitialClaimDate(initialClaimDate);
 
             // Assert
-            Assert.NotNull(testDescription);
-            Assert.NotNull(expectedQuarters);
             Assert.NotNull(result);
             var quarters = result.AltBasePeriodQuarters;
             Assert.NotNull(quarters);
@@ -36,19 +34,14 @@ namespace DWD.UI.Monetary.Tests.Business
                 .ThenBy(q => q.QuarterNumber)
                 .ToArray();
 
-            var expectedUIQuarters = new UIQuarter[4];
-            for (var i = 0; i < 4; i++)
-            {
-                if (expectedQuarters?[i] != null)
-                {
-                    expectedUIQuarters[i] = new UIQuarter(expectedQuarters[i].Year, expectedQuarters[i].QuarterNumber);
-                }
-            }
+            var expectedUIQuarters = expectedQuarters
+                .Select(x => new UIQuarter(x.Year, x.QuarterNumber))
+                .ToArray();
 
-            Assert.Equal(expectedUIQuarters[0], actualQuarters[0]);
-            Assert.Equal(expectedUIQuarters[1], actualQuarters[1]);
-            Assert.Equal(expectedUIQuarters[2], actualQuarters[2]);
-            Assert.Equal(expectedUIQuarters[3], actualQuarters[3]);
+            Assert.True(expectedUIQuarters[0].Equals(actualQuarters[0]), testDescription);
+            Assert.True(expectedUIQuarters[1].Equals(actualQuarters[1]), testDescription);
+            Assert.True(expectedUIQuarters[2].Equals(actualQuarters[2]), testDescription);
+            Assert.True(expectedUIQuarters[3].Equals(actualQuarters[3]), testDescription);
         }
 
         [Fact]
@@ -57,8 +50,8 @@ namespace DWD.UI.Monetary.Tests.Business
             var invalidClaimDate = new DateTime(1887, 7, 4);
             var basePeriodUseCase = new CalculateBasePeriod();
 
-            Assert.Throws<ArgumentException>(() =>
-                basePeriodUseCase.CalculateBasePeriodFromInitialClaimDate(invalidClaimDate));
+            _ = Assert.Throws<ArgumentException>(() =>
+                  basePeriodUseCase.CalculateBasePeriodFromInitialClaimDate(invalidClaimDate));
         }
     }
 
