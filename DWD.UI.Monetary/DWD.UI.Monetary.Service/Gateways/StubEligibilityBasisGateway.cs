@@ -11,9 +11,9 @@ namespace DWD.UI.Monetary.Service.Gateways
     public class StubEligibilityBasisGateway : IEligibilityBasisGateway
     {
         /// <summary>
-        /// Determine the eligibility basis.
+        /// Provides temporarary values used in determination of eligibility - to be replaced with a data store TBD.
         /// </summary>
-        /// <returns>The eligibility basis</returns>
+        /// <returns>An object holding several values required to determine eligibility and to calculate WBR and MBA.</returns>
         public async Task<EligibilityBasis> GetEligibilityBasisAsync() => new EligibilityBasis(1350, 4, 2, 4, 35, 26, 40);
     }
 }

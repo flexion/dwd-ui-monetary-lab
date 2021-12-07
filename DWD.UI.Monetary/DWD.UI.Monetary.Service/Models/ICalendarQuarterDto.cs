@@ -6,12 +6,12 @@ namespace DWD.UI.Monetary.Service.Models
     public interface ICalendarQuarterDto
     {
         /// <summary>
-        /// The calendar year.
+        /// Gets or sets the calendar year.
         /// </summary>
         int Year { get; set; }
 
         /// <summary>
-        /// The quarter number.
+        /// Gets or sets the quarter number.
         /// </summary>
         int QuarterNumber { get; set; }
     }

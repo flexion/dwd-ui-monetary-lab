@@ -1,31 +1,29 @@
 namespace DWD.UI.Monetary.Service.Models
 {
     /// <summary>
-    /// Result when claimant is eligible.
+    /// Data Transfer Object to carry the response when a determination of Eligibility has been made.
     /// </summary>
     public class EligibleResultDto
     {
         /// <summary>
-        /// Constructor.
+        /// Gets a value indicating whether the claimant is ineligible based on the base period wages
         /// </summary>
-        /// <param name="isEligible">boolean</param>
-        /// <param name="weeklyBenefitRate">benefit rate</param>
+        public bool IsEligible { get; }
+
+        /// <summary>
+        /// Gets the Weekly Benefit Rate.
+        /// </summary>
+        public decimal WeeklyBenefitRate { get; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EligibleResultDto"/> class.
+        /// </summary>
+        /// <param name="isEligible">Indicates that the claimant is ineligible based on the base period wages.</param>
+        /// <param name="weeklyBenefitRate">The calulated Weekly Benefit Rate.</param>
         public EligibleResultDto(bool isEligible, decimal weeklyBenefitRate)
         {
             this.IsEligible = isEligible;
             this.WeeklyBenefitRate = weeklyBenefitRate;
         }
-
-        /// <summary>
-        /// Is eligible?
-        /// </summary>
-        /// <returns>boolean</returns>
-        public bool IsEligible { get; }
-
-        /// <summary>
-        /// Gets the benefit rate for eligible claimant.
-        /// </summary>
-        /// <returns>benefit rate</returns>
-        public decimal WeeklyBenefitRate { get; }
     }
 }

@@ -7,16 +7,16 @@ namespace DWD.UI.Monetary.Service.Mappers
     using DWD.UI.Monetary.Service.Models;
 
     /// <summary>
-    /// Maps EligibleResult to EligibleResultDto and IneligibleResult to IneligibleResultDto
+    /// Maps EligibleResult to EligibleResultDto and IneligibleResult to IneligibleResultDto.
     /// </summary>
     public static class EligibilityResultMapper
     {
         /// <summary>
-        /// Presentation for the ineligible reason.
+        /// Maps the IneligibleResult to the IneligibleResultDto.
         /// </summary>
-        /// <param name="ineligibleResult">in from the domain layer</param>
-        /// <returns>the presentation object</returns>
-        /// <exception cref="ArgumentNullException">When the arg is null</exception>
+        /// <param name="ineligibleResult">The ineligible result object.</param>
+        /// <returns>The IneligibleResult Data Transfer Object.</returns>
+        /// <exception cref="ArgumentNullException">The ineligibleResult was null.</exception>
         public static IneligibleResultDto MapToDto(IneligibleResult ineligibleResult)
         {
             if (ineligibleResult == null)
@@ -34,11 +34,11 @@ namespace DWD.UI.Monetary.Service.Mappers
         }
 
         /// <summary>
-        /// Maps the object to the presentation.
+        /// Maps the IneligibleResult to the IneligibleResultDto.
         /// </summary>
-        /// <param name="eligibleResult">in from the domain layer</param>
-        /// <returns>presentation objects</returns>
-        /// <exception cref="ArgumentNullException">should not be null</exception>
+        /// <param name="eligibleResult">The eligible result object.</param>
+        /// <returns>The EligibleResult Data Transfer Object.</returns>
+        /// <exception cref="ArgumentNullException">The eligibleResult was null.</exception>
         public static EligibleResultDto MapToDto(EligibleResult eligibleResult)
         {
             if (eligibleResult == null)
