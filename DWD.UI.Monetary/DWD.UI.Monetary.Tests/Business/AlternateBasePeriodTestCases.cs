@@ -55,12 +55,6 @@ namespace DWD.UI.Monetary.Tests.Business
         }
     }
 
-    public class Quarter
-    {
-        public int Year { get; init; }
-        public int QuarterNumber { get; init; }
-    }
-
     public class AlternateBasePeriodTestData : IEnumerable<object[]>
     {
         public IEnumerator<object[]> GetEnumerator()
