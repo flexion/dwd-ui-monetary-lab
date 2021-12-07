@@ -3,6 +3,7 @@
 namespace DWD.UI.Monetary.Domain.Utilities
 {
     using System;
+
     /// <summary>
     /// Additional methods to be used on any DateTime.
     /// </summary>

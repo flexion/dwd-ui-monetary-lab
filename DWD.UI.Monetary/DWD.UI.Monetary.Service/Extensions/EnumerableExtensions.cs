@@ -4,15 +4,18 @@ namespace DWD.UI.Monetary.Service.Extensions
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
 
-    public static class ExtensionMethods
+    /// <summary>
+    /// App specific extensions.
+    /// </summary>
+    public static class EnumerableExtensions
     {
         /// <summary>
         /// Convert a list to a collection
         /// </summary>
-        /// <param name="items"></param>
-        /// <typeparam name="T"></typeparam>
+        /// <param name="items">collection of items</param>
+        /// <typeparam name="T">type of element</typeparam>
         /// <returns>Collection</returns>
-        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentNullException">if items are null</exception>
         public static Collection<T> ToCollection<T>(this IEnumerable<T> items)
         {
             if (items is null)

@@ -1,5 +1,4 @@
 namespace DWD.UI.Monetary.Service.Models
-
 {
     using System;
     using System.Collections.Generic;
@@ -9,8 +8,19 @@ namespace DWD.UI.Monetary.Service.Models
     /// </summary>
     public class EligibilityRequestDto
     {
+        /// <summary>
+        /// ID for the claimant.
+        /// </summary>
         public string ClaimantId { get; set; }
+
+        /// <summary>
+        /// The VNC initial claim date.
+        /// </summary>
         public DateTime InitialClaimDate { get; set; }
+
+        /// <summary>
+        /// Quarterly wages.s
+        /// </summary>
         public IEnumerable<decimal> WagesOfQuarters { get; set; } = new List<decimal>();
     }
 }

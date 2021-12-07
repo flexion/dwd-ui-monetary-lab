@@ -8,8 +8,8 @@ namespace DWD.UI.Monetary.Service
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Reflection;
-    using Domain.Interfaces;
-    using Domain.Utilities;
+    using DWD.UI.Monetary.Domain.Interfaces;
+    using DWD.UI.Monetary.Domain.Utilities;
     using DWD.UI.Monetary.Domain.UseCases;
     using DWD.UI.Monetary.Service.Extensions;
     using DWD.UI.Monetary.Service.Frameworks;
@@ -95,12 +95,12 @@ namespace DWD.UI.Monetary.Service
         /// Configure http pipeline.
         /// </summary>
         /// <param name="app">Application builder reference.</param>
-        /// <param name="env">Environment reference.</param>
+        /// <param name="hostenv">Environment reference.</param>
         /// <remarks>This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         /// </remarks>
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment hostenv)
         {
-            if (env.IsDevelopment())
+            if (hostenv.IsDevelopment())
             {
                 // nothing yet
             }
