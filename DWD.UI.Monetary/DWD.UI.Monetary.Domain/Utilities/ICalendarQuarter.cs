@@ -7,7 +7,6 @@ namespace DWD.UI.Monetary.Domain.Utilities
     /// </summary>
     public interface ICalendarQuarter
     {
-
         /// <summary>
         /// Quarter for date.
         /// </summary>
