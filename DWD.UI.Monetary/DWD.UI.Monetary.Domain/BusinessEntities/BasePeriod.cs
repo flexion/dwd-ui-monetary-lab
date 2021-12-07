@@ -2,8 +2,8 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
 {
     using System;
     using System.Collections.Generic;
-    using Utilities;
     using System.Linq;
+    using DWD.UI.Monetary.Domain.Utilities;
 
     // TODO: Add a method to get base period by year and week i.e. 2021 41, meaning 41st week of 2021.
 

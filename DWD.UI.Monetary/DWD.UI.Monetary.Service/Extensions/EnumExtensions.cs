@@ -3,12 +3,15 @@ namespace DWD.UI.Monetary.Service.Extensions
     using System;
     using System.ComponentModel;
 
+    /// <summary>
+    /// App specific extensions.
+    /// </summary>
     public static class EnumExtensions
     {
         /// <summary>
         ///  Get description of an Enum from the annotation attribute
         /// </summary>
-        /// <param name="genericEnum"></param>
+        /// <param name="genericEnum">enum to describe.</param>
         /// <returns>string</returns>
         public static string GetDescription(this Enum genericEnum)
         {
@@ -25,8 +28,7 @@ namespace DWD.UI.Monetary.Service.Extensions
                 return genericEnum.ToString();
             }
 
-            dynamic attributes = memberInfo[0].GetCustomAttributes
-                (typeof(DescriptionAttribute), false);
+            dynamic attributes = memberInfo[0].GetCustomAttributes(typeof(DescriptionAttribute), false);
             return ((DescriptionAttribute)attributes[0]).Description;
         }
     }

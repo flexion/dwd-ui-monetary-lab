@@ -2,8 +2,8 @@ namespace DWD.UI.Monetary.Service.Controllers
 {
     using System;
     using System.Net.Mime;
-    using Domain.BusinessEntities;
-    using Domain.UseCases;
+    using DWD.UI.Monetary.Domain.BusinessEntities;
+    using DWD.UI.Monetary.Domain.UseCases;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
 
@@ -84,6 +84,5 @@ namespace DWD.UI.Monetary.Service.Controllers
         [Route("lookup-by-date")]
         public ActionResult<BenefitYear> GetBenefitYearForRequestedDate(DateTime requestedDate) =>
             this.Ok(this.calculateBenefitYear.CalculateBenefitYearFromDate(requestedDate));
-
     }
 }

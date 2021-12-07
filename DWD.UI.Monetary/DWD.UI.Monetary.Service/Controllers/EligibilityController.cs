@@ -3,11 +3,11 @@ namespace DWD.UI.Monetary.Service.Controllers
     using System.Net;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Mvc;
-    using Domain.BusinessEntities;
-    using Domain.UseCases;
-    using Models;
-    using Extensions;
-    using Mappers;
+    using DWD.UI.Monetary.Domain.BusinessEntities;
+    using DWD.UI.Monetary.Domain.UseCases;
+    using DWD.UI.Monetary.Service.Models;
+    using DWD.UI.Monetary.Service.Extensions;
+    using DWD.UI.Monetary.Service.Mappers;
     using Swashbuckle.AspNetCore.Annotations;
 
     /// <summary>
@@ -19,6 +19,10 @@ namespace DWD.UI.Monetary.Service.Controllers
     {
         private readonly ICheckEligibilityOfMonetaryRequirements checkEligibilityRequirements;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EligibilityController"/> class.
+        /// </summary>
+        /// <param name="checkEligibilityRequirements">Eligibity data</param>
         public EligibilityController(ICheckEligibilityOfMonetaryRequirements checkEligibilityRequirements) =>
             this.checkEligibilityRequirements = checkEligibilityRequirements;
 
@@ -35,8 +39,10 @@ namespace DWD.UI.Monetary.Service.Controllers
         /// <note type="tip"><em>WBR is 4** percent of high quarter</em></note><br />
         /// <note type="tip"><em>** - Actual values may vary depending on state law</em></note>
         /// </remarks>
-        /// <param name="eligibilityRequestDto"></param>
-        [SwaggerResponse((int)HttpStatusCode.OK,
+        /// <param name="eligibilityRequestDto">Eligibility data</param>
+        /// <returns>the API response.</returns>
+        [SwaggerResponse(
+            (int)HttpStatusCode.OK,
             description: "If eligible then weekly benefit rate is returned. Otherwise reasons for ineligibility")]
         [SwaggerResponse((int)HttpStatusCode.BadRequest, "Bad Initial Claim Date or wagesOfQuarter is empty", typeof(ProblemDetails), "application/problem+json")]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError, "Internal Server Error", typeof(ProblemDetails), "application/problem+json")]
@@ -56,8 +62,9 @@ namespace DWD.UI.Monetary.Service.Controllers
             }
 
             var eligibilityVerificationRequest = new EligibilityVerificationRequest(
-                eligibilityRequestDto.WagesOfQuarters.ToCollection(), eligibilityRequestDto.InitialClaimDate,
-                eligibilityRequestDto.ClaimantId);
+                                                            eligibilityRequestDto.WagesOfQuarters.ToCollection(),
+                                                            eligibilityRequestDto.InitialClaimDate,
+                                                            eligibilityRequestDto.ClaimantId);
 
             var result = await this.checkEligibilityRequirements.VerifyAsync(eligibilityVerificationRequest).ConfigureAwait(true);
 
