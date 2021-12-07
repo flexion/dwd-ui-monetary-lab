@@ -1,5 +1,3 @@
-#pragma warning disable IDE0011
-
 namespace DWD.UI.Monetary.Service.Extensions
 {
     using System;
@@ -8,7 +6,7 @@ namespace DWD.UI.Monetary.Service.Extensions
     using Microsoft.Extensions.DependencyInjection;
 
     /// <summary>
-    /// Extension methods to simplify adding and configuring Google Logging
+    /// Extension methods to simplify adding and configuring Google Logging.
     /// </summary>
     public static class GoogleLoggingExtensions
     {
@@ -20,10 +18,10 @@ namespace DWD.UI.Monetary.Service.Extensions
         /// See https://developers.google.com/accounts/docs/application-default-credentials for more information.
         /// </para>
         /// </summary>
-        /// <param name="services">Services collection</param>
-        /// <param name="configuration">Reference to app configuration</param>
-        /// <exception cref="ArgumentNullException">Configuration is null</exception>
-        /// <returns>Services collection for fluent chaining</returns>
+        /// <param name="services">Services collection.</param>
+        /// <param name="configuration">Reference to app configuration.</param>
+        /// <exception cref="ArgumentNullException">Configuration is null.</exception>
+        /// <returns>Services collection for fluent chaining.</returns>
         public static IServiceCollection AddGoogleLogging(this IServiceCollection services, IConfiguration configuration)
         {
             if (configuration is null)
@@ -41,7 +39,7 @@ namespace DWD.UI.Monetary.Service.Extensions
             {
                 ProjectId = projectId,
                 ServiceName = serviceName,
-                Version = version
+                Version = version,
             });
 
             return services;
