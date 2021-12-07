@@ -26,12 +26,12 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
         /// <summary>
         /// Local storage for quarters.
         /// </summary>
-        private readonly UIQuarter[] standardQuarters = new UIQuarter[4];
+        private readonly UIQuarter[] standardQuarters;
 
         /// <summary>
         /// Local storage for quarters.
         /// </summary>
-        private readonly UIQuarter[] alternateQuarters = new UIQuarter[4];
+        private readonly UIQuarter[] alternateQuarters;
 
         /// <summary>
         /// Construct instance using initial claim date as input.
