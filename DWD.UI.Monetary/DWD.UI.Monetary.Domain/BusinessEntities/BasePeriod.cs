@@ -34,11 +34,6 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
         private readonly UIQuarter[] alternateQuarters = new UIQuarter[4];
 
         /// <summary>
-        /// Hidden default constructor.
-        /// </summary>
-        private BasePeriod() { }
-
-        /// <summary>
         /// Construct instance using initial claim date as input.
         /// </summary>
         /// <param name="initialClaimDate">The initial claim date.</param>

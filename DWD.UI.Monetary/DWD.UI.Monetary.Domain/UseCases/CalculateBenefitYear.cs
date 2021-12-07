@@ -2,7 +2,7 @@ namespace DWD.UI.Monetary.Domain.UseCases
 {
     using System;
     using System.Globalization;
-    using BusinessEntities;
+    using DWD.UI.Monetary.Domain.BusinessEntities;
 
     /// <summary>
     /// Benefit year calculations.
@@ -12,7 +12,7 @@ namespace DWD.UI.Monetary.Domain.UseCases
         /// <summary>
         /// Preferred culture for Calendar
         /// </summary>
-        public static readonly string EnglishUS = "en-US";
+        public const string EnglishUs = "en-US";
 
         /// <summary>
         /// The usual number of week in a benefit period.
@@ -55,12 +55,12 @@ namespace DWD.UI.Monetary.Domain.UseCases
         /// <returns>Year week</returns>
         private static YearWeek GetYearWeekFromDate(DateTime inDate)
         {
-            var dateTimeFormatInfo = DateTimeFormatInfo.GetInstance(new CultureInfo(EnglishUS));
-            var week = dateTimeFormatInfo.Calendar.GetWeekOfYear(inDate,
-                CalendarWeekRule.FirstFullWeek,
-                DayOfWeek.Saturday);
+            var dateTimeFormatInfo = DateTimeFormatInfo.GetInstance(new CultureInfo(EnglishUs));
+            var week = dateTimeFormatInfo.Calendar.GetWeekOfYear(
+                                                                    inDate,
+                                                                    CalendarWeekRule.FirstFullWeek,
+                                                                    DayOfWeek.Saturday);
             return new YearWeek(inDate.Year, week);
         }
-
     }
 }
