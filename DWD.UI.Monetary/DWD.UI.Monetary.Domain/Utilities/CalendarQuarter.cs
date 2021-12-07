@@ -50,9 +50,9 @@ namespace DWD.UI.Monetary.Domain.Utilities
         /// <exception cref="ArgumentException"></exception>
         public DateTime GetDateTimeFromYearAndWeek(int year, int weekOfYear)
         {
-            if (year < Constants.MinBenefitYear)
+            if (year < Constants.MIN_BENEFIT_YEAR)
             {
-                throw new ArgumentException($"Year before {Constants.MinBenefitYear} not supported");
+                throw new ArgumentException($"Year before {Constants.MIN_BENEFIT_YEAR} not supported");
             }
 
             var firstDayOfYear = new DateTime(year, 1, 1);
