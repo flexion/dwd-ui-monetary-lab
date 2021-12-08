@@ -36,14 +36,14 @@ namespace DWD.UI.Monetary.Domain.UseCases
                 throw new ArgumentNullException(nameof(verificationRequest));
             }
 
-            // Claimant must have been paid wages from covered employment in at least two quarters (BP)
-            if (verificationRequest.WagesOfQuarters.Count(wage => wage > 0) < 2)
+            var eligibilityBasis = await this.eligibilityBasisGateway.GetEligibilityBasisAsync().ConfigureAwait(true);
+            // Claimant must have been paid wages from covered employment in at least min quarters (BP)
+            if (verificationRequest.WagesOfQuarters.Count(wage => wage > 0) < eligibilityBasis.MinQuarters)
             {
                 ineligibilityReasons.Add(IneligibilityReason.InsufficientQuartersWithWages);
             }
 
             var wagesOfHighQuarter = verificationRequest.WagesOfQuarters.Max();
-            var eligibilityBasis = await this.eligibilityBasisGateway.GetEligibilityBasisAsync().ConfigureAwait(true);
 
             // Claimant has wages in their high quarter (BP)to meet the minimum high quarter earnings amount
             if (wagesOfHighQuarter < eligibilityBasis.MinHighQuarterEarnings)
@@ -68,7 +68,14 @@ namespace DWD.UI.Monetary.Domain.UseCases
                 ineligibilityReasons.Add(IneligibilityReason.InsufficientTotalBasePeriodWages);
             }
 
-            return ineligibilityReasons.Count > 0 ? new IneligibleResult(ineligibilityReasons) : new EligibleResult(weeklyBenefitRate);
+            //Calculation of Maximum Benefit Amount
+            var numberOfWeeksTimesWeeklyBenefitRate = eligibilityBasis.NumberOfWeeks * weeklyBenefitRate;
+            var percentageOfTotalBasePeriodWages = eligibilityBasis.PercentOfBasePeriodWages * totalBasePeriodWages / 100;
+            var maximumBenefitAmount = Math.Min(numberOfWeeksTimesWeeklyBenefitRate, percentageOfTotalBasePeriodWages);
+
+            return ineligibilityReasons.Count > 0
+                ? new IneligibleResult(ineligibilityReasons)
+                : new EligibleResult(weeklyBenefitRate, maximumBenefitAmount);
         }
     }
 }

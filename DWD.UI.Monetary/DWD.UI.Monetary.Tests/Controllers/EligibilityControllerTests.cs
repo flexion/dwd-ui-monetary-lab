@@ -28,9 +28,10 @@ namespace DWD.UI.Monetary.Tests.Controllers
                 WagesOfQuarters = new Collection<decimal>() { 1500M, 6500M, 250M, 2500M }
             };
             const decimal expectedWeeklyBenefitRate = 260M;
+            const decimal expectedMaximumBenefitAmount = 4300M;
             var mock = new Mock<ICheckEligibilityOfMonetaryRequirements>();
             _ = mock.Setup(m => m.VerifyAsync(It.IsAny<EligibilityVerificationRequest>()))
-                                 .ReturnsAsync(new EligibleResult(expectedWeeklyBenefitRate));
+                                 .ReturnsAsync(new EligibleResult(expectedWeeklyBenefitRate, expectedMaximumBenefitAmount));
             var controller = new EligibilityController(mock.Object);
 
             // Act
@@ -42,6 +43,7 @@ namespace DWD.UI.Monetary.Tests.Controllers
             var eligibilityResult = Assert.IsType<EligibleResultDto>(okObjectResult.Value);
             Assert.True(eligibilityResult.IsEligible);
             Assert.Equal(expectedWeeklyBenefitRate, eligibilityResult.WeeklyBenefitRate);
+            Assert.Equal(expectedMaximumBenefitAmount, eligibilityResult.MaximumBenefitAmount);
         }
 
         [Fact]
