@@ -1,5 +1,3 @@
-#pragma warning disable CA1052
-#pragma warning disable CA1822
 namespace DWD.UI.Monetary.Domain.Utilities
 {
     using System;

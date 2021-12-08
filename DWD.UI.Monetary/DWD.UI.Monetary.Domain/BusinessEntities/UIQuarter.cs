@@ -1,4 +1,4 @@
-#nullable enable
+//#nullable enable
 namespace DWD.UI.Monetary.Domain.BusinessEntities
 {
     using System;
@@ -29,7 +29,7 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
         /// <summary>
         /// The minimum valid date that can be used to construct a UI Quarter.
         /// </summary>
-        private static readonly DateTime MinimumValidDate = new(1900, 1, 1);
+        private static readonly DateTime MinimumValidDate = new(MinimumValidYear, 1, 1);
 
         /// <summary>
         /// The quarter's year.
@@ -40,8 +40,6 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
         /// The quarter number.
         /// </summary>
         public int QuarterNumber { get; private set; }
-
-        public ICalendarQuarter CalendarQuarter { get; }
 
         /// <summary>
         /// Construct from year and quarter number.
@@ -73,12 +71,11 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
                 throw new ArgumentException(errorMessage);
             }
 
-            this.CalendarQuarter = calendarQuarter;
             this.Year = date.Year;
-            this.QuarterNumber = this.CalendarQuarter.CalendarQuarterNumber(date);
+            this.QuarterNumber = calendarQuarter.CalendarQuarterNumber(date);
 
             // Find first Sunday of calendar quarter
-            var firstSundayOfQuarter = this.CalendarQuarter.FirstDayOfCalendarQuarter(date.Year, this.QuarterNumber);
+            var firstSundayOfQuarter = calendarQuarter.FirstDayOfCalendarQuarter(date.Year, this.QuarterNumber);
             while (firstSundayOfQuarter.DayOfWeek != DayOfWeek.Sunday)
             {
                 firstSundayOfQuarter = firstSundayOfQuarter.AddDays(1);
@@ -129,9 +126,9 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
         /// </summary>
         /// <param name="other">Another UIQuarter</param>
         /// <returns>comparison</returns>
-        public int CompareTo(IUIQuarter? other)
+        public int CompareTo(IUIQuarter other)
         {
-            var result = -1;
+            var result = 1;
             if (other is UIQuarter quarter)
             {
                 result = this.Year.CompareTo(quarter.Year);
@@ -140,8 +137,8 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
                 {
                     result = this.QuarterNumber.CompareTo(quarter.QuarterNumber);
                 }
-            }
 
+            }
             return result;
         }
 
@@ -150,17 +147,24 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
         /// </summary>
         /// <param name="other">The other UIQuarter to check for equality.</param>
         /// <returns>True if the values are equal, false otherwise.</returns>
-        public bool Equals(IUIQuarter? other) =>
-            this.Equals((object)other!);
+        public bool Equals(IUIQuarter other)
+        {
+            if (other is null)
+            {
+                return false;
+            }
+
+            return this.Equals((object)other);
+        }
 
         /// <summary>
         /// Check if the object for value equality.
         /// </summary>
         /// <param name="obj">The object to check for equality.</param>
         /// <returns>True if the object is a UIQuarter and if its values are equal, false otherwise.</returns>
-        public override bool Equals(object? obj)
+        public override bool Equals(object obj)
         {
-            if (obj is UIQuarter quarter)
+            if (obj is not null and UIQuarter quarter)
             {
                 return this.Year.Equals(quarter.Year) && this.QuarterNumber.Equals(quarter.QuarterNumber);
             }
@@ -181,7 +185,7 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
         /// <param name="quarterNumber">The quarter number.</param>
         /// <param name="errorMessage">The error message (out).</param>
         /// <returns>True if the year or quarter number are invalid, false otherwise.</returns>
-        private static bool YearOrQuarterInvalid(int year, int quarterNumber, out string? errorMessage)
+        private static bool YearOrQuarterInvalid(int year, int quarterNumber, out string errorMessage)
         {
             // Check the year is within bounds
             if (year is < MinimumValidYear or > MaximumValidYear)
@@ -207,7 +211,7 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
         /// <param name="date">The year.</param>
         /// <param name="errorMessage">The error message (out).</param>
         /// <returns>True if the date is invalid, false otherwise.</returns>
-        private static bool DateInvalid(DateTime date, out string? errorMessage)
+        private static bool DateInvalid(DateTime date, out string errorMessage)
         {
             // Check the year is within bounds
             if (date < MinimumValidDate)

@@ -1,5 +1,3 @@
-#pragma warning disable IDE0011
-
 namespace DWD.UI.Monetary.Service.Extensions
 {
     using System;
@@ -26,7 +24,9 @@ namespace DWD.UI.Monetary.Service.Extensions
         public static IServiceCollection AddGoogleLogging(this IServiceCollection services, IConfiguration configuration)
         {
             if (configuration is null)
+            {
                 throw new ArgumentNullException(nameof(configuration));
+            }
 
             var gcpConfig = configuration.GetSection("GCP");
             var projectId = gcpConfig.GetValue<string>("ProjectID");
