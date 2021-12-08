@@ -17,7 +17,7 @@ steps:
       - 'run'
       - 'deploy'
       - 'dwd-ui-monetary-dotnet6-api'
-      - '--image=us-central1-docker.pkg.dev/$PROJECT_ID/dwd-modernization-lab/dwd-ui-monetary-deploy:$COMMIT_SHA'
+      - '--image=us-central1-docker.pkg.dev/$PROJECT_ID/dwd-modernization-lab/dwd-ui-monetary-dotnet6-deploy:$COMMIT_SHA'
       - '--platform=managed'
       - '--region=us-central1'
       - '--allow-unauthenticated'
