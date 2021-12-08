@@ -1,6 +1,7 @@
 namespace DWD.UI.Monetary.Service.Controllers;
 
 using System;
+using System.Globalization;
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -16,6 +17,15 @@ using Swashbuckle.AspNetCore.Annotations;
 [Route("[controller]")]
 public class BasePeriodController : ControllerBase
 {
+    /// <summary>
+    /// Date error logging message.
+    /// </summary>
+    private static readonly Action<ILogger, string, Exception> DateError =
+        LoggerMessage.Define<string>(
+                        LogLevel.Information,
+                        new EventId(2, nameof(DateTime)),
+                        "Error calculating standard base period from initialClaimDate={InitialClaimDate}");
+
     /// <summary>
     /// Local logger reference.
     /// </summary>
@@ -72,7 +82,7 @@ public class BasePeriodController : ControllerBase
         catch (ArgumentException argumentException)
         {
             // Log and return http 400
-            this.logger.LogError(argumentException, "Error calculating standard base period from initialClaimDate={0}", initialClaimDate);
+            DateError(this.logger, initialClaimDate.ToString(CultureInfo.CurrentCulture), argumentException);
             return this.Problem(argumentException.Message, null, 400);
         }
     }
@@ -113,7 +123,7 @@ public class BasePeriodController : ControllerBase
         catch (ArgumentException argumentException)
         {
             // Log and return http 400
-            this.logger.LogError(argumentException, "Error calculating alternate base period from initialClaimDate={0}", initialClaimDate);
+            DateError(this.logger, initialClaimDate.ToString(CultureInfo.CurrentCulture), argumentException);
             return this.Problem(argumentException.Message, null, 400);
         }
     }

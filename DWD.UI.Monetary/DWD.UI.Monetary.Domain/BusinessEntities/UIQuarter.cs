@@ -1,4 +1,3 @@
-#nullable enable
 namespace DWD.UI.Monetary.Domain.BusinessEntities;
 
 using System;
@@ -34,6 +33,7 @@ internal class UIQuarter : IUIQuarter
     {
         this.Year = year;
         this.QuarterNumber = quarterNumber;
+        this.CalendarQuarter = new CalendarQuarter();
     }
 
     /// <summary>
@@ -99,7 +99,7 @@ internal class UIQuarter : IUIQuarter
     /// </summary>
     /// <param name="other">Another UIQuarter</param>
     /// <returns>comparison</returns>
-    public int CompareTo(IUIQuarter? other)
+    public int CompareTo(IUIQuarter other)
     {
         var result = -1;
         if (other is UIQuarter quarter)
@@ -120,7 +120,7 @@ internal class UIQuarter : IUIQuarter
     /// </summary>
     /// <param name="other">the other</param>
     /// <returns>true/false</returns>
-    public bool Equals(IUIQuarter? other) =>
+    public bool Equals(IUIQuarter other) =>
         this.Equals((object)other!);
 
     /// <summary>
@@ -128,7 +128,7 @@ internal class UIQuarter : IUIQuarter
     /// </summary>
     /// <param name="obj">other obj</param>
     /// <returns>true/false</returns>
-    public override bool Equals(object? obj)
+    public override bool Equals(object obj)
     {
         if (obj is UIQuarter quarter)
         {
