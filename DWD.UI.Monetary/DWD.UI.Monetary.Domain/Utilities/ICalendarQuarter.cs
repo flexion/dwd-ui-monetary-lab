@@ -1,10 +1,9 @@
-namespace DWD.UI.Monetary.Domain.Utilities
-{
-    using System;
+namespace DWD.UI.Monetary.Domain.Utilities;
 
-    public interface ICalendarQuarter
-    {
-        public int CalendarQuarterNumber(DateTime dateTime);
-        public DateTime FirstDayOfCalendarQuarter(int year, int quarterNumber);
-    }
+using System;
+
+public interface ICalendarQuarter
+{
+    public int CalendarQuarterNumber(DateTime dateTime);
+    public DateTime FirstDayOfCalendarQuarter(int year, int quarterNumber);
 }

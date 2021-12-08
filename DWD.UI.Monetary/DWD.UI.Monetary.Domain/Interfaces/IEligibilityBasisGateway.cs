@@ -1,10 +1,9 @@
-namespace DWD.UI.Monetary.Domain.Interfaces
-{
-    using System.Threading.Tasks;
-    using Domain.BusinessEntities;
+namespace DWD.UI.Monetary.Domain.Interfaces;
 
-    public interface IEligibilityBasisGateway
-    {
-        Task<EligibilityBasis> GetEligibilityBasisAsync();
-    }
+using System.Threading.Tasks;
+using Domain.BusinessEntities;
+
+public interface IEligibilityBasisGateway
+{
+    Task<EligibilityBasis> GetEligibilityBasisAsync();
 }

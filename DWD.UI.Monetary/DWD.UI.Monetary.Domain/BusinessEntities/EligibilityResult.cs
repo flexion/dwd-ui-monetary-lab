@@ -1,40 +1,39 @@
-namespace DWD.UI.Monetary.Domain.BusinessEntities
+namespace DWD.UI.Monetary.Domain.BusinessEntities;
+
+using System.Collections.ObjectModel;
+
+public abstract class EligibilityResult
 {
-    using System.Collections.ObjectModel;
+    public bool IsEligible { get; protected set; }
+}
 
-    public abstract class EligibilityResult
+/// <summary>
+/// This is the concrete class returned when the claimant is eligible.
+/// Max benefit rate will be added in a future story.
+/// </summary>
+public class EligibleResult : EligibilityResult
+{
+    public decimal WeeklyBenefitRate { get; }
+    //public decimal MaxBenefitAmount { get; }
+
+    public EligibleResult(decimal weeklyBenefitRate)
     {
-        public bool IsEligible { get; protected set; }
+        this.IsEligible = true;
+        this.WeeklyBenefitRate = weeklyBenefitRate;
+        //this.MaxBenefitAmount = null;
     }
+}
 
-    /// <summary>
-    /// This is the concrete class returned when the claimant is eligible.
-    /// Max benefit rate will be added in a future story.
-    /// </summary>
-    public class EligibleResult : EligibilityResult
+/// <summary>
+/// This is the concrete class returned when the claimant is ineligible.
+/// </summary>
+public class IneligibleResult : EligibilityResult
+{
+    public Collection<IneligibilityReason> IneligibilityReasons { get; }
+
+    public IneligibleResult(Collection<IneligibilityReason> reasons)
     {
-        public decimal WeeklyBenefitRate { get; }
-        //public decimal MaxBenefitAmount { get; }
-
-        public EligibleResult(decimal weeklyBenefitRate)
-        {
-            this.IsEligible = true;
-            this.WeeklyBenefitRate = weeklyBenefitRate;
-            //this.MaxBenefitAmount = null;
-        }
-    }
-
-    /// <summary>
-    /// This is the concrete class returned when the claimant is ineligible.
-    /// </summary>
-    public class IneligibleResult : EligibilityResult
-    {
-        public Collection<IneligibilityReason> IneligibilityReasons { get; }
-
-        public IneligibleResult(Collection<IneligibilityReason> reasons)
-        {
-            this.IsEligible = false;
-            this.IneligibilityReasons = reasons ?? new Collection<IneligibilityReason>();
-        }
+        this.IsEligible = false;
+        this.IneligibilityReasons = reasons ?? new Collection<IneligibilityReason>();
     }
 }

@@ -1,18 +1,17 @@
-namespace DWD.UI.Monetary.Domain.UseCases
-{
-    using System;
-    using DWD.UI.Monetary.Domain.BusinessEntities;
+namespace DWD.UI.Monetary.Domain.UseCases;
 
+using System;
+using DWD.UI.Monetary.Domain.BusinessEntities;
+
+/// <summary>
+/// Interface defining our base period calculations.
+/// </summary>
+public interface ICalculateBasePeriod
+{
     /// <summary>
-    /// Interface defining our base period calculations.
+    /// Calculate base period from initial claim date.
     /// </summary>
-    public interface ICalculateBasePeriod
-    {
-        /// <summary>
-        /// Calculate base period from initial claim date.
-        /// </summary>
-        /// <param name="initialClaimDate">The initial claim date.</param>
-        /// <returns>The calculated base period.</returns>
-        IBasePeriod CalculateBasePeriodFromInitialClaimDate(DateTime initialClaimDate);
-    }
+    /// <param name="initialClaimDate">The initial claim date.</param>
+    /// <returns>The calculated base period.</returns>
+    IBasePeriod CalculateBasePeriodFromInitialClaimDate(DateTime initialClaimDate);
 }
