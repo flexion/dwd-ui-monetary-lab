@@ -4,7 +4,7 @@ namespace DWD.UI.Monetary.Service.Extensions
     using System.ComponentModel;
 
     /// <summary>
-    /// App specific extensions.
+    /// Methods to extend the functionality for type <see cref="Enum"/>.
     /// </summary>
     public static class EnumExtensions
     {
