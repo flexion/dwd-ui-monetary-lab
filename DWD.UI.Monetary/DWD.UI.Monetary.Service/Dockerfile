@@ -1,5 +1,5 @@
 ﻿# SDK Version
-ARG sdk_ver=5.0
+ARG sdk_ver=6.0
 # Use Microsoft's official build .NET image.
 FROM mcr.microsoft.com/dotnet/aspnet:${sdk_ver} AS base
 WORKDIR /src
