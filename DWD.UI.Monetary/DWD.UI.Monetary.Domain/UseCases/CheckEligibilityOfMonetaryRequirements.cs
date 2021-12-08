@@ -37,6 +37,7 @@ namespace DWD.UI.Monetary.Domain.UseCases
             }
 
             var eligibilityBasis = await this.eligibilityBasisGateway.GetEligibilityBasisAsync().ConfigureAwait(true);
+
             // Claimant must have been paid wages from covered employment in at least min quarters (BP)
             if (verificationRequest.WagesOfQuarters.Count(wage => wage > 0) < eligibilityBasis.MinQuarters)
             {
@@ -68,7 +69,7 @@ namespace DWD.UI.Monetary.Domain.UseCases
                 ineligibilityReasons.Add(IneligibilityReason.InsufficientTotalBasePeriodWages);
             }
 
-            //Calculation of Maximum Benefit Amount
+            // Calculation of Maximum Benefit Amount
             var numberOfWeeksTimesWeeklyBenefitRate = eligibilityBasis.NumberOfWeeks * weeklyBenefitRate;
             var percentageOfTotalBasePeriodWages = eligibilityBasis.PercentOfBasePeriodWages * totalBasePeriodWages / 100;
             var maximumBenefitAmount = Math.Min(numberOfWeeksTimesWeeklyBenefitRate, percentageOfTotalBasePeriodWages);

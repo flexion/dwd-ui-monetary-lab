@@ -25,12 +25,6 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
         public int QuarterNumber { get; private set; }
 
         /// <summary>
-        /// Get calendar quarter.
-        /// </summary>
-        /// <returns>quarter</returns>
-        public ICalendarQuarter CalendarQuarter { get; }
-
-        /// <summary>
         /// Construct from year and quarter number.
         /// </summary>
         /// <param name="year">The quarter's year.</param>
@@ -48,12 +42,11 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
         /// <param name="calendarQuarter">calendarQuarter.</param>
         public UIQuarter(DateTime date, ICalendarQuarter calendarQuarter)
         {
-            this.CalendarQuarter = calendarQuarter;
             this.Year = date.Year;
-            this.QuarterNumber = this.CalendarQuarter.CalendarQuarterNumber(date);
+            this.QuarterNumber = calendarQuarter.CalendarQuarterNumber(date);
 
             // Find first Sunday of calendar quarter
-            var firstSundayOfQuarter = this.CalendarQuarter.FirstDayOfCalendarQuarter(date.Year, this.QuarterNumber);
+            var firstSundayOfQuarter = calendarQuarter.FirstDayOfCalendarQuarter(date.Year, this.QuarterNumber);
             while (firstSundayOfQuarter.DayOfWeek != DayOfWeek.Sunday)
             {
                 firstSundayOfQuarter = firstSundayOfQuarter.AddDays(1);

@@ -6,7 +6,7 @@ namespace DWD.UI.Monetary.Service.Models
     public class EligibleResultDto
     {
         /// <summary>
-        /// Gets a value indicating whether the claimant is ineligible based on the base period wages
+        /// Gets a value indicating whether the claimant is ineligible based on the base period wages.
         /// </summary>
         public bool IsEligible { get; }
 
@@ -24,7 +24,8 @@ namespace DWD.UI.Monetary.Service.Models
         /// Initializes a new instance of the <see cref="EligibleResultDto"/> class.
         /// </summary>
         /// <param name="isEligible">Indicates that the claimant is ineligible based on the base period wages.</param>
-        /// <param name="weeklyBenefitRate">The calulated Weekly Benefit Rate.</param>
+        /// <param name="weeklyBenefitRate">The calculated Weekly Benefit Rate.</param>
+        /// <param name="maximumBenefitAmount">The maximum annual benefit amount.</param>
         public EligibleResultDto(bool isEligible, decimal weeklyBenefitRate, decimal maximumBenefitAmount)
         {
             this.IsEligible = isEligible;
