@@ -4,6 +4,7 @@ Table of contents:
 - [Introduction and Goals](#introduction-and-goals-)
 - [Git](#git-)
   - [Cloning a DWD repository](#cloning-a-dwd-repository-)
+  - [Healthy git practices](#healthy-git-practices-)
   - [LFS](#lfs-)
 - [Topic X](#topic-x-)
 - [Topic Y](#topic-y-)
@@ -65,6 +66,57 @@ For example:
 # When prompted, enter the PAT that we created above
 git clone https://firstname-lastname_widwd@github.com/WI-DWD/UI-Modernization.git`
 ```
+
+## Healthy git practices [^](#)
+
+- Create useful commit messages:
+  ```
+  1st line is a short description of the changeset
+
+  3rd+ lines are the explanation of the change. Diffs can show us "what" changed,
+    but comments can tell us "why" it changed. Here is a good place to include:
+    - issue #'s,
+    - decision points,
+    - failed experiments,
+    - references
+    - etc.
+
+    A good starting point is to put what the state/behavior was before, what it
+    is now, and why that solution was chosen.
+  ```
+- Periodically rebase feature branches
+  - Rather than merging `main` into your feature branch (which creates merge commits on your branch),
+    [rebase](https://git-scm.com/book/en/v2/Git-Branching-Rebasing) your changes on top of `main`. This can
+    be done with a configuration:
+    ```bash
+    git config --global pull.rebase true
+    #git pull origin main
+    ```
+- Refactor commits before Pull Request
+  - any branch you create is your history. Rewriting history is not a problem on these branches because
+    you own them and they are temporary anyway. Make as many work in progress commits as you like. When you
+    have the code ready to be integrated, use
+    [git rebase](https://git-scm.com/book/en/v2/Git-Tools-Rewriting-History#_squashing) to chunk the commits
+    into logical change sets (*a formally collected set of changes that should be treated as a group*) and
+    push (may require `--force`). This can greatly help readability of the git history and ease in reverting
+    changes.
+
+    ---
+    ***⚠ Note:** rebasing may not go smoothly sometimes, but a failed attempt can be undone. It is useful to
+    create a branch or understanding the [git reflog](https://git-scm.com/docs/git-reflog) command before
+    starting so that you can always return to the pre-rebased changes.*
+
+    ---
+  - Integration branches such as main are immutable. Once a pull request has been approved, a new change has to
+    then be approved to modify it. The history is now a permanent record.
+- Avoid adding generated files
+  - Generated files, such as reports (ie coverage reports), debugging files (ie .pdbs), etc should not be put
+    into git. Be sure to add them to the gitignore when applicable or accidental/unnecessary changes can be
+    introduced.
+- Avoid adding binary files
+  - Binary files, such as zip files, libraries, etc should not be in git. Modern languages manage dependencies
+    through dependency or tool managers such as [Nuget](https://www.nuget.org/).
+
 
 
 ### LFS [^](#development-guidelines)
