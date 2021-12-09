@@ -61,5 +61,50 @@ namespace DWD.UI.Monetary.Tests
         [Fact]
         public void TestInvalidQuarterNumberThrowsArgumentOutOfRangeException() =>
             Assert.Throws<ArgumentOutOfRangeException>(() => this.calendarQuarter.FirstDayOfCalendarQuarter(2020, 5));
+
+        public static IEnumerable<object[]> DataForGetDateFromYearAndWeekNumber
+        {
+            get
+            {
+                var startDateOfWeek1In2022 = new DateTime(2021, 12, 26);
+                var startDateOfWeek52In2021 = new DateTime(2021, 12, 19);
+                var startDateOfWeek2In2021 = new DateTime(2021, 1, 3);
+                var startDateOfWeek50In2020 = new DateTime(2020, 12, 6);
+                var startDateOfWeek14In2021 = new DateTime(2021, 3, 28);
+                var startDateOfWeek15In2021 = new DateTime(2021, 4, 4);
+                var startDateOfWeek28In2021 = new DateTime(2021, 7, 4);
+                var startDateOfWeek45In2021 = new DateTime(2021, 10, 31);
+                var startDateOfWeek48In2021 = new DateTime(2021, 11, 21);
+                var startDateOfWeek54In2020 = new DateTime(2000, 12, 24);
+                return new List<object[]>
+                {
+                    new object[] {2022, 1, startDateOfWeek1In2022},
+                    new object[] {2021, 52, startDateOfWeek52In2021},
+                    new object[] {2021, 2, startDateOfWeek2In2021},
+                    new object[] {2020, 50, startDateOfWeek50In2020},
+                    new object[] {2021, 14, startDateOfWeek14In2021},
+                    new object[] {2021, 15, startDateOfWeek15In2021},
+                    new object[] {2021, 28, startDateOfWeek28In2021},
+                    new object[] {2021, 45, startDateOfWeek45In2021},
+                    new object[] {2021, 48, startDateOfWeek48In2021},
+                    new object[] {2000, 53, startDateOfWeek54In2020},
+                };
+            }
+        }
+
+        [CLSCompliant(false)]
+        [Theory]
+        [MemberData(nameof(DataForGetDateFromYearAndWeekNumber))]
+        public void ShouldReturnDateTimeFromYearAndWeekNumber(int year, int weekOfYear, DateTime expectedStartDate) =>
+            Assert.Equal(expectedStartDate, this.calendarQuarter.GetDateTimeFromYearAndWeek(year, weekOfYear));
+
+        [CLSCompliant(false)]
+        [Theory]
+        [InlineData(2020, 0)]
+        [InlineData(2020, -1)]
+        [InlineData(2028, 54)]
+        [InlineData(-18, 5)]
+        public void ShouldReturnArgumentOutOfRangeExceptionWhenGetDateFromYearAndWeekNumber(int year, int weekOfYear) =>
+            Assert.Throws<ArgumentException>(() => this.calendarQuarter.GetDateTimeFromYearAndWeek(year, weekOfYear));
     }
 }

@@ -21,29 +21,42 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
         /// <summary>
         /// The minimum valid initial base claim date that we will calculate from.
         /// </summary>
-        private static readonly DateTime MinimumValidInitialBaseClaimDate = new(1900, 1, 1);
+        private static readonly DateTime MinimumValidInitialBaseClaimDate = new(Constants.MIN_BENEFIT_YEAR, 1, 1);
 
         /// <summary>
         /// Local storage for quarters.
         /// </summary>
-        private readonly UIQuarter[] standardQuarters;
+        private UIQuarter[] standardQuarters = new UIQuarter[4];
 
         /// <summary>
         /// Local storage for quarters.
         /// </summary>
-        private readonly UIQuarter[] alternateQuarters;
+        private UIQuarter[] alternateQuarters = new UIQuarter[4];
+
+        /// <summary>
+        /// Hidden default constructor.
+        /// </summary>
+        private BasePeriod() { }
 
         /// <summary>
         /// Construct instance using initial claim date as input.
         /// </summary>
         /// <param name="initialClaimDate">The initial claim date.</param>
         /// <exception cref="ArgumentException">Throws a ArgumentException if the supplied initial claim date is not valid.</exception>
-        public BasePeriod(DateTime initialClaimDate)
+        public BasePeriod(DateTime initialClaimDate) =>
+            this.PopulateBasePeriods(initialClaimDate);
+
+        /// <summary>
+        ///  Populate standard and alternate base periods
+        /// </summary>
+        /// <param name="initialClaimDate">The initial claim date.</param>
+        /// <exception cref="ArgumentException">Throws a ArgumentException if the supplied initial claim date is not valid.</exception>
+        private void PopulateBasePeriods(DateTime initialClaimDate)
         {
             // Check if claim date is invalid
-            if (ClaimDateInvalid(initialClaimDate, out var errorMessage))
+            if (initialClaimDate.Date < MinimumValidInitialBaseClaimDate)
             {
-                throw new ArgumentException(errorMessage);
+                throw new ArgumentException($"The supplied initial claim date is not valid: Dates before {MinimumValidInitialBaseClaimDate} are not supported (initialClaimDate={initialClaimDate.Date.ToShortDateString()}).");
             }
 
             // Populate basePeriod with last 5 complete quarters, skipping most recent complete quarter
@@ -58,6 +71,12 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
 
             this.standardQuarters = previous5Quarters.Take(4).ToArray();
             this.alternateQuarters = previous5Quarters.Skip(1).ToArray();
+        }
+
+        public BasePeriod(int year, int weekOfYear)
+        {
+            var initialClaimDate = new CalendarQuarter().GetDateTimeFromYearAndWeek(year, weekOfYear);
+            this.PopulateBasePeriods(initialClaimDate);
         }
 
         /// <summary>
@@ -89,24 +108,5 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
         /// Friendly getter for fourth quarter.
         /// </summary>
         public UIQuarter FourthQuarter => this.standardQuarters[3];
-
-        /// <summary>
-        /// Determine if the claim date is invalid.
-        /// </summary>
-        /// <param name="initialClaimDate">The initial claim date.</param>
-        /// <param name="errorMessage">The error message (out).</param>
-        /// <returns>True if the claim date is invalid, false otherwise.</returns>
-        private static bool ClaimDateInvalid(DateTime initialClaimDate, out string errorMessage)
-        {
-            // Check the claim date is not prior to our minimum
-            if (initialClaimDate.Date < MinimumValidInitialBaseClaimDate)
-            {
-                errorMessage = $"The supplied initial claim date is not valid: Dates before {MinimumValidInitialBaseClaimDate} are not supported (initialClaimDate={initialClaimDate.Date.ToShortDateString()}).";
-                return true;
-            }
-
-            errorMessage = null;
-            return false;
-        }
     }
 }
