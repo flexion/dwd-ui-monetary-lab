@@ -5,10 +5,13 @@ namespace DWD.UI.Monetary.Service.Models
         public bool IsEligible { get; }
         public decimal WeeklyBenefitRate { get; }
 
-        public EligibleResultDto(bool isEligible, decimal weeklyBenefitRate)
+        public decimal MaximumBenefitAmount { get; }
+
+        public EligibleResultDto(bool isEligible, decimal weeklyBenefitRate, decimal maximumBenefitAmount)
         {
             this.IsEligible = isEligible;
             this.WeeklyBenefitRate = weeklyBenefitRate;
+            this.MaximumBenefitAmount = maximumBenefitAmount;
         }
     }
 }
