@@ -44,6 +44,34 @@ namespace DWD.UI.Monetary.Tests.Business
             Assert.True(expectedUIQuarters[2].Equals(actualQuarters[2]), testDescription);
             Assert.True(expectedUIQuarters[3].Equals(actualQuarters[3]), testDescription);
         }
+
+        [Fact]
+        public void BusinessTestCase_ShouldReturnStandardBasePeriods_WhenYearAndWeekValid()
+        {
+            // Arrange
+            var basePeriodUseCase = new CalculateBasePeriod();
+
+            // Act
+            var result = basePeriodUseCase.CalculateBasePeriodFromYearAndWeek(2021, 28);
+
+            // Assert
+            Assert.NotNull(result);
+            var quarters = result.BasePeriodQuarters;
+            Assert.NotNull(quarters);
+
+            var actualQuarters = quarters
+                .OrderBy(q => q.Year)
+                .ThenBy(q => q.QuarterNumber)
+                .ToArray();
+
+            var testQuarters = new IUIQuarter[4];
+            testQuarters[0] = new UIQuarter(2020, 2);
+            testQuarters[1] = new UIQuarter(2020, 3);
+            testQuarters[2] = new UIQuarter(2020, 4);
+            testQuarters[3] = new UIQuarter(2021, 1);
+
+            Assert.Equal(testQuarters, actualQuarters);
+        }
     }
 
     public class StandardBasePeriodTestData : IEnumerable<object[]>

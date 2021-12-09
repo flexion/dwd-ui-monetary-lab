@@ -45,6 +45,34 @@ namespace DWD.UI.Monetary.Tests.Business
         }
 
         [Fact]
+        public void BusinessTestCase_ShouldReturnAlternateBasePeriods_WhenYearAndWeekValid()
+        {
+            // Arrange
+            var basePeriodUseCase = new CalculateBasePeriod();
+
+            // Act
+            var result = basePeriodUseCase.CalculateBasePeriodFromYearAndWeek(2021, 28);
+
+            // Assert
+            Assert.NotNull(result);
+            var quarters = result.AltBasePeriodQuarters;
+            Assert.NotNull(quarters);
+
+            var actualQuarters = quarters
+                .OrderBy(q => q.Year)
+                .ThenBy(q => q.QuarterNumber)
+                .ToArray();
+
+            var expectedUIQuarters = new IUIQuarter[4];
+            expectedUIQuarters[0] = new UIQuarter(2020, 3);
+            expectedUIQuarters[1] = new UIQuarter(2020, 4);
+            expectedUIQuarters[2] = new UIQuarter(2021, 1);
+            expectedUIQuarters[3] = new UIQuarter(2021, 2);
+
+            Assert.Equal(expectedUIQuarters, actualQuarters);
+        }
+
+        [Fact]
         public void BusinessTestCase_ShouldReturnArgumentException_WhenInvalidClaimDate()
         {
             var invalidClaimDate = new DateTime(1887, 7, 4);
@@ -52,6 +80,33 @@ namespace DWD.UI.Monetary.Tests.Business
 
             _ = Assert.Throws<ArgumentException>(() =>
                   basePeriodUseCase.CalculateBasePeriodFromInitialClaimDate(invalidClaimDate));
+        }
+
+        [Fact]
+        public void BusinessTestCase_ShouldThrowArgumentException_WhenYearIsLessThanOne()
+        {
+            var basePeriodUseCase = new CalculateBasePeriod();
+            // Expect ArgumentException
+            _ = Assert.Throws<ArgumentException>(() =>
+                basePeriodUseCase.CalculateBasePeriodFromYearAndWeek(0, 45));
+        }
+
+        [Fact]
+        public void BusinessTestCase_ShouldThrowArgumentException_WhenWeekIsLessThanOne()
+        {
+            var basePeriodUseCase = new CalculateBasePeriod();
+            // Expect ArgumentException
+            _ = Assert.Throws<ArgumentException>(() =>
+                basePeriodUseCase.CalculateBasePeriodFromYearAndWeek(1989, 0));
+        }
+
+        [Fact]
+        public void BusinessTestCase_ShouldThrowArgumentException_WhenWeekIsGreaterThan53()
+        {
+            var basePeriodUseCase = new CalculateBasePeriod();
+            // Expect ArgumentException
+            _ = Assert.Throws<ArgumentException>(() =>
+                basePeriodUseCase.CalculateBasePeriodFromYearAndWeek(2022, 54));
         }
     }
 

@@ -128,7 +128,7 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
         /// <returns>comparison</returns>
         public int CompareTo(IUIQuarter other)
         {
-            var result = 1;
+            var result = -1;
             if (other is UIQuarter quarter)
             {
                 result = this.Year.CompareTo(quarter.Year);
@@ -137,34 +137,27 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
                 {
                     result = this.QuarterNumber.CompareTo(quarter.QuarterNumber);
                 }
-
             }
+
             return result;
         }
 
         /// <summary>
         /// Check for value equality.
         /// </summary>
-        /// <param name="other">The other UIQuarter to check for equality.</param>
-        /// <returns>True if the values are equal, false otherwise.</returns>
-        public bool Equals(IUIQuarter other)
-        {
-            if (other is null)
-            {
-                return false;
-            }
-
-            return this.Equals((object)other);
-        }
+        /// <param name="other">the other</param>
+        /// <returns>true/false</returns>
+        public bool Equals(IUIQuarter other) =>
+            this.Equals((object)other!);
 
         /// <summary>
         /// Check if the object for value equality.
         /// </summary>
-        /// <param name="obj">The object to check for equality.</param>
-        /// <returns>True if the object is a UIQuarter and if its values are equal, false otherwise.</returns>
+        /// <param name="obj">other obj</param>
+        /// <returns>true/false</returns>
         public override bool Equals(object obj)
         {
-            if (obj is not null and UIQuarter quarter)
+            if (obj is UIQuarter quarter)
             {
                 return this.Year.Equals(quarter.Year) && this.QuarterNumber.Equals(quarter.QuarterNumber);
             }
@@ -173,9 +166,9 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
         }
 
         /// <summary>
-        /// Get a hash code for this UIQuarter instance.
+        /// Hash code override.
         /// </summary>
-        /// <returns>A integer hashcode for this UIQuarter instance.</returns>
+        /// <returns>hash</returns>
         public override int GetHashCode() => HashCode.Combine(this.Year, this.QuarterNumber);
 
         /// <summary>

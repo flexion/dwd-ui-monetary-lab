@@ -45,6 +45,34 @@ namespace DWD.UI.Monetary.Tests.Unit.UseCases
         }
 
         [Fact]
+        public void CalculateBasePeriodFromYearAndWeek_ShouldReturnCorrectAlternateQuartersForYearAndWeek_WhenValidYearAndWeek()
+        {
+            // Arrange
+            var basePeriodUseCase = new CalculateBasePeriod();
+
+            // Act
+            var result = basePeriodUseCase.CalculateBasePeriodFromYearAndWeek(2020, 48);
+
+            // Assert
+            Assert.NotNull(result);
+            var quarters = result.AltBasePeriodQuarters;
+            Assert.NotNull(quarters);
+
+            var actualQuarters = quarters
+                .OrderBy(q => q.Year)
+                .ThenBy(q => q.QuarterNumber)
+                .ToArray();
+
+            var expectedUIQuarters = new IUIQuarter[4];
+            expectedUIQuarters[0] = new UIQuarter(2019, 4);
+            expectedUIQuarters[1] = new UIQuarter(2020, 1);
+            expectedUIQuarters[2] = new UIQuarter(2020, 2);
+            expectedUIQuarters[3] = new UIQuarter(2020, 3);
+
+            Assert.Equal(expectedUIQuarters, actualQuarters);
+        }
+
+        [Fact]
         public void CalculateBasePeriodFromInitialClaimDate_ShouldReturnArgumentException_WhenInvalidClaimDate()
         {
             var testClaimDate = new DateTime(1776, 7, 4);
