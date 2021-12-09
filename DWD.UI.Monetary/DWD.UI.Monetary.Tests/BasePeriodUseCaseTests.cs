@@ -25,5 +25,21 @@ namespace DWD.UI.Monetary.Tests
             }
         }
 
+        [Fact]
+        public void CalculateBasePeriodFromYearAndWeek()
+        {
+            var basePeriodUseCase = new CalculateBasePeriod();
+            var result = basePeriodUseCase.CalculateBasePeriodFromYearAndWeek(2021, 8);
+
+            // Check result
+            Assert.NotNull(result);
+            var quarters = result.BasePeriodQuarters;
+            Assert.NotNull(quarters);
+            foreach (var basePeriod in quarters)
+            {
+                Assert.NotNull(basePeriod);
+            }
+        }
+
     }
 }

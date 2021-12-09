@@ -25,16 +25,13 @@ namespace DWD.UI.Monetary.Tests
             var actualQuarters = quarters.OrderBy(q => q.Year)
                                                                 .ThenBy(q => q.QuarterNumber)
                                                                 .ToArray();
-            var testQuarters = new UIQuarter[4];
+            var testQuarters = new IUIQuarter[4];
             testQuarters[0] = new UIQuarter(2019, 4);
             testQuarters[1] = new UIQuarter(2020, 1);
             testQuarters[2] = new UIQuarter(2020, 2);
             testQuarters[3] = new UIQuarter(2020, 3);
 
-            Assert.Equal(testQuarters[0], actualQuarters[0]);
-            Assert.Equal(testQuarters[1], actualQuarters[1]);
-            Assert.Equal(testQuarters[2], actualQuarters[2]);
-            Assert.Equal(testQuarters[3], actualQuarters[3]);
+            Assert.Equal(testQuarters, actualQuarters);
 
         }
 
@@ -54,16 +51,38 @@ namespace DWD.UI.Monetary.Tests
             var actualQuarters = quarters.OrderBy(q => q.Year)
                 .ThenBy(q => q.QuarterNumber)
                 .ToArray();
-            var testQuarters = new UIQuarter[4];
+            var testQuarters = new IUIQuarter[4];
             testQuarters[0] = new UIQuarter(2019, 4);
             testQuarters[1] = new UIQuarter(2020, 1);
             testQuarters[2] = new UIQuarter(2020, 2);
             testQuarters[3] = new UIQuarter(2020, 3);
 
-            Assert.Equal(testQuarters[0], actualQuarters[0]);
-            Assert.Equal(testQuarters[1], actualQuarters[1]);
-            Assert.Equal(testQuarters[2], actualQuarters[2]);
-            Assert.Equal(testQuarters[3], actualQuarters[3]);
+            Assert.Equal(testQuarters, actualQuarters);
+
+        }
+
+        [Fact]
+        public void CalculateAltBasePeriodFromYearAndWeek()
+        {
+            // Get base period from year and week
+            var basePeriodUseCase = new CalculateBasePeriod();
+            var result = basePeriodUseCase.CalculateBasePeriodFromYearAndWeek(2020, 48);
+
+            // Check result
+            Assert.NotNull(result);
+            var quarters = result.AltBasePeriodQuarters;
+            Assert.NotNull(quarters);
+
+            var actualQuarters = quarters.OrderBy(q => q.Year)
+                .ThenBy(q => q.QuarterNumber)
+                .ToArray();
+            var testQuarters = new IUIQuarter[4];
+            testQuarters[0] = new UIQuarter(2019, 4);
+            testQuarters[1] = new UIQuarter(2020, 1);
+            testQuarters[2] = new UIQuarter(2020, 2);
+            testQuarters[3] = new UIQuarter(2020, 3);
+
+            Assert.Equal(testQuarters, actualQuarters);
 
         }
     }
