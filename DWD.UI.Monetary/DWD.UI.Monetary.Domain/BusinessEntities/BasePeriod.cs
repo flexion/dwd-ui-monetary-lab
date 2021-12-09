@@ -20,7 +20,7 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
         /// <summary>
         /// The minimum valid initial base claim date that we will calculate from.
         /// </summary>
-        private static readonly DateTime MinimumValidInitialBaseClaimDate = new(Constants.MinBenefitYear, 1, 1);
+        private static readonly DateTime MinimumValidInitialBaseClaimDate = new(Constants.MIN_BENEFIT_YEAR, 1, 1);
 
         /// <summary>
         /// Local storage for quarters.

@@ -98,7 +98,7 @@ namespace DWD.UI.Monetary.Service.Controllers
         [SwaggerResponse((int)HttpStatusCode.InternalServerError, "Internal Server Error", typeof(ProblemDetails), "application/problem+json")]
         [Produces("application/json")]
         [HttpGet]
-        [Route("GetStandardBasePeriodFromInitialClaimDate")]
+        [Route("GetStandardBasePeriodFromYearAndWeek")]
         public IActionResult GetStandardBasePeriodFromYearAndWeek(int year, int week)
         {
             try
