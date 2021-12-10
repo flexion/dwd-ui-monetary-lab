@@ -3,21 +3,21 @@ steps:
     args:
       - 'build'
       - '--file=DWD.UI.Monetary/Deploy.dockerfile'
-      - '--tag=us-central1-docker.pkg.dev/$PROJECT_ID/dwd-modernization-lab/dwd-ui-monetary-dotnet6-deploy:$COMMIT_SHA'
+      - '--tag=us-central1-docker.pkg.dev/$PROJECT_ID/dwd-modernization-lab/dwd-ui-monetary-deploy:$COMMIT_SHA'
       - 'DWD.UI.Monetary'
     id: build-deploy-container
   - name: 'gcr.io/cloud-builders/docker'
     args:
       - 'push'
-      - 'us-central1-docker.pkg.dev/$PROJECT_ID/dwd-modernization-lab/dwd-ui-monetary-dotnet6-deploy:$COMMIT_SHA'
+      - 'us-central1-docker.pkg.dev/$PROJECT_ID/dwd-modernization-lab/dwd-ui-monetary-deploy:$COMMIT_SHA'
     id: push-deploy-container
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
     args:
       - 'run'
       - 'deploy'
-      - 'dwd-ui-monetary-dotnet6-api'
-      - '--image=us-central1-docker.pkg.dev/$PROJECT_ID/dwd-modernization-lab/dwd-ui-monetary-dotnet6-deploy:$COMMIT_SHA'
+      - 'dwd-ui-monetary-api'
+      - '--image=us-central1-docker.pkg.dev/$PROJECT_ID/dwd-modernization-lab/dwd-ui-monetary-deploy:$COMMIT_SHA'
       - '--platform=managed'
       - '--region=us-central1'
       - '--allow-unauthenticated'
