@@ -15,8 +15,8 @@ public static class GoogleLoggingExtensions
     /// <summary>
     /// Add Google Logging and Error reporting using settngs in the "GCP" section.
     /// <para>
-    /// Google Logging requires Application Default Credentials. They are available if running in Google Compute Engine. 
-    /// Otherwise, the environment variable GOOGLE_APPLICATION_CREDENTIALS must be defined pointing to a file defining the credentials. 
+    /// Google Logging requires Application Default Credentials. They are available if running in Google Compute Engine.
+    /// Otherwise, the environment variable GOOGLE_APPLICATION_CREDENTIALS must be defined pointing to a file defining the credentials.
     /// See https://developers.google.com/accounts/docs/application-default-credentials for more information.
     /// </para>
     /// </summary>
@@ -26,7 +26,9 @@ public static class GoogleLoggingExtensions
     public static IServiceCollection AddGoogleLogging(this IServiceCollection services, IConfiguration configuration)
     {
         if (configuration is null)
+        {
             throw new ArgumentNullException(nameof(configuration));
+        }
 
         var gcpConfig = configuration.GetSection("GCP");
         var projectId = gcpConfig.GetValue<string>("ProjectID");
