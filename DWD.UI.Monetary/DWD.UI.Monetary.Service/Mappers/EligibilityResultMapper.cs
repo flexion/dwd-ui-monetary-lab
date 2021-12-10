@@ -1,39 +1,40 @@
-namespace DWD.UI.Monetary.Service.Mappers;
-
-using System;
-using System.Collections.ObjectModel;
-using Domain.BusinessEntities;
-using Extensions;
-using Models;
-
-/// <summary>
-/// Maps EligibleResult to EligibleResultDto and IneligibleResult to IneligibleResultDto
-/// </summary>
-public static class EligibilityResultMapper
+namespace DWD.UI.Monetary.Service.Mappers
 {
-    public static IneligibleResultDto MapToDto(IneligibleResult ineligibleResult)
+    using System;
+    using System.Collections.ObjectModel;
+    using Domain.BusinessEntities;
+    using Extensions;
+    using Models;
+
+    /// <summary>
+    /// Maps EligibleResult to EligibleResultDto and IneligibleResult to IneligibleResultDto
+    /// </summary>
+    public static class EligibilityResultMapper
     {
-        if (ineligibleResult == null)
+        public static IneligibleResultDto MapToDto(IneligibleResult ineligibleResult)
         {
-            throw new ArgumentNullException(nameof(ineligibleResult));
+            if (ineligibleResult == null)
+            {
+                throw new ArgumentNullException(nameof(ineligibleResult));
+            }
+
+            var ineligibleDisplayReasons = new Collection<IneligibilityDisplayReason>();
+            foreach (var reason in ineligibleResult.IneligibilityReasons)
+            {
+                ineligibleDisplayReasons.Add(new IneligibilityDisplayReason(reason, reason.GetDescription()));
+            }
+
+            return new IneligibleResultDto(ineligibleResult.IsEligible, ineligibleDisplayReasons);
         }
 
-        var ineligibleDisplayReasons = new Collection<IneligibilityDisplayReason>();
-        foreach (var reason in ineligibleResult.IneligibilityReasons)
+        public static EligibleResultDto MapToDto(EligibleResult eligibleResult)
         {
-            ineligibleDisplayReasons.Add(new IneligibilityDisplayReason(reason, reason.GetDescription()));
+            if (eligibleResult == null)
+            {
+                throw new ArgumentNullException(nameof(eligibleResult));
+            }
+
+            return new EligibleResultDto(eligibleResult.IsEligible, eligibleResult.WeeklyBenefitRate, eligibleResult.MaximumBenefitAmount);
         }
-
-        return new IneligibleResultDto(ineligibleResult.IsEligible, ineligibleDisplayReasons);
-    }
-
-    public static EligibleResultDto MapToDto(EligibleResult eligibleResult)
-    {
-        if (eligibleResult == null)
-        {
-            throw new ArgumentNullException(nameof(eligibleResult));
-        }
-
-        return new EligibleResultDto(eligibleResult.IsEligible, eligibleResult.WeeklyBenefitRate);
     }
 }
