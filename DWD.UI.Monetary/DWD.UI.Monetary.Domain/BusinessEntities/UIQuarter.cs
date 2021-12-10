@@ -1,4 +1,3 @@
-//#nullable enable
 namespace DWD.UI.Monetary.Domain.BusinessEntities
 {
     using System;
