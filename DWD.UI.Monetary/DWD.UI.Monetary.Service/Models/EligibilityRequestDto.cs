@@ -1,25 +1,26 @@
-namespace DWD.UI.Monetary.Service.Models;
-
-using System;
-using System.Collections.Generic;
-
-/// <summary>
-/// Information about the claimant necessary for determining eligibility for benefits
-/// </summary>
-public class EligibilityRequestDto
+namespace DWD.UI.Monetary.Service.Models
 {
-    /// <summary>
-    ///  Identifies the claimant
-    /// </summary>
-    public string ClaimantId { get; set; }
+    using System;
+    using System.Collections.Generic;
 
     /// <summary>
-    /// Date when the claim first submitted and must be on after 01/01/1900
+    /// Information about the claimant necessary for determining eligibility for benefits.
     /// </summary>
-    public DateTime InitialClaimDate { get; set; }
+    public class EligibilityRequestDto
+    {
+        /// <summary>
+        ///  Gets or sets the claimant identifier.
+        /// </summary>
+        public string ClaimantId { get; set; }
 
-    /// <summary>
-    /// Wages of standard or alternate base periods from all employers
-    /// </summary>
-    public IEnumerable<decimal> WagesOfQuarters { get; set; } = new List<decimal>();
+        /// <summary>
+        /// Gets or sets the date when the claim first submitted and must be on after 01/01/1900.
+        /// </summary>
+        public DateTime InitialClaimDate { get; set; }
+
+        /// <summary>
+        /// Gets or sets the wages of standard or alternate base periods from all employers.
+        /// </summary>
+        public IEnumerable<decimal> WagesOfQuarters { get; set; } = new List<decimal>();
+    }
 }
