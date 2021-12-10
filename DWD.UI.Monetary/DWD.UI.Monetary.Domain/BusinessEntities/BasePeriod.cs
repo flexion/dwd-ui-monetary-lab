@@ -88,25 +88,5 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
         /// Get base period quarters as IEnumerable of IUIQuarter.
         /// </summary>
         public IEnumerable<IUIQuarter> AltBasePeriodQuarters => new List<IUIQuarter>(this.alternateQuarters);
-
-        /// <summary>
-        /// Friendly getter for first quarter.
-        /// </summary>
-        public UIQuarter FirstQuarter => this.standardQuarters[0];
-
-        /// <summary>
-        /// Friendly getter for second quarter.
-        /// </summary>
-        public UIQuarter SecondQuarter => this.standardQuarters[1];
-
-        /// <summary>
-        /// Friendly getter for third quarter.
-        /// </summary>
-        public UIQuarter ThirdQuarter => this.standardQuarters[2];
-
-        /// <summary>
-        /// Friendly getter for fourth quarter.
-        /// </summary>
-        public UIQuarter FourthQuarter => this.standardQuarters[3];
     }
 }

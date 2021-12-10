@@ -30,4 +30,8 @@
       <ProjectReference Include="..\DWD.UI.Monetary.Service\DWD.UI.Monetary.Service.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Remove="BasePeriodControllerTests.cs" />
+    </ItemGroup>
+
 </Project>
