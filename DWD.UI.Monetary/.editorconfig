@@ -152,7 +152,7 @@ dotnet_style_prefer_is_null_check_over_reference_equality_method = true:warning
 # Undocumented
 dotnet_style_operator_placement_when_wrapping = end_of_line:warning
 csharp_style_prefer_null_check_over_type_check = true:warning
-dotnet_style_namespace_match_folder = true:suggestion
+dotnet_style_namespace_match_folder = true:warning
 dotnet_diagnostic.IDE0130.severity = suggestion
 
 # C# Style Rules
@@ -442,6 +442,11 @@ dotnet_naming_symbols.parameters_group.applicable_kinds = parameter
 dotnet_naming_rule.parameters_rule.symbols              = parameters_group
 dotnet_naming_rule.parameters_rule.style                = camel_case_style
 dotnet_naming_rule.parameters_rule.severity             = warning
+
+# Special style rules for test classes
+[*Test*.{cs,csx,cake,vb,vbx}]
+# Allow underscores in members
+dotnet_diagnostic.CA1707.severity = none
 
 ##########################################
 # License

@@ -33,6 +33,7 @@ namespace DWD.UI.Monetary.Tests.Business
         [Theory]
         [MemberData(nameof(DataForAtLeastTwoQuartersEligibilityVerification))]
         [CLSCompliant(false)]
+
         public async Task ShouldHaveAtLeastTwoQuarters(Collection<decimal> wagesOfQuarters, bool expectedIsEligible)
         {
             var eligibilityVerificationRequest = new EligibilityVerificationRequest(wagesOfQuarters, new DateTime(2020, 5, 7), "1234567890");

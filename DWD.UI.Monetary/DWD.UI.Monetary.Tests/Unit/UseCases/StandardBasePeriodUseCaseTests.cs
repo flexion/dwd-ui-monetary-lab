@@ -1,4 +1,4 @@
-namespace DWD.UI.Monetary.Tests.Business
+namespace DWD.UI.Monetary.Tests.Unit.UseCases
 {
     using System;
     using System.Collections;
@@ -10,13 +10,13 @@ namespace DWD.UI.Monetary.Tests.Business
     using Xunit;
 
     /// <summary>
-    /// These are standard base period business test cases provided by the SME as part of the user story.
+    /// Unit tests for the CalculateBasePeriod use case.  Standard base period calculations.
     /// </summary>
-    public class StandardBasePeriodTestCases
+    public class StandardBasePeriodUseCaseTests
     {
         [Theory]
-        [ClassData(typeof(StandardBasePeriodTestData))]
-        public void BusinessTestCases_TestStandardBasePeriodCalculations_ClassData(string testDescription,
+        [ClassData(typeof(StandardBasePeriodUseCaseTestData))]
+        public void TestStandardBasePeriodUseCase_ClassData(string testDescription,
             DateTime initialClaimDate, Collection<Quarter> expectedQuarters)
         {
             // Arrange
@@ -46,7 +46,7 @@ namespace DWD.UI.Monetary.Tests.Business
         }
 
         [Fact]
-        public void BusinessTestCase_ShouldReturnStandardBasePeriods_WhenYearAndWeekValid()
+        public void CalculateBasePeriodFromYearAndWeek_ShouldReturnCorrectStandardQuartersForYearAndWeek_WhenValidYearAndWeek()
         {
             // Arrange
             var basePeriodUseCase = new CalculateBasePeriod();
@@ -74,14 +74,14 @@ namespace DWD.UI.Monetary.Tests.Business
         }
     }
 
-    public class StandardBasePeriodTestData : IEnumerable<object[]>
+    public class StandardBasePeriodUseCaseTestData : IEnumerable<object[]>
     {
         public IEnumerator<object[]> GetEnumerator()
         {
             yield return new object[]
             {
-                "BusinessTestCase_ShouldReturnCorrectStandardBaseQuarters_WhenValidClaimDate",
-                new DateTime(2021, 10, 31),
+                "CalculateBasePeriodFromInitialClaimDate_ShouldReturnCorrectStandardQuartersForClaimDate_WhenValidClaimDate",
+                new DateTime(2021, 10, 15),
                 new Collection<Quarter>()
                 {
                     new() {Year = 2020, QuarterNumber = 3}, new() {Year = 2020, QuarterNumber = 4}, new() {Year=2021, QuarterNumber = 1}, new() {Year=2021, QuarterNumber = 2}
@@ -89,7 +89,16 @@ namespace DWD.UI.Monetary.Tests.Business
             };
             yield return new object[]
             {
-                "BusinessTestCase_ShouldReturnCurrentStandardBaseQuarters_WhenClaimDateOnFirstSundayOfQuarter",
+                "CalculateBasePeriodFromInitialClaimDate_ShouldReturnPriorStandardBaseQuarters_WhenClaimDatePriorToFirstSundayOfQuarter",
+                new DateTime(2021, 1, 1),
+                new Collection<Quarter>()
+                {
+                    new() {Year = 2019, QuarterNumber = 3}, new() {Year = 2019, QuarterNumber = 4}, new(){Year=2020, QuarterNumber = 1}, new(){Year=2020, QuarterNumber = 2}
+                }
+            };
+            yield return new object[]
+            {
+                "CalculateBasePeriodFromInitialClaimDate_ShouldReturnCurrentStandardBaseQuarters_WhenClaimDateOnFirstSundayOfQuarter",
                 new DateTime(2021, 1, 3),
                 new Collection<Quarter>()
                 {
@@ -98,56 +107,11 @@ namespace DWD.UI.Monetary.Tests.Business
             };
             yield return new object[]
             {
-                "BusinessTestCase_ShouldReturnThirdQuarterStandardBaseQuarters_WhenClaimDateInFourthQuarterOfLeapYear",
-                new DateTime(2020, 12, 6),
-                new Collection<Quarter>()
-                {
-                    new() {Year = 2019, QuarterNumber = 3}, new() {Year = 2019, QuarterNumber = 4}, new(){Year=2020, QuarterNumber = 1}, new(){Year=2020, QuarterNumber = 2}
-                }
-            };
-            yield return new object[]
-            {
-                "BusinessTestCase_ShouldReturnPriorQuarterStandardBaseQuarters_WhenClaimDatePriorToFirstSundayOfQuarter",
-                new DateTime(2021, 4, 1),
+                "CalculateBasePeriodFromInitialClaimDate_ShouldReturnCurrentStandardBaseQuarters_WhenClaimDateAfterFirstSundayOfQuarter",
+                new DateTime(2021, 1, 15),
                 new Collection<Quarter>()
                 {
                     new() {Year = 2019, QuarterNumber = 4}, new() {Year = 2020, QuarterNumber = 1}, new(){Year=2020, QuarterNumber = 2}, new(){Year=2020, QuarterNumber = 3}
-                }
-            };
-            yield return new object[]
-            {
-                "BusinessTestCase_ShouldReturnCurrentStandardBaseQuarters_WhenClaimDateAfterFirstSundayOfQuarter",
-                new DateTime(2021, 4, 6),
-                new Collection<Quarter>()
-                {
-                    new() {Year = 2020, QuarterNumber = 1}, new() {Year = 2020, QuarterNumber = 2}, new(){Year=2020, QuarterNumber = 3}, new(){Year=2020, QuarterNumber = 4}
-                }
-            };
-            yield return new object[]
-            {
-                "BusinessTestCase_ShouldReturnPriorQuarterStandardBaseQuarters_WhenClaimDatePriorToFirstSundayOfYear",
-                new DateTime(2022, 1, 1),
-                new Collection<Quarter>()
-                {
-                    new() {Year = 2020, QuarterNumber = 3}, new() {Year = 2020, QuarterNumber = 4}, new(){Year=2021, QuarterNumber = 1}, new(){Year=2021, QuarterNumber = 2}
-                }
-            };
-            yield return new object[]
-            {
-                "BusinessTestCase_ShouldReturnCurrentStandardBaseQuarters_WhenClaimDateOnHoliday",
-                new DateTime(2021, 11, 25),
-                new Collection<Quarter>()
-                {
-                    new() {Year = 2020, QuarterNumber = 3}, new() {Year = 2020, QuarterNumber = 4}, new(){Year=2021, QuarterNumber = 1}, new(){Year=2021, QuarterNumber = 2}
-                }
-            };
-            yield return new object[]
-            {
-                "BusinessTestCase_ShouldReturnCurrentStandardBaseQuarters_WhenClaimDateOnFirstSundayOfQuarterAndHoliday",
-                new DateTime(2021, 7, 4),
-                new Collection<Quarter>()
-                {
-                    new() {Year = 2020, QuarterNumber = 2}, new() {Year = 2020, QuarterNumber = 3}, new(){Year=2020, QuarterNumber = 4}, new(){Year=2021, QuarterNumber = 1}
                 }
             };
         }
