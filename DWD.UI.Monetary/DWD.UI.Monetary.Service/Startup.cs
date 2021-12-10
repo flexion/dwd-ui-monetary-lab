@@ -1,15 +1,11 @@
-#pragma warning disable IDE0052
-#pragma warning disable CA1801
-#pragma warning disable IDE0060
-
 namespace DWD.UI.Monetary.Service
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Reflection;
-    using Domain.Interfaces;
-    using Domain.Utilities;
+    using DWD.UI.Monetary.Domain.Interfaces;
+    using DWD.UI.Monetary.Domain.Utilities;
     using DWD.UI.Monetary.Domain.UseCases;
     using DWD.UI.Monetary.Service.Extensions;
     using DWD.UI.Monetary.Service.Frameworks;
@@ -30,10 +26,10 @@ namespace DWD.UI.Monetary.Service
     public class Startup
     {
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the <see cref="Startup"/> class.
         /// </summary>
-        /// <param name="env">Reference to hosting environment</param>
-        /// <param name="configuration">Reference to the app configuration</param>
+        /// <param name="env">Reference to hosting environment.</param>
+        /// <param name="configuration">Reference to the app configuration.</param>
         public Startup(IWebHostEnvironment env, IConfiguration configuration)
         {
             this.env = env;
@@ -57,12 +53,12 @@ namespace DWD.UI.Monetary.Service
         /// <remarks>This method gets called by the runtime. Use this method to add services to the container.</remarks>
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddControllers();
+
             if (this.env.IsStaging() || this.env.IsProduction())
             {
                 services.AddGoogleLogging(this.config);
             }
-
-            services.AddControllers();
 
             services.AddSwaggerGen(c =>
             {
@@ -70,7 +66,7 @@ namespace DWD.UI.Monetary.Service
                 {
                     Title = "Monetary Endpoint Demo",
                     Version = "v1",
-                    Description = "An initial lab-safe implementation."
+                    Description = "An initial lab-safe implementation.",
                 });
 
                 // using System.Reflection;
@@ -95,11 +91,12 @@ namespace DWD.UI.Monetary.Service
         /// Configure http pipeline.
         /// </summary>
         /// <param name="app">Application builder reference.</param>
-        /// <param name="env">Environment reference.</param>
-        /// <remarks>This method gets called by the runtime. Use this method to configure the HTTP request pipeline.</remarks>
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        /// <param name="hostenv">Environment reference.</param>
+        /// <remarks>This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        /// </remarks>
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment hostenv)
         {
-            if (env.IsDevelopment())
+            if (hostenv.IsDevelopment())
             {
                 // nothing yet
             }
@@ -116,12 +113,11 @@ namespace DWD.UI.Monetary.Service
             });
 
             // app.UseHttpsRedirection();
-
             app.UseRouting();
 
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+            app.UseEndpoints(endpoints => endpoints.MapControllers());
         }
 
         /// <summary>
@@ -142,7 +138,7 @@ namespace DWD.UI.Monetary.Service
                     Password = config["SqlConnection:Password"],
                     Database = dbSettings["Database"],
                     SslMode = SslMode.Disable,
-                    Pooling = true
+                    Pooling = true,
                 };
             }
             else
@@ -158,7 +154,7 @@ namespace DWD.UI.Monetary.Service
                     Password = config.GetValue<string>("DB_PASS"), // e.g. 'my-db-password'
                     Database = config.GetValue<string>("DB_NAME"), // e.g. 'my-database'
                     SslMode = SslMode.Disable,
-                    Pooling = true
+                    Pooling = true,
                 };
             }
 

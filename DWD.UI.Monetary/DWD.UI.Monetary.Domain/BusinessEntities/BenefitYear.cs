@@ -3,7 +3,7 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
     using System;
 
     /// <summary>
-    ///
+    /// Benefit year.
     /// </summary>
     /// <param name="BenefitWeeks">
     /// The number of weeks in a benefit year.
