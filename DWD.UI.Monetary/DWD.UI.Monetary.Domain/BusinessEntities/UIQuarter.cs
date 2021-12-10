@@ -14,21 +14,9 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
     {
         // TODO: Ask Helen if this is needed, and if so what the correct minimum should be.
         /// <summary>
-        /// The minimum valid year.
-        /// </summary>
-        private const int MinimumValidYear = 1900;
-
-        // TODO: Ask Helen if this is needed, and if so what the correct maximum should be.
-        /// <summary>
-        /// The maximum valid year.
-        /// </summary>
-        private const int MaximumValidYear = 9999;
-
-        // TODO: Ask Helen if this is needed, and if so what the correct minimum should be.
-        /// <summary>
         /// The minimum valid date that can be used to construct a UI Quarter.
         /// </summary>
-        private static readonly DateTime MinimumValidDate = new(MinimumValidYear, 1, 1);
+        private static readonly DateTime MinimumValidDate = new(Constants.MIN_BENEFIT_YEAR, 1, 1);
 
         /// <summary>
         /// The quarter's year.
@@ -180,9 +168,9 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
         private static bool YearOrQuarterInvalid(int year, int quarterNumber, out string errorMessage)
         {
             // Check the year is within bounds
-            if (year is < MinimumValidYear or > MaximumValidYear)
+            if (year is < Constants.MIN_BENEFIT_YEAR or > Constants.MAX_BENEFIT_YEAR)
             {
-                errorMessage = $"The supplied year is not valid: year must be between {MinimumValidYear} and {MaximumValidYear} (Year={year}).";
+                errorMessage = $"The supplied year is not valid: year must be between {Constants.MIN_BENEFIT_YEAR} and {Constants.MAX_BENEFIT_YEAR} (Year={year}).";
                 return true;
             }
 
