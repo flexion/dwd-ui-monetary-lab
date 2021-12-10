@@ -3,8 +3,8 @@
 namespace DWD.UI.Monetary.Service.Controllers
 {
     using Microsoft.AspNetCore.Mvc;
-    using Gateways;
-    using Models.Stubs;
+    using DWD.UI.Monetary.Service.Gateways;
+    using DWD.UI.Monetary.Service.Models.Stubs;
 
     /// <summary>
     /// Provides endpoints for entering wage data.
@@ -62,6 +62,7 @@ namespace DWD.UI.Monetary.Service.Controllers
             var claimantWages = this.claimantWageRepository.GetClaimantWagesByClaimantId(claimantId);
             return this.Ok(claimantWages);
         }
+
         /// <summary>
         /// Updates a single wage entry by wage entry id
         /// </summary>
@@ -88,7 +89,7 @@ namespace DWD.UI.Monetary.Service.Controllers
         /// Deletes a wage entry by wage entry id
         /// </summary>
         /// <param name="id">wage id</param>
-        /// <returns></returns>
+        /// <returns>All wage entries</returns>
         [HttpDelete]
         [Route("DeleteClaimantWage/{id}")]
         public IActionResult DeleteClaimantWage([FromRoute] long id)
@@ -105,7 +106,7 @@ namespace DWD.UI.Monetary.Service.Controllers
         /// <param name="year">quarterly wages year</param>
         /// <param name="quarter">quarterly wages quarter</param>
         /// <param name="wages">quarterly wages</param>
-        /// <returns></returns>
+        /// <returns>All wage entries</returns>
         [HttpPost]
         [Route("CreateClaimantWage")]
         public IActionResult CreateClaimantWage(string claimantId, short? year, short? quarter, decimal wages)

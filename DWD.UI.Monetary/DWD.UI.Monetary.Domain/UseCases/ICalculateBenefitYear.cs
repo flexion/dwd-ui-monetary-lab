@@ -1,7 +1,7 @@
 namespace DWD.UI.Monetary.Domain.UseCases
 {
     using System;
-    using BusinessEntities;
+    using DWD.UI.Monetary.Domain.BusinessEntities;
 
     /// <summary>
     /// Calculate the claimant's benefit year.
@@ -16,7 +16,7 @@ namespace DWD.UI.Monetary.Domain.UseCases
         /// Calculate the benefit period based on requested start date.
         /// </summary>
         /// <param name="requestedClaimStartDate">The requested start date for the UI claim</param>
-        /// <returns></returns>
+        /// <returns>benefit year</returns>
         BenefitYear CalculateBenefitYearFromDate(DateTime requestedClaimStartDate);
     }
 }

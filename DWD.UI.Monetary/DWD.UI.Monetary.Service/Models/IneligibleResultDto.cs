@@ -1,29 +1,32 @@
 namespace DWD.UI.Monetary.Service.Models
 {
     using System.Collections.ObjectModel;
-    using Domain.BusinessEntities;
 
+    /// <summary>
+    /// API presentation result for ineligible reasons.
+    /// </summary>
     public class IneligibleResultDto
     {
-        public bool IsEligible { get; }
-        public Collection<IneligibilityDisplayReason> IneligibilityReasons { get; }
-
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="isEligible">boolean</param>
+        /// <param name="ineligibilityReasons">reasons collection</param>
         public IneligibleResultDto(bool isEligible, Collection<IneligibilityDisplayReason> ineligibilityReasons)
         {
             this.IsEligible = isEligible;
             this.IneligibilityReasons = ineligibilityReasons;
         }
-    }
 
-    public class IneligibilityDisplayReason
-    {
-        public IneligibilityReason Code { get; }
-        public string Description { get; }
+        /// <summary>
+        /// Is claimant eligible.
+        /// </summary>
+        public bool IsEligible { get; }
 
-        public IneligibilityDisplayReason(IneligibilityReason code, string description)
-        {
-            this.Code = code;
-            this.Description = description;
-        }
+        /// <summary>
+        /// The reasons for ineligibility.
+        /// </summary>
+        /// <returns>collection of reasons</returns>
+        public Collection<IneligibilityDisplayReason> IneligibilityReasons { get; }
     }
 }

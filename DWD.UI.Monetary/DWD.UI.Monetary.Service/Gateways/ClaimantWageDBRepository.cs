@@ -2,9 +2,12 @@ namespace DWD.UI.Monetary.Service.Gateways
 {
     using System.Collections.ObjectModel;
     using System.Linq;
-    using Frameworks;
-    using Models.Stubs;
+    using DWD.UI.Monetary.Service.Frameworks;
+    using DWD.UI.Monetary.Service.Models.Stubs;
 
+    /// <summary>
+    /// Concrete ClaimantWageDbRepository
+    /// </summary>
     public class ClaimantWageDbRepository : IClaimantWageRepository
     {
         /// <summary>
@@ -65,7 +68,7 @@ namespace DWD.UI.Monetary.Service.Gateways
         /// <summary>
         /// Get all wages for a claimant.
         /// </summary>
-        /// <param name="claimantId"></param>
+        /// <param name="claimantId">The claimant ID</param>
         /// <returns>wages for claimant</returns>
         public Collection<ClaimantWage> GetClaimantWagesByClaimantId(string claimantId) =>
             new(this.context.ClaimantWages.Where(c => c.ClaimantId == claimantId).ToList());

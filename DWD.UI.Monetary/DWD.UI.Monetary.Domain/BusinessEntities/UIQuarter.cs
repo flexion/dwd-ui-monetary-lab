@@ -1,7 +1,7 @@
 namespace DWD.UI.Monetary.Domain.BusinessEntities
 {
     using System;
-    using Utilities;
+    using DWD.UI.Monetary.Domain.Utilities;
 
     /// <summary>
     /// Represents an unemployment insurance quarter.
@@ -26,6 +26,7 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
         /// <summary>
         /// The quarter number.
         /// </summary>
+        /// <returns>quarter number</returns>
         public int QuarterNumber { get; private set; }
 
         /// <summary>
@@ -98,6 +99,7 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
                 quarter.QuarterNumber = 4;
                 quarter.Year--;
             }
+
             return quarter;
         }
 
