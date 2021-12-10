@@ -1,15 +1,14 @@
-namespace DWD.UI.Monetary.Service.Models
-{
-    using System.Collections.Generic;
+namespace DWD.UI.Monetary.Service.Models;
 
+using System.Collections.Generic;
+
+/// <summary>
+/// Base period dto interface.
+/// </summary>
+public interface IBasePeriodDto
+{
     /// <summary>
-    /// Base period dto interface.
+    /// An array of quarters making up the base period.
     /// </summary>
-    public interface IBasePeriodDto
-    {
-        /// <summary>
-        /// An array of quarters making up the base period.
-        /// </summary>
-        IEnumerable<ICalendarQuarterDto> Quarters { get; set; }
-    }
+    IEnumerable<ICalendarQuarterDto> Quarters { get; set; }
 }

@@ -1,25 +1,24 @@
-namespace DWD.UI.Monetary.Domain.BusinessEntities
+namespace DWD.UI.Monetary.Domain.BusinessEntities;
+
+using System.Collections.ObjectModel;
+
+/// <summary>
+/// This is the concrete class returned when the claimant is ineligible.
+/// </summary>
+public class IneligibleResult : EligibilityResult
 {
-    using System.Collections.ObjectModel;
+    /// <summary>
+    /// Gets a collection of numeric codes indicating all of the reasons for the determination of ineligbility.
+    /// </summary>
+    public Collection<IneligibilityReason> IneligibilityReasons { get; }
 
     /// <summary>
-    /// This is the concrete class returned when the claimant is ineligible.
+    /// Initializes a new instance of the <see cref="IneligibleResult"/> class.
     /// </summary>
-    public class IneligibleResult : EligibilityResult
+    /// <param name="reasons">A collection of numeric codes indicating all of the reasons for the determination of ineligbility.</param>
+    public IneligibleResult(Collection<IneligibilityReason> reasons)
     {
-        /// <summary>
-        /// Gets a collection of numeric codes indicating all of the reasons for the determination of ineligbility.
-        /// </summary>
-        public Collection<IneligibilityReason> IneligibilityReasons { get; }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="IneligibleResult"/> class.
-        /// </summary>
-        /// <param name="reasons">A collection of numeric codes indicating all of the reasons for the determination of ineligbility.</param>
-        public IneligibleResult(Collection<IneligibilityReason> reasons)
-        {
-            this.IsEligible = false;
-            this.IneligibilityReasons = reasons ?? new Collection<IneligibilityReason>();
-        }
+        this.IsEligible = false;
+        this.IneligibilityReasons = reasons ?? new Collection<IneligibilityReason>();
     }
 }
