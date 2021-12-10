@@ -5,6 +5,8 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities
     /// <summary>
     /// This enum defines the reasons for a determination of ineligibilty and corresponding human-readable descriptions.
     /// </summary>
+    /// <remarks>The values of the enumeration are set explicitly to infer that they should not
+    /// change, so that API clients can reference them independent of the text.</remarks>
     public enum IneligibilityReason
     {
         /// <summary>
