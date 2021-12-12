@@ -2,7 +2,6 @@ namespace DWD.UI.Monetary.Tests.Unit.Entities;
 
 using System;
 using Domain.BusinessEntities;
-using Domain.Utilities;
 using Xunit;
 
 /// <summary>
@@ -59,7 +58,7 @@ public class UIQuarterEntityTests
     {
         var validDate = new DateTime(2021, 4, 15);
 
-        var quarter = new UIQuarter(validDate, new CalendarQuarter());
+        var quarter = new UIQuarter(validDate);
 
         Assert.Equal(2021, quarter.Year);
         Assert.Equal(2, quarter.QuarterNumber);
@@ -70,7 +69,7 @@ public class UIQuarterEntityTests
     {
         var priorToFirstSundayOfCalendarQuarter = new DateTime(2021, 1, 1);
 
-        var quarter = new UIQuarter(priorToFirstSundayOfCalendarQuarter, new CalendarQuarter());
+        var quarter = new UIQuarter(priorToFirstSundayOfCalendarQuarter);
 
         Assert.Equal(2020, quarter.Year);
         Assert.Equal(4, quarter.QuarterNumber);
@@ -81,7 +80,7 @@ public class UIQuarterEntityTests
     {
         var firstSundayOfCalendarQuarter = new DateTime(2021, 1, 3);
 
-        var quarter = new UIQuarter(firstSundayOfCalendarQuarter, new CalendarQuarter());
+        var quarter = new UIQuarter(firstSundayOfCalendarQuarter);
 
         Assert.Equal(2021, quarter.Year);
         Assert.Equal(1, quarter.QuarterNumber);
@@ -92,7 +91,7 @@ public class UIQuarterEntityTests
     {
         var lastDayOfCalendarQuarter = new DateTime(2021, 1, 15);
 
-        var quarter = new UIQuarter(lastDayOfCalendarQuarter, new CalendarQuarter());
+        var quarter = new UIQuarter(lastDayOfCalendarQuarter);
 
         Assert.Equal(2021, quarter.Year);
         Assert.Equal(1, quarter.QuarterNumber);
@@ -103,7 +102,7 @@ public class UIQuarterEntityTests
     {
         var lastDayOfCalendarQuarter = new DateTime(2021, 12, 31);
 
-        var quarter = new UIQuarter(lastDayOfCalendarQuarter, new CalendarQuarter());
+        var quarter = new UIQuarter(lastDayOfCalendarQuarter);
 
         Assert.Equal(2021, quarter.Year);
         Assert.Equal(4, quarter.QuarterNumber);
@@ -114,7 +113,7 @@ public class UIQuarterEntityTests
     {
         var leapDay = new DateTime(2020, 2, 29);
 
-        var quarter = new UIQuarter(leapDay, new CalendarQuarter());
+        var quarter = new UIQuarter(leapDay);
 
         Assert.Equal(2020, quarter.Year);
         Assert.Equal(1, quarter.QuarterNumber);
@@ -124,7 +123,7 @@ public class UIQuarterEntityTests
     public void UIQuarterConstructor_ShouldReturnArgumentException_WhenInvalidDate()
     {
         var invalidDate = new DateTime(1800, 1, 1);
-        _ = Assert.Throws<ArgumentException>(() => new UIQuarter(invalidDate, new CalendarQuarter()));
+        _ = Assert.Throws<ArgumentException>(() => new UIQuarter(invalidDate));
     }
 
     [Fact]
@@ -132,7 +131,7 @@ public class UIQuarterEntityTests
     {
         var lastDayOfCalendarQuarter = new DateTime(2021, 1, 15);
 
-        var quarter = new UIQuarter(lastDayOfCalendarQuarter, new CalendarQuarter());
+        var quarter = new UIQuarter(lastDayOfCalendarQuarter);
 
         Assert.Equal(2021, quarter.Year);
         Assert.Equal(1, quarter.QuarterNumber);
@@ -148,7 +147,7 @@ public class UIQuarterEntityTests
     {
         var lastDayOfCalendarQuarter = new DateTime(2021, 12, 15);
 
-        var quarter = new UIQuarter(lastDayOfCalendarQuarter, new CalendarQuarter());
+        var quarter = new UIQuarter(lastDayOfCalendarQuarter);
 
         Assert.Equal(2021, quarter.Year);
         Assert.Equal(4, quarter.QuarterNumber);
@@ -163,7 +162,7 @@ public class UIQuarterEntityTests
     public void UIQuarterEquals_ShouldReturnTrue_WhenQuarterValuesAreEqual()
     {
         var myFirstQuarter = new UIQuarter(2021, 1);
-        var myEqualQuarter = new UIQuarter(new DateTime(2021, 1, 15), new CalendarQuarter());
+        var myEqualQuarter = new UIQuarter(new DateTime(2021, 1, 15));
         Assert.True(myFirstQuarter.Equals(myEqualQuarter));
     }
 
@@ -171,7 +170,7 @@ public class UIQuarterEntityTests
     public void UIQuarterEquals_ShouldReturnFalse_WhenQuarterValuesAreNotEqual()
     {
         var myFirstQuarter = new UIQuarter(2021, 1);
-        var notEqualQuarter = new UIQuarter(new DateTime(2021, 4, 15), new CalendarQuarter());
+        var notEqualQuarter = new UIQuarter(new DateTime(2021, 4, 15));
         Assert.False(myFirstQuarter.Equals(notEqualQuarter));
     }
 
