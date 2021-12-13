@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       DOTNET_NOLOGO: true
-      DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: 1
+      DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: 0
       DOTNET_RUNNING_IN_CONTAINER: true
       ASPNETCORE_URLS: http://+:8080
       
