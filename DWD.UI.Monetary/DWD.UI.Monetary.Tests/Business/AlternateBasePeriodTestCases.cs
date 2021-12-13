@@ -1,281 +1,192 @@
-namespace DWD.UI.Monetary.Tests.Business
+namespace DWD.UI.Monetary.Tests.Business;
+
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using Domain.BusinessEntities;
+using Domain.UseCases;
+using Xunit;
+
+/// <summary>
+/// These are alternate base period business test cases provided by the SME as part of the user story.
+/// </summary>
+public class AlternateBasePeriodTestCases
 {
-    using System;
-    using System.Linq;
-    using Domain.BusinessEntities;
-    using Domain.UseCases;
-    using Xunit;
-
-    /// <summary>
-    /// These are alternate base period business test cases provided by the SME as part of the user story.
-    /// </summary>
-    public class AlternateBasePeriodTestCases
+    [Theory]
+    [ClassData(typeof(AlternateBasePeriodTestData))]
+    public void BusinessTestCases_TestAlternateBasePeriodCalculations_ClassData(string testDescription, DateTime initialClaimDate, Collection<Quarter> expectedQuarters)
     {
-        /// <summary>
-        /// Calculate the alternate base period for 10/31/2021.
-        /// </summary>
-        [Fact]
-        public void OctoberThirtyFirst2021()
-        {
-            // Get base period from date
-            var myClaimDate = new DateTime(2021, 10, 31);
-            var basePeriodUseCase = new CalculateBasePeriod();
-            var result = basePeriodUseCase.CalculateBasePeriodFromInitialClaimDate(myClaimDate);
+        // Arrange
+        var basePeriodUseCase = new CalculateBasePeriod();
 
-            // Check result
-            Assert.NotNull(result);
-            var quarters = result.AltBasePeriodQuarters;
-            Assert.NotNull(quarters);
+        // Act
+        var result = basePeriodUseCase.CalculateBasePeriodFromInitialClaimDate(initialClaimDate);
 
-            var actualQuarters = quarters.OrderBy(q => q.Year)
-                .ThenBy(q => q.QuarterNumber)
-                .ToArray();
-            var testQuarters = new IUIQuarter[4];
-            testQuarters[0] = new UIQuarter(2020, 4);
-            testQuarters[1] = new UIQuarter(2021, 1);
-            testQuarters[2] = new UIQuarter(2021, 2);
-            testQuarters[3] = new UIQuarter(2021, 3);
+        // Assert
+        Assert.NotNull(result);
+        var quarters = result.AltBasePeriodQuarters;
+        Assert.NotNull(quarters);
 
-            Assert.Equal(testQuarters, actualQuarters);
-        }
+        var actualQuarters = quarters
+            .OrderBy(q => q.Year)
+            .ThenBy(q => q.QuarterNumber)
+            .ToArray();
 
-        /// <summary>
-        /// Calculate the alternate base period for 01/03/2021.
-        /// </summary>
-        [Fact]
-        public void JanuaryThird2021()
-        {
-            // Get base period from date
-            var myClaimDate = new DateTime(2021, 1, 3);
-            var basePeriodUseCase = new CalculateBasePeriod();
-            var result = basePeriodUseCase.CalculateBasePeriodFromInitialClaimDate(myClaimDate);
+        var expectedUIQuarters = expectedQuarters
+            .Select(x => new UIQuarter(x.Year, x.QuarterNumber))
+            .ToArray();
 
-            // Check result
-            Assert.NotNull(result);
-            var quarters = result.AltBasePeriodQuarters;
-            Assert.NotNull(quarters);
-
-            var actualQuarters = quarters.OrderBy(q => q.Year)
-                .ThenBy(q => q.QuarterNumber)
-                .ToArray();
-            var testQuarters = new IUIQuarter[4];
-            testQuarters[0] = new UIQuarter(2020, 1);
-            testQuarters[1] = new UIQuarter(2020, 2);
-            testQuarters[2] = new UIQuarter(2020, 3);
-            testQuarters[3] = new UIQuarter(2020, 4);
-
-            Assert.Equal(testQuarters, actualQuarters);
-        }
-
-        /// <summary>
-        /// Calculate the alternate base period for 12/06/2020.
-        /// </summary>
-        /// <remarks>2020 was a leap year.</remarks>
-        [Fact]
-        public void DecemberSixth2020()
-        {
-            // Get base period from date
-            var myClaimDate = new DateTime(2020, 12, 6);
-            var basePeriodUseCase = new CalculateBasePeriod();
-            var result = basePeriodUseCase.CalculateBasePeriodFromInitialClaimDate(myClaimDate);
-
-            // Check result
-            Assert.NotNull(result);
-            var quarters = result.AltBasePeriodQuarters;
-            Assert.NotNull(quarters);
-
-            var actualQuarters = quarters.OrderBy(q => q.Year)
-                .ThenBy(q => q.QuarterNumber)
-                .ToArray();
-            var testQuarters = new IUIQuarter[4];
-            testQuarters[0] = new UIQuarter(2019, 4);
-            testQuarters[1] = new UIQuarter(2020, 1);
-            testQuarters[2] = new UIQuarter(2020, 2);
-            testQuarters[3] = new UIQuarter(2020, 3);
-
-            Assert.Equal(testQuarters, actualQuarters);
-        }
-
-        /// <summary>
-        /// Calculate the alternate base period for 04/01/2021.
-        /// </summary>
-        /// <remarks>04/01/2021 is technically part of calendar Q2 but in UI it is still considered part of Q1.</remarks>
-        [Fact]
-        public void AprilFirst2021()
-        {
-            // Get base period from date
-            var myClaimDate = new DateTime(2021, 4, 1);
-            var basePeriodUseCase = new CalculateBasePeriod();
-            var result = basePeriodUseCase.CalculateBasePeriodFromInitialClaimDate(myClaimDate);
-
-            // Check result
-            Assert.NotNull(result);
-            var quarters = result.AltBasePeriodQuarters;
-            Assert.NotNull(quarters);
-
-            var actualQuarters = quarters.OrderBy(q => q.Year)
-                .ThenBy(q => q.QuarterNumber)
-                .ToArray();
-            var testQuarters = new IUIQuarter[4];
-            testQuarters[0] = new UIQuarter(2020, 1);
-            testQuarters[1] = new UIQuarter(2020, 2);
-            testQuarters[2] = new UIQuarter(2020, 3);
-            testQuarters[3] = new UIQuarter(2020, 4);
-
-            Assert.Equal(testQuarters, actualQuarters);
-        }
-
-        /// <summary>
-        /// Calculate the alternate base period for 04/06/2021.
-        /// </summary>
-        [Fact]
-        public void AprilSixth2021()
-        {
-            // Get base period from date
-            var myClaimDate = new DateTime(2021, 4, 6);
-            var basePeriodUseCase = new CalculateBasePeriod();
-            var result = basePeriodUseCase.CalculateBasePeriodFromInitialClaimDate(myClaimDate);
-
-            // Check result
-            Assert.NotNull(result);
-            var quarters = result.AltBasePeriodQuarters;
-            Assert.NotNull(quarters);
-
-            var actualQuarters = quarters.OrderBy(q => q.Year)
-                .ThenBy(q => q.QuarterNumber)
-                .ToArray();
-            var testQuarters = new IUIQuarter[4];
-            testQuarters[0] = new UIQuarter(2020, 2);
-            testQuarters[1] = new UIQuarter(2020, 3);
-            testQuarters[2] = new UIQuarter(2020, 4);
-            testQuarters[3] = new UIQuarter(2021, 1);
-
-            Assert.Equal(testQuarters, actualQuarters);
-        }
-
-        /// <summary>
-        /// Calculate the alternate base period for 01/01/2022.
-        /// </summary>
-        [Fact]
-        public void JanuaryFirst2022()
-        {
-            // Get base period from date
-            var myClaimDate = new DateTime(2022, 1, 1);
-            var basePeriodUseCase = new CalculateBasePeriod();
-            var result = basePeriodUseCase.CalculateBasePeriodFromInitialClaimDate(myClaimDate);
-
-            // Check result
-            Assert.NotNull(result);
-            var quarters = result.AltBasePeriodQuarters;
-            Assert.NotNull(quarters);
-
-            var actualQuarters = quarters.OrderBy(q => q.Year)
-                .ThenBy(q => q.QuarterNumber)
-                .ToArray();
-            var testQuarters = new IUIQuarter[4];
-            testQuarters[0] = new UIQuarter(2020, 4);
-            testQuarters[1] = new UIQuarter(2021, 1);
-            testQuarters[2] = new UIQuarter(2021, 2);
-            testQuarters[3] = new UIQuarter(2021, 3);
-
-            Assert.Equal(testQuarters, actualQuarters);
-        }
-
-        /// <summary>
-        /// Calculate the alternate base period for 11/25/2021.
-        /// </summary>
-        /// <remarks>11/25 Holiday in which we will still take claims.</remarks>
-        [Fact]
-        public void NovemberTwentyFifth2021()
-        {
-            // Get base period from date
-            var myClaimDate = new DateTime(2021, 11, 25);
-            var basePeriodUseCase = new CalculateBasePeriod();
-            var result = basePeriodUseCase.CalculateBasePeriodFromInitialClaimDate(myClaimDate);
-
-            // Check result
-            Assert.NotNull(result);
-            var quarters = result.AltBasePeriodQuarters;
-            Assert.NotNull(quarters);
-
-            var actualQuarters = quarters.OrderBy(q => q.Year)
-                .ThenBy(q => q.QuarterNumber)
-                .ToArray();
-            var testQuarters = new IUIQuarter[4];
-            testQuarters[0] = new UIQuarter(2020, 4);
-            testQuarters[1] = new UIQuarter(2021, 1);
-            testQuarters[2] = new UIQuarter(2021, 2);
-            testQuarters[3] = new UIQuarter(2021, 3);
-
-            Assert.Equal(testQuarters, actualQuarters);
-        }
-
-        /// <summary>
-        /// Calculate the alternate base period for 07/04/2021.
-        /// </summary>
-        /// <remarks>07/04 Holiday falls on Sunday.</remarks>
-        [Fact]
-        public void JulyFourth2021()
-        {
-            // Get base period from date
-            var myClaimDate = new DateTime(2021, 7, 4);
-            var basePeriodUseCase = new CalculateBasePeriod();
-            var result = basePeriodUseCase.CalculateBasePeriodFromInitialClaimDate(myClaimDate);
-
-            // Check result
-            Assert.NotNull(result);
-            var quarters = result.AltBasePeriodQuarters;
-            Assert.NotNull(quarters);
-
-            var actualQuarters = quarters.OrderBy(q => q.Year)
-                .ThenBy(q => q.QuarterNumber)
-                .ToArray();
-            var testQuarters = new IUIQuarter[4];
-            testQuarters[0] = new UIQuarter(2020, 3);
-            testQuarters[1] = new UIQuarter(2020, 4);
-            testQuarters[2] = new UIQuarter(2021, 1);
-            testQuarters[3] = new UIQuarter(2021, 2);
-
-            Assert.Equal(testQuarters, actualQuarters);
-        }
-
-        /// <summary>
-        /// Calculate the alternate base period for 07/04/1887.
-        /// </summary>
-        /// <remarks>Bad request.</remarks>
-        [Fact]
-        public void JulyFourth1887()
-        {
-            // Get base period from date
-            var myClaimDate = new DateTime(1887, 7, 4);
-            var basePeriodUseCase = new CalculateBasePeriod();
-            // Expect ArgumentException
-            Assert.Throws<ArgumentException>(() =>
-                basePeriodUseCase.CalculateBasePeriodFromInitialClaimDate(myClaimDate));
-        }
-
-        [Fact]
-        public void ShouldReturnAlternateBasePeriodsWhenYearAndWeekValid()
-        {
-            // Get base period from year and week
-            var basePeriodUseCase = new CalculateBasePeriod();
-            var result = basePeriodUseCase.CalculateBasePeriodFromYearAndWeek(2021, 28);
-
-            // Check result
-            Assert.NotNull(result);
-            var quarters = result.AltBasePeriodQuarters;
-            Assert.NotNull(quarters);
-
-            var actualQuarters = quarters.OrderBy(q => q.Year)
-                .ThenBy(q => q.QuarterNumber)
-                .ToArray();
-            var testQuarters = new IUIQuarter[4];
-            testQuarters[0] = new UIQuarter(2020, 3);
-            testQuarters[1] = new UIQuarter(2020, 4);
-            testQuarters[2] = new UIQuarter(2021, 1);
-            testQuarters[3] = new UIQuarter(2021, 2);
-
-            Assert.Equal(testQuarters, actualQuarters);
-        }
+        Assert.True(expectedUIQuarters[0].Equals(actualQuarters[0]), testDescription);
+        Assert.True(expectedUIQuarters[1].Equals(actualQuarters[1]), testDescription);
+        Assert.True(expectedUIQuarters[2].Equals(actualQuarters[2]), testDescription);
+        Assert.True(expectedUIQuarters[3].Equals(actualQuarters[3]), testDescription);
     }
+
+    [Fact]
+    public void BusinessTestCase_ShouldReturnAlternateBasePeriods_WhenYearAndWeekValid()
+    {
+        // Arrange
+        var basePeriodUseCase = new CalculateBasePeriod();
+
+        // Act
+        var result = basePeriodUseCase.CalculateBasePeriodFromYearAndWeek(2021, 28);
+
+        // Assert
+        Assert.NotNull(result);
+        var quarters = result.AltBasePeriodQuarters;
+        Assert.NotNull(quarters);
+
+        var actualQuarters = quarters
+            .OrderBy(q => q.Year)
+            .ThenBy(q => q.QuarterNumber)
+            .ToArray();
+
+        var expectedUIQuarters = new IUIQuarter[4];
+        expectedUIQuarters[0] = new UIQuarter(2020, 3);
+        expectedUIQuarters[1] = new UIQuarter(2020, 4);
+        expectedUIQuarters[2] = new UIQuarter(2021, 1);
+        expectedUIQuarters[3] = new UIQuarter(2021, 2);
+
+        Assert.Equal(expectedUIQuarters, actualQuarters);
+    }
+
+    [Fact]
+    public void BusinessTestCase_ShouldReturnArgumentException_WhenInvalidClaimDate()
+    {
+        var invalidClaimDate = new DateTime(1887, 7, 4);
+        var basePeriodUseCase = new CalculateBasePeriod();
+
+        _ = Assert.Throws<ArgumentException>(() =>
+            basePeriodUseCase.CalculateBasePeriodFromInitialClaimDate(invalidClaimDate));
+    }
+
+    [Fact]
+    public void BusinessTestCase_ShouldThrowArgumentException_WhenYearIsLessThanOne()
+    {
+        var basePeriodUseCase = new CalculateBasePeriod();
+        // Expect ArgumentException
+        _ = Assert.Throws<ArgumentException>(() =>
+            basePeriodUseCase.CalculateBasePeriodFromYearAndWeek(0, 45));
+    }
+
+    [Fact]
+    public void BusinessTestCase_ShouldThrowArgumentException_WhenWeekIsLessThanOne()
+    {
+        var basePeriodUseCase = new CalculateBasePeriod();
+        // Expect ArgumentException
+        _ = Assert.Throws<ArgumentException>(() =>
+            basePeriodUseCase.CalculateBasePeriodFromYearAndWeek(1989, 0));
+    }
+
+    [Fact]
+    public void BusinessTestCase_ShouldThrowArgumentException_WhenWeekIsGreaterThan53()
+    {
+        var basePeriodUseCase = new CalculateBasePeriod();
+        // Expect ArgumentException
+        _ = Assert.Throws<ArgumentException>(() =>
+            basePeriodUseCase.CalculateBasePeriodFromYearAndWeek(2022, 54));
+    }
+}
+
+public class AlternateBasePeriodTestData : IEnumerable<object[]>
+{
+    public IEnumerator<object[]> GetEnumerator()
+    {
+        yield return new object[]
+        {
+            "BusinessTestCase_ShouldReturnCorrectAltBaseQuarters_WhenValidClaimDate",
+            new DateTime(2021, 10, 31),
+            new Collection<Quarter>()
+            {
+                new() {Year = 2020, QuarterNumber = 4}, new() {Year = 2021, QuarterNumber = 1}, new() {Year=2021, QuarterNumber = 2}, new() {Year=2021, QuarterNumber = 3}
+            }
+        };
+        yield return new object[]
+        {
+            "BusinessTestCase_ShouldReturnCurrentAltBaseQuarters_WhenClaimDateOnFirstSundayOfQuarter",
+            new DateTime(2021, 1, 3),
+            new Collection<Quarter>()
+            {
+                new() {Year = 2020, QuarterNumber = 1}, new() {Year = 2020, QuarterNumber = 2}, new(){Year=2020, QuarterNumber = 3}, new(){Year=2020, QuarterNumber = 4}
+            }
+        };
+        yield return new object[]
+        {
+            "BusinessTestCase_ShouldReturnThirdQuarterAltBaseQuarters_WhenClaimDateInFourthQuarterOfLeapYear",
+            new DateTime(2020, 12, 6),
+            new Collection<Quarter>()
+            {
+                new() {Year = 2019, QuarterNumber = 4}, new() {Year = 2020, QuarterNumber = 1}, new(){Year=2020, QuarterNumber = 2}, new(){Year=2020, QuarterNumber = 3}
+            }
+        };
+        yield return new object[]
+        {
+            "BusinessTestCase_ShouldReturnPriorQuarterAltBaseQuarters_WhenClaimDatePriorToFirstSundayOfQuarter",
+            new DateTime(2021, 4, 1),
+            new Collection<Quarter>()
+            {
+                new() {Year = 2020, QuarterNumber = 1}, new() {Year = 2020, QuarterNumber = 2}, new(){Year=2020, QuarterNumber = 3}, new(){Year=2020, QuarterNumber = 4}
+            }
+        };
+        yield return new object[]
+        {
+            "BusinessTestCase_ShouldReturnCurrentAltBaseQuarters_WhenClaimDateAfterFirstSundayOfQuarter",
+            new DateTime(2021, 4, 6),
+            new Collection<Quarter>()
+            {
+                new() {Year = 2020, QuarterNumber = 2}, new() {Year = 2020, QuarterNumber = 3}, new(){Year=2020, QuarterNumber = 4}, new(){Year=2021, QuarterNumber = 1}
+            }
+        };
+        yield return new object[]
+        {
+            "BusinessTestCase_ShouldReturnPriorQuarterAltBaseQuarters_WhenClaimDatePriorToFirstSundayOfYear",
+            new DateTime(2022, 1, 1),
+            new Collection<Quarter>()
+            {
+                new() {Year = 2020, QuarterNumber = 4}, new() {Year = 2021, QuarterNumber = 1}, new(){Year=2021, QuarterNumber = 2}, new(){Year=2021, QuarterNumber = 3}
+            }
+        };
+        yield return new object[]
+        {
+            "BusinessTestCase_ShouldReturnCurrentAltBaseQuarters_WhenClaimDateOnFirstSundayOfQuarterAndHoliday",
+            new DateTime(2021, 7, 4),
+            new Collection<Quarter>()
+            {
+                new() {Year = 2020, QuarterNumber = 3}, new() {Year = 2020, QuarterNumber = 4}, new(){Year=2021, QuarterNumber = 1}, new(){Year=2021, QuarterNumber = 2}
+            }
+        };
+        yield return new object[]
+        {
+            "BusinessTestCase_ShouldReturnCurrentAltBaseQuarters_WhenClaimDateOnHoliday",
+            new DateTime(2021, 11, 25),
+            new Collection<Quarter>()
+            {
+                new() {Year = 2020, QuarterNumber = 4}, new() {Year = 2021, QuarterNumber = 1}, new(){Year=2021, QuarterNumber = 2}, new(){Year=2021, QuarterNumber = 3}
+            }
+        };
+    }
+
+    IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
 }

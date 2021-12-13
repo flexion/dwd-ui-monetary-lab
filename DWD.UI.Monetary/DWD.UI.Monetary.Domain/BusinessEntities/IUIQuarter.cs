@@ -1,20 +1,19 @@
-namespace DWD.UI.Monetary.Domain.BusinessEntities
+namespace DWD.UI.Monetary.Domain.BusinessEntities;
+
+using System;
+
+/// <summary>
+/// Simplified representation of unemployment insurance quarter.
+/// </summary>
+public interface IUIQuarter : IEquatable<IUIQuarter>, IComparable<IUIQuarter>
 {
-    using System;
+    /// <summary>
+    /// The quarter's year.
+    /// </summary>
+    int Year { get; }
 
     /// <summary>
-    /// Simplified representation of unemployment insurance quarter.
+    /// The quarter number.
     /// </summary>
-    public interface IUIQuarter : IEquatable<IUIQuarter>, IComparable<IUIQuarter>
-    {
-        /// <summary>
-        /// The quarter's year.
-        /// </summary>
-        int Year { get; }
-
-        /// <summary>
-        /// The quarter number.
-        /// </summary>
-        int QuarterNumber { get; }
-    }
+    int QuarterNumber { get; }
 }
