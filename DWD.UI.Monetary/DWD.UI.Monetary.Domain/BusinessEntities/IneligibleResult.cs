@@ -8,14 +8,14 @@ using System.Collections.ObjectModel;
 public class IneligibleResult : EligibilityResult
 {
     /// <summary>
-    /// Gets a collection of numeric codes indicating all of the reasons for the determination of ineligbility.
+    /// Gets a collection of numeric codes indicating all of the reasons for the determination of ineligibility.
     /// </summary>
     public Collection<IneligibilityReason> IneligibilityReasons { get; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="IneligibleResult"/> class.
     /// </summary>
-    /// <param name="reasons">A collection of numeric codes indicating all of the reasons for the determination of ineligbility.</param>
+    /// <param name="reasons">A collection of numeric codes indicating all of the reasons for the determination of ineligibility.</param>
     public IneligibleResult(Collection<IneligibilityReason> reasons)
     {
         this.IsEligible = false;

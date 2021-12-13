@@ -41,10 +41,10 @@ public static class CalendarQuarter
     /// <summary>
     /// Determine date from year and week number.
     /// </summary>
-    /// <param name="year">year</param>
-    /// <param name="weekOfYear">week</param>
-    /// <returns>DateTime - Start Date of the week</returns>
-    /// <exception cref="ArgumentException">If date does not meet the max/min criteria</exception>
+    /// <param name="year">year.</param>
+    /// <param name="weekOfYear">week.</param>
+    /// <returns>DateTime - Start Date of the week.</returns>
+    /// <exception cref="ArgumentException">If date does not meet the max/min criteria.</exception>
     public static DateTime GetDateTimeFromYearAndWeek(int year, int weekOfYear)
     {
         if (year < Constants.MinBenefitYear)

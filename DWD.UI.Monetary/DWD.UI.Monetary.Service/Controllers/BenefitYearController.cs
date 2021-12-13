@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 [Produces(MediaTypeNames.Application.Json)]
 [ApiController]
 [Route("benefityear")]
-public class BenefitYearContoller : ControllerBase
+public class BenefitYearController : ControllerBase
 {
     /// <summary>
     /// Local reference to domain logic.
@@ -24,7 +24,7 @@ public class BenefitYearContoller : ControllerBase
     /// Constructor.
     /// </summary>
     /// <param name="calculateBenefitYear">A domain logic reference.</param>
-    public BenefitYearContoller(ICalculateBenefitYear calculateBenefitYear) => this.calculateBenefitYear = calculateBenefitYear;
+    public BenefitYearController(ICalculateBenefitYear calculateBenefitYear) => this.calculateBenefitYear = calculateBenefitYear;
 
     /// <summary>
     /// Calculate benefit year for requested date.

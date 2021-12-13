@@ -32,7 +32,7 @@ internal class BasePeriod : IBasePeriod
     private UIQuarter[] alternateQuarters = new UIQuarter[4];
 
     /// <summary>
-    /// Construct instance using initial claim date as input.
+    /// Initializes a new instance of the <see cref="BasePeriod"/> class.
     /// </summary>
     /// <param name="initialClaimDate">The initial claim date.</param>
     /// <exception cref="ArgumentException">Throws a ArgumentException if the supplied initial claim date is not valid.</exception>
@@ -40,7 +40,7 @@ internal class BasePeriod : IBasePeriod
         this.PopulateBasePeriods(initialClaimDate);
 
     /// <summary>
-    ///  Populate standard and alternate base periods
+    ///  Populate standard and alternate base periods.
     /// </summary>
     /// <param name="initialClaimDate">The initial claim date.</param>
     /// <exception cref="ArgumentException">Throws a ArgumentException if the supplied initial claim date is not valid.</exception>
@@ -67,10 +67,10 @@ internal class BasePeriod : IBasePeriod
     }
 
     /// <summary>
-    /// Constructor by year and week.
+    /// Initializes a new instance of the <see cref="BasePeriod"/> class.
     /// </summary>
-    /// <param name="year">year</param>
-    /// <param name="weekOfYear">weak</param>
+    /// <param name="year">year.</param>
+    /// <param name="weekOfYear">weak.</param>
     public BasePeriod(int year, int weekOfYear)
     {
         var initialClaimDate = CalendarQuarter.GetDateTimeFromYearAndWeek(year, weekOfYear);
@@ -78,12 +78,12 @@ internal class BasePeriod : IBasePeriod
     }
 
     /// <summary>
-    /// Get base period quarters as IEnumerable of IUIQuarter.
+    /// Gets base period quarters as IEnumerable of IUIQuarter.
     /// </summary>
     public IEnumerable<IUIQuarter> BasePeriodQuarters => new List<IUIQuarter>(this.standardQuarters);
 
     /// <summary>
-    /// Get base period quarters as IEnumerable of IUIQuarter.
+    /// Gets base period quarters as IEnumerable of IUIQuarter.
     /// </summary>
     public IEnumerable<IUIQuarter> AltBasePeriodQuarters => new List<IUIQuarter>(this.alternateQuarters);
 }

@@ -8,12 +8,12 @@ using System;
 public interface IUIQuarter : IEquatable<IUIQuarter>, IComparable<IUIQuarter>
 {
     /// <summary>
-    /// The quarter's year.
+    /// Gets the quarter's year.
     /// </summary>
     int Year { get; }
 
     /// <summary>
-    /// The quarter number.
+    /// Gets the quarter number.
     /// </summary>
     int QuarterNumber { get; }
 }

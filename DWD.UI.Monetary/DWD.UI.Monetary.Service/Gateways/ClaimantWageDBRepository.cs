@@ -16,15 +16,15 @@ public class ClaimantWageDbRepository : IClaimantWageRepository
     private readonly ClaimantWageContext context;
 
     /// <summary>
-    /// Create the new repository with a DB context.
+    /// Initializes a new instance of the <see cref="ClaimantWageDbRepository"/> class.
     /// </summary>
-    /// <param name="theClaimantWageContext">DB context</param>
+    /// <param name="theClaimantWageContext">DB context.</param>
     public ClaimantWageDbRepository(ClaimantWageContext theClaimantWageContext) => this.context = theClaimantWageContext;
 
     /// <summary>
     /// Add a new wage entry.
     /// </summary>
-    /// <param name="wage">wage entry</param>
+    /// <param name="wage">wage entry.</param>
     public void AddClaimantWage(ClaimantWage wage)
     {
         _ = this.context.ClaimantWages.Add(wage);
@@ -34,7 +34,7 @@ public class ClaimantWageDbRepository : IClaimantWageRepository
     /// <summary>
     /// Update a wage entry by id.
     /// </summary>
-    /// <param name="wage">wage entry</param>
+    /// <param name="wage">wage entry.</param>
     public void UpdateClaimantWage(ClaimantWage wage)
     {
         _ = this.context.ClaimantWages.Update(wage);
@@ -44,7 +44,7 @@ public class ClaimantWageDbRepository : IClaimantWageRepository
     /// <summary>
     /// Delete a wage entry by id.
     /// </summary>
-    /// <param name="id">wage entry id</param>
+    /// <param name="id">wage entry id.</param>
     public void DeleteClaimantWage(long id)
     {
         var entity = this.context.ClaimantWages.Find(id);
@@ -55,21 +55,21 @@ public class ClaimantWageDbRepository : IClaimantWageRepository
     /// <summary>
     /// Get a wage entry by id.
     /// </summary>
-    /// <param name="id">wage entry id</param>
-    /// <returns>wage entry</returns>
+    /// <param name="id">wage entry id.</param>
+    /// <returns>wage entry.</returns>
     public ClaimantWage GetClaimantWage(long id) => this.context.ClaimantWages.Find(id);
 
     /// <summary>
     /// Get all wages.
     /// </summary>
-    /// <returns>all wages</returns>
+    /// <returns>all wages.</returns>
     public Collection<ClaimantWage> GetClaimantWages() => new(this.context.ClaimantWages.ToList());
 
     /// <summary>
     /// Get all wages for a claimant.
     /// </summary>
-    /// <param name="claimantId">The claimant ID</param>
-    /// <returns>wages for claimant</returns>
+    /// <param name="claimantId">The claimant ID.</param>
+    /// <returns>wages for claimant.</returns>
     public Collection<ClaimantWage> GetClaimantWagesByClaimantId(string claimantId) =>
         new(this.context.ClaimantWages.Where(c => c.ClaimantId == claimantId).ToList());
 }

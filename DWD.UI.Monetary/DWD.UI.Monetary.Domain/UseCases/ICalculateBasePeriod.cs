@@ -16,10 +16,10 @@ public interface ICalculateBasePeriod
     IBasePeriod CalculateBasePeriodFromInitialClaimDate(DateTime initialClaimDate);
 
     /// <summary>
-    /// Calculate base period from year and week
+    /// Calculate base period from year and week.
     /// </summary>
-    /// <param name="year">Year to calculate the base periods</param>
-    /// <param name="week">Week number of the year. Must be between 1 and 52 or 53(If first day of the year lands on saturday)</param>
+    /// <param name="year">Year to calculate the base periods.</param>
+    /// <param name="week">Week number of the year. Must be between 1 and 52 or 53(If first day of the year lands on saturday).</param>
     /// <returns>The calculated base period.</returns>
     IBasePeriod CalculateBasePeriodFromYearAndWeek(int year, int week);
 }

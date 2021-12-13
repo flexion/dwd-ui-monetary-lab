@@ -20,17 +20,18 @@ internal class UIQuarter : IUIQuarter
     private static readonly DateTime MinimumValidDate = new(Constants.MinBenefitYear, 1, 1);
 
     /// <summary>
-    /// The quarter's year.
+    /// Gets the quarter's year.
     /// </summary>
     public int Year { get; private set; }
 
     /// <summary>
-    /// The quarter number.
+    /// Gets the quarter number.
     /// </summary>
-    /// <returns>quarter number</returns>
+    /// <returns>quarter number.</returns>
     public int QuarterNumber { get; private set; }
 
     /// <summary>
+    /// Initializes a new instance of the <see cref="UIQuarter"/> class.
     /// Construct from year and quarter number.
     /// </summary>
     /// <param name="year">The quarter's year.</param>
@@ -48,6 +49,7 @@ internal class UIQuarter : IUIQuarter
     }
 
     /// <summary>
+    /// Initializes a new instance of the <see cref="UIQuarter"/> class.
     /// Construct from calendar date.
     /// </summary>
     /// <param name="date">date.</param>
@@ -113,8 +115,8 @@ internal class UIQuarter : IUIQuarter
     /// <summary>
     /// Compare two UIQuarter objects.
     /// </summary>
-    /// <param name="other">Another UIQuarter</param>
-    /// <returns>comparison</returns>
+    /// <param name="other">Another UIQuarter.</param>
+    /// <returns>comparison.</returns>
     public int CompareTo(IUIQuarter other)
     {
         var result = -1;
@@ -134,16 +136,16 @@ internal class UIQuarter : IUIQuarter
     /// <summary>
     /// Check for value equality.
     /// </summary>
-    /// <param name="other">the other</param>
-    /// <returns>true/false</returns>
+    /// <param name="other">the other.</param>
+    /// <returns>true/false.</returns>
     public bool Equals(IUIQuarter other) =>
         this.Equals((object)other!);
 
     /// <summary>
     /// Check if the object for value equality.
     /// </summary>
-    /// <param name="obj">other obj</param>
-    /// <returns>true/false</returns>
+    /// <param name="obj">other obj.</param>
+    /// <returns>true/false.</returns>
     public override bool Equals(object obj)
     {
         if (obj is UIQuarter quarter)
@@ -157,7 +159,7 @@ internal class UIQuarter : IUIQuarter
     /// <summary>
     /// Hash code override.
     /// </summary>
-    /// <returns>hash</returns>
+    /// <returns>hash.</returns>
     public override int GetHashCode() => HashCode.Combine(this.Year, this.QuarterNumber);
 
     /// <summary>

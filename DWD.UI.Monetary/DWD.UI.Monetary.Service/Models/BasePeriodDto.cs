@@ -8,7 +8,7 @@ using System.Collections.Generic;
 public class BasePeriodDto : IBasePeriodDto
 {
     /// <summary>
-    /// An array of quarters making up the base period.
+    /// Gets or sets an array of quarters making up the base period.
     /// </summary>
     public IEnumerable<ICalendarQuarterDto> Quarters { get; set; }
 }
