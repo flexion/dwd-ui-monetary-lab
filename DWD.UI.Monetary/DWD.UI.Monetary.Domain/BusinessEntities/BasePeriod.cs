@@ -5,8 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using DWD.UI.Monetary.Domain.Utilities;
 
-// TODO: Add a method to get base period by year and week i.e. 2021 41, meaning 41st week of 2021.
-
 /// <summary>
 /// The base period used within our eligibility logic.
 /// </summary>
@@ -21,7 +19,7 @@ internal class BasePeriod : IBasePeriod
     /// <summary>
     /// The minimum valid initial base claim date that we will calculate from.
     /// </summary>
-    private static readonly DateTime MinimumValidInitialBaseClaimDate = new(Constants.MIN_BENEFIT_YEAR, 1, 1);
+    private static readonly DateTime MinimumValidInitialBaseClaimDate = new(Constants.MinBenefitYear, 1, 1);
 
     /// <summary>
     /// Local storage for quarters.
@@ -32,11 +30,6 @@ internal class BasePeriod : IBasePeriod
     /// Local storage for quarters.
     /// </summary>
     private UIQuarter[] alternateQuarters = new UIQuarter[4];
-
-    /// <summary>
-    /// Hidden default constructor.
-    /// </summary>
-    private BasePeriod() { }
 
     /// <summary>
     /// Construct instance using initial claim date as input.
@@ -61,7 +54,7 @@ internal class BasePeriod : IBasePeriod
 
         // Populate basePeriod with last 5 complete quarters, skipping most recent complete quarter
         var previous5Quarters = new UIQuarter[5];
-        var currentQuarter = new UIQuarter(initialClaimDate, new CalendarQuarter());
+        var currentQuarter = new UIQuarter(initialClaimDate);
 
         for (var i = 4; i >= 0; i--)
         {
@@ -73,9 +66,14 @@ internal class BasePeriod : IBasePeriod
         this.alternateQuarters = previous5Quarters.Skip(1).ToArray();
     }
 
+    /// <summary>
+    /// Constructor by year and week.
+    /// </summary>
+    /// <param name="year">year</param>
+    /// <param name="weekOfYear">weak</param>
     public BasePeriod(int year, int weekOfYear)
     {
-        var initialClaimDate = new CalendarQuarter().GetDateTimeFromYearAndWeek(year, weekOfYear);
+        var initialClaimDate = CalendarQuarter.GetDateTimeFromYearAndWeek(year, weekOfYear);
         this.PopulateBasePeriods(initialClaimDate);
     }
 

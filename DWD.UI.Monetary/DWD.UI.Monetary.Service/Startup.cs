@@ -5,7 +5,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
 using DWD.UI.Monetary.Domain.Interfaces;
-using DWD.UI.Monetary.Domain.Utilities;
 using DWD.UI.Monetary.Domain.UseCases;
 using DWD.UI.Monetary.Service.Extensions;
 using DWD.UI.Monetary.Service.Frameworks;
@@ -81,7 +80,6 @@ public class Startup
             .AddTransient<ICalculateBasePeriod, CalculateBasePeriod>()
             .AddSingleton<ICalculateBenefitYear, CalculateBenefitYear>()
             .AddScoped<IClaimantWageRepository, ClaimantWageDbRepository>()
-            .AddScoped<ICalendarQuarter, CalendarQuarter>()
             .AddScoped<IClaimantWageRepository, ClaimantWageDbRepository>()
             .AddScoped<ICheckEligibilityOfMonetaryRequirements, CheckEligibilityOfMonetaryRequirements>()
             .AddScoped<IEligibilityBasisGateway, StubEligibilityBasisGateway>();
