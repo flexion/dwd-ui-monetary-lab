@@ -78,7 +78,7 @@ public class AlternateBasePeriodTestCases
         var invalidClaimDate = new DateTime(1887, 7, 4);
         var basePeriodUseCase = new CalculateBasePeriod();
 
-        _ = Assert.Throws<ArgumentException>(() =>
+        _ = Assert.Throws<ArgumentOutOfRangeException>(() =>
             basePeriodUseCase.CalculateBasePeriodFromInitialClaimDate(invalidClaimDate));
     }
 
@@ -87,7 +87,7 @@ public class AlternateBasePeriodTestCases
     {
         var basePeriodUseCase = new CalculateBasePeriod();
         // Expect ArgumentException
-        _ = Assert.Throws<ArgumentException>(() =>
+        _ = Assert.Throws<ArgumentOutOfRangeException>(() =>
             basePeriodUseCase.CalculateBasePeriodFromYearAndWeek(0, 45));
     }
 
@@ -96,7 +96,7 @@ public class AlternateBasePeriodTestCases
     {
         var basePeriodUseCase = new CalculateBasePeriod();
         // Expect ArgumentException
-        _ = Assert.Throws<ArgumentException>(() =>
+        _ = Assert.Throws<ArgumentOutOfRangeException>(() =>
             basePeriodUseCase.CalculateBasePeriodFromYearAndWeek(1989, 0));
     }
 
@@ -105,7 +105,7 @@ public class AlternateBasePeriodTestCases
     {
         var basePeriodUseCase = new CalculateBasePeriod();
         // Expect ArgumentException
-        _ = Assert.Throws<ArgumentException>(() =>
+        _ = Assert.Throws<ArgumentOutOfRangeException>(() =>
             basePeriodUseCase.CalculateBasePeriodFromYearAndWeek(2022, 54));
     }
 }

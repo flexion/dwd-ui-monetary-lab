@@ -5,8 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using DWD.UI.Monetary.Domain.Utilities;
 
-// TODO: Add a method to get base period by year and week i.e. 2021 41, meaning 41st week of 2021.
-
 /// <summary>
 /// The base period used within our eligibility logic.
 /// </summary>
@@ -21,7 +19,7 @@ internal class BasePeriod : IBasePeriod
     /// <summary>
     /// The minimum valid initial base claim date that we will calculate from.
     /// </summary>
-    private static readonly DateTime MinimumValidInitialBaseClaimDate = new(Constants.MIN_BENEFIT_YEAR, 1, 1);
+    private static readonly DateTime MinimumValidInitialBaseClaimDate = new(Constants.MINBENEFITYEAR, 1, 1);
 
     /// <summary>
     /// Local storage for quarters.
@@ -34,12 +32,7 @@ internal class BasePeriod : IBasePeriod
     private UIQuarter[] alternateQuarters = new UIQuarter[4];
 
     /// <summary>
-    /// Hidden default constructor.
-    /// </summary>
-    private BasePeriod() { }
-
-    /// <summary>
-    /// Construct instance using initial claim date as input.
+    /// Initializes a new instance of the <see cref="BasePeriod"/> class using initial claim date as input.
     /// </summary>
     /// <param name="initialClaimDate">The initial claim date.</param>
     /// <exception cref="ArgumentException">Throws a ArgumentException if the supplied initial claim date is not valid.</exception>
@@ -47,16 +40,37 @@ internal class BasePeriod : IBasePeriod
         this.PopulateBasePeriods(initialClaimDate);
 
     /// <summary>
-    ///  Populate standard and alternate base periods
+    /// Initializes a new instance of the <see cref="BasePeriod"/> class given a year and week of year.
+    /// </summary>
+    /// <param name="year">The year.</param>
+    /// <param name="weekOfYear">The week.</param>
+    public BasePeriod(int year, int weekOfYear)
+    {
+        var initialClaimDate = CalendarQuarter.GetDateTimeFromYearAndWeek(year, weekOfYear);
+        this.PopulateBasePeriods(initialClaimDate);
+    }
+
+    /// <summary>
+    /// Gets base period quarters as IEnumerable of IUIQuarter.
+    /// </summary>
+    public IEnumerable<IUIQuarter> BasePeriodQuarters => new List<IUIQuarter>(this.standardQuarters);
+
+    /// <summary>
+    /// Gets base period quarters as IEnumerable of IUIQuarter.
+    /// </summary>
+    public IEnumerable<IUIQuarter> AltBasePeriodQuarters => new List<IUIQuarter>(this.alternateQuarters);
+
+    /// <summary>
+    /// Populate standard and alternate base periods.
     /// </summary>
     /// <param name="initialClaimDate">The initial claim date.</param>
-    /// <exception cref="ArgumentException">Throws a ArgumentException if the supplied initial claim date is not valid.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">Throws a ArgumentException if the supplied initial claim date is not valid.</exception>
     private void PopulateBasePeriods(DateTime initialClaimDate)
     {
         // Check if claim date is invalid
         if (initialClaimDate.Date < MinimumValidInitialBaseClaimDate)
         {
-            throw new ArgumentException($"The supplied initial claim date is not valid: Dates before {MinimumValidInitialBaseClaimDate} are not supported (initialClaimDate={initialClaimDate.Date.ToShortDateString()}).");
+            throw new ArgumentOutOfRangeException($"The supplied initial claim date is not valid: Dates before {MinimumValidInitialBaseClaimDate} are not supported (initialClaimDate={initialClaimDate.Date.ToShortDateString()}).");
         }
 
         // Populate basePeriod with last 5 complete quarters, skipping most recent complete quarter
@@ -72,20 +86,4 @@ internal class BasePeriod : IBasePeriod
         this.standardQuarters = previous5Quarters.Take(4).ToArray();
         this.alternateQuarters = previous5Quarters.Skip(1).ToArray();
     }
-
-    public BasePeriod(int year, int weekOfYear)
-    {
-        var initialClaimDate = new CalendarQuarter().GetDateTimeFromYearAndWeek(year, weekOfYear);
-        this.PopulateBasePeriods(initialClaimDate);
-    }
-
-    /// <summary>
-    /// Get base period quarters as IEnumerable of IUIQuarter.
-    /// </summary>
-    public IEnumerable<IUIQuarter> BasePeriodQuarters => new List<IUIQuarter>(this.standardQuarters);
-
-    /// <summary>
-    /// Get base period quarters as IEnumerable of IUIQuarter.
-    /// </summary>
-    public IEnumerable<IUIQuarter> AltBasePeriodQuarters => new List<IUIQuarter>(this.alternateQuarters);
 }

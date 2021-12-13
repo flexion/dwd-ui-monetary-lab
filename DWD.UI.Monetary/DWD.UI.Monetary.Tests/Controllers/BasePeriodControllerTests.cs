@@ -54,7 +54,7 @@ public class BasePeriodControllerTests
         _ = controller.GetStandardBasePeriodFromInitialClaimDate(testDate);
 
         var log = Assert.Single(this.loggerFactory.Sink.LogEntries);
-        _ = Assert.IsType<ArgumentException>(log.Exception);
+        _ = Assert.IsType<ArgumentOutOfRangeException>(log.Exception);
     }
 
     [Fact]
@@ -65,7 +65,7 @@ public class BasePeriodControllerTests
         _ = controller.GetStandardBasePeriodFromYearAndWeek(1899, 8);
 
         var log = Assert.Single(this.loggerFactory.Sink.LogEntries);
-        _ = Assert.IsType<ArgumentException>(log.Exception);
+        _ = Assert.IsType<ArgumentOutOfRangeException>(log.Exception);
     }
 
     [Fact]
@@ -76,7 +76,7 @@ public class BasePeriodControllerTests
         _ = controller.GetStandardBasePeriodFromYearAndWeek(1981, 53);
 
         var log = Assert.Single(this.loggerFactory.Sink.LogEntries);
-        _ = Assert.IsType<ArgumentException>(log.Exception);
+        _ = Assert.IsType<ArgumentOutOfRangeException>(log.Exception);
     }
 
     [Fact]
@@ -117,7 +117,7 @@ public class BasePeriodControllerTests
         _ = controller.GetAlternateBasePeriodFromInitialClaimDate(testDate);
 
         var log = Assert.Single(this.loggerFactory.Sink.LogEntries);
-        _ = Assert.IsType<ArgumentException>(log.Exception);
+        _ = Assert.IsType<ArgumentOutOfRangeException>(log.Exception);
     }
 
     [Fact]
@@ -128,7 +128,7 @@ public class BasePeriodControllerTests
         _ = controller.GetAlternateBasePeriodFromYearAndWeek(1899, 8);
 
         var log = Assert.Single(this.loggerFactory.Sink.LogEntries);
-        _ = Assert.IsType<ArgumentException>(log.Exception);
+        _ = Assert.IsType<ArgumentOutOfRangeException>(log.Exception);
     }
 
     [Fact]
@@ -139,7 +139,7 @@ public class BasePeriodControllerTests
         _ = controller.GetAlternateBasePeriodFromYearAndWeek(1981, 53);
 
         var log = Assert.Single(this.loggerFactory.Sink.LogEntries);
-        _ = Assert.IsType<ArgumentException>(log.Exception);
+        _ = Assert.IsType<ArgumentOutOfRangeException>(log.Exception);
     }
 
     [Fact]

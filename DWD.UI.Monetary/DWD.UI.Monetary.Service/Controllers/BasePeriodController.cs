@@ -46,7 +46,7 @@ public class BasePeriodController : ControllerBase
     private readonly ICalculateBasePeriod calculateBasePeriod;
 
     /// <summary>
-    /// Constructor.
+    /// Initializes a new instance of the <see cref="BasePeriodController"/> class.
     /// </summary>
     /// <param name="logger">A logger reference.</param>
     /// <param name="calculateBasePeriod">A domain logic reference.</param>
@@ -88,11 +88,11 @@ public class BasePeriodController : ControllerBase
             var result = BasePeriodMapper.MapToDto(basePeriod.BasePeriodQuarters);
             return this.Ok(result);
         }
-        catch (ArgumentException argumentException)
+        catch (ArgumentOutOfRangeException ex)
         {
             // Log and return http 400
-            DateError(this.logger, initialClaimDate.ToString(CultureInfo.CurrentCulture), argumentException);
-            return this.Problem(argumentException.Message, null, 400);
+            DateError(this.logger, initialClaimDate.ToString(CultureInfo.CurrentCulture), ex);
+            return this.Problem(ex.Message, null, 400);
         }
     }
 
@@ -129,11 +129,11 @@ public class BasePeriodController : ControllerBase
             var result = BasePeriodMapper.MapToDto(basePeriod.BasePeriodQuarters);
             return this.Ok(result);
         }
-        catch (ArgumentException argumentException)
+        catch (ArgumentOutOfRangeException ex)
         {
             // Log and return http 400
-            YearWeekError(this.logger, year + "/" + week, argumentException);
-            return this.Problem(argumentException.Message, null, 400);
+            YearWeekError(this.logger, year + "/" + week, ex);
+            return this.Problem(ex.Message, null, 400);
         }
     }
 
@@ -170,11 +170,11 @@ public class BasePeriodController : ControllerBase
             var result = BasePeriodMapper.MapToDto(basePeriod.AltBasePeriodQuarters);
             return this.Ok(result);
         }
-        catch (ArgumentException argumentException)
+        catch (ArgumentOutOfRangeException ex)
         {
             // Log and return http 400
-            DateError(this.logger, initialClaimDate.ToString(CultureInfo.CurrentCulture), argumentException);
-            return this.Problem(argumentException.Message, null, 400);
+            DateError(this.logger, initialClaimDate.ToString(CultureInfo.CurrentCulture), ex);
+            return this.Problem(ex.Message, null, 400);
         }
     }
 
@@ -212,11 +212,11 @@ public class BasePeriodController : ControllerBase
             var result = BasePeriodMapper.MapToDto(basePeriod.AltBasePeriodQuarters);
             return this.Ok(result);
         }
-        catch (ArgumentException argumentException)
+        catch (ArgumentOutOfRangeException ex)
         {
             // Log and return http 400
-            YearWeekError(this.logger, year + "/" + week, argumentException);
-            return this.Problem(argumentException.Message, null, 400);
+            YearWeekError(this.logger, year + "/" + week, ex);
+            return this.Problem(ex.Message, null, 400);
         }
     }
 }

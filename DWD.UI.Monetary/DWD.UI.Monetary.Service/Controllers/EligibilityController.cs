@@ -22,24 +22,24 @@ public class EligibilityController : ControllerBase
     /// <summary>
     /// Initializes a new instance of the <see cref="EligibilityController"/> class.
     /// </summary>
-    /// <param name="checkEligibilityRequirements">Eligibity data</param>
+    /// <param name="checkEligibilityRequirements">Eligibity data.</param>
     public EligibilityController(ICheckEligibilityOfMonetaryRequirements checkEligibilityRequirements) =>
         this.checkEligibilityRequirements = checkEligibilityRequirements;
 
     /// <summary>
-    ///  Determine eligibility for benefits
+    ///  Determine eligibility for benefits.
     /// </summary>
     /// <remarks>
-    /// Check for all monetary qualifying requirements the week the claimant is filing for so that the department can determine eligibility for benefits <br /><br />
+    /// Check for all monetary qualifying requirements the week the claimant is filing for so that the department can determine eligibility for benefits. <br /><br />
     /// <b>Eligibility Criteria</b><br />
-    /// <para>- Claimant must have been paid wages from covered employment in at least two quarters (BP)</para><br />
-    /// <para>- Claimant has wages in their high quarter (BP)to meet the minimum high quarter earnings amount</para><br />
-    /// <para>- Wages outside their high quarter that equal to at least 4** times their Weekly Benefit Rate(WBR)</para><br />
-    /// <para>- Total base period wages equal to at least 35** times your WBR</para><br /><br />
+    /// <para>- Claimant must have been paid wages from covered employment in at least two quarters (BP).</para><br />
+    /// <para>- Claimant has wages in their high quarter (BP)to meet the minimum high quarter earnings amount.</para><br />
+    /// <para>- Wages outside their high quarter that equal to at least 4** times their Weekly Benefit Rate(WBR).</para><br />
+    /// <para>- Total base period wages equal to at least 35** times your WBR.</para><br /><br />
     /// <note type="tip"><em>WBR is 4** percent of high quarter</em></note><br />
     /// <note type="tip"><em>** - Actual values may vary depending on state law</em></note>
     /// </remarks>
-    /// <param name="eligibilityRequestDto">Eligibility data</param>
+    /// <param name="eligibilityRequestDto">Eligibility data.</param>
     /// <returns>the API response.</returns>
     [SwaggerResponse(
         (int)HttpStatusCode.OK,

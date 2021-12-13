@@ -9,6 +9,40 @@ using BusinessEntities;
 public class CalendarQuarter : ICalendarQuarter
 {
     /// <summary>
+    /// Determine date from year and week number.
+    /// </summary>
+    /// <param name="year">The year.</param>
+    /// <param name="weekOfYear">The week of year.</param>
+    /// <returns>DateTime - Start Date of the week.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">The benefit year was out of the acceptable range.</exception>
+    public static DateTime GetDateTimeFromYearAndWeek(int year, int weekOfYear)
+    {
+        if (year < Constants.MINBENEFITYEAR)
+        {
+            throw new ArgumentOutOfRangeException($"Year before {Constants.MINBENEFITYEAR} not supported");
+        }
+
+        var firstDayOfYear = new DateTime(year, 1, 1);
+
+        // There will be 53 weeks in a year if the first day of the year is Saturday
+        var totalWeeksOfYear = firstDayOfYear.DayOfWeek == DayOfWeek.Saturday ? 53 : 52;
+
+        if (weekOfYear < 1 || weekOfYear > totalWeeksOfYear)
+        {
+            throw new ArgumentOutOfRangeException($"Week number must be between 1 and {totalWeeksOfYear}!");
+        }
+
+        // Set the firstDayOfYear to previous Sunday if it is not sunday.
+        if (firstDayOfYear.DayOfWeek != DayOfWeek.Sunday)
+        {
+            var offset = firstDayOfYear.DayOfWeek - DayOfWeek.Sunday;
+            firstDayOfYear = firstDayOfYear.AddDays(-1 * offset);
+        }
+
+        return firstDayOfYear.AddDays((weekOfYear - 1) * 7);
+    }
+
+    /// <summary>
     /// Return the calendar quarter number for the supplied date.
     /// </summary>
     /// <param name="dateTime">dateTime.</param>
@@ -19,7 +53,7 @@ public class CalendarQuarter : ICalendarQuarter
             < 4 => 1,
             < 7 => 2,
             < 10 => 3,
-            _ => 4
+            _ => 4,
         };
 
     /// <summary>
@@ -35,40 +69,6 @@ public class CalendarQuarter : ICalendarQuarter
             2 => new DateTime(year, 4, 1),
             3 => new DateTime(year, 7, 1),
             4 => new DateTime(year, 10, 1),
-            _ => throw new ArgumentOutOfRangeException(message: "Unknown calendar quarter", paramName: nameof(quarterNumber))
+            _ => throw new ArgumentOutOfRangeException(message: "Unknown calendar quarter", paramName: nameof(quarterNumber)),
         };
-
-    /// <summary>
-    /// Determine date from year and week number
-    /// </summary>
-    /// <param name="year"></param>
-    /// <param name="weekOfYear"></param>
-    /// <returns>DateTime - Start Date of the week</returns>
-    /// <exception cref="ArgumentException"></exception>
-    public DateTime GetDateTimeFromYearAndWeek(int year, int weekOfYear)
-    {
-        if (year < Constants.MIN_BENEFIT_YEAR)
-        {
-            throw new ArgumentException($"Year before {Constants.MIN_BENEFIT_YEAR} not supported");
-        }
-
-        var firstDayOfYear = new DateTime(year, 1, 1);
-
-        //There will be 53 weeks in a year if the first day of the year is Saturday
-        var totalWeeksOfYear = firstDayOfYear.DayOfWeek == DayOfWeek.Saturday ? 53 : 52;
-
-        if (weekOfYear < 1 || weekOfYear > totalWeeksOfYear)
-        {
-            throw new ArgumentException($"Week number must be between 1 and {totalWeeksOfYear}!");
-        }
-
-        //Set the firstDayOfYear to previous Sunday if it is not sunday.
-        if (firstDayOfYear.DayOfWeek != DayOfWeek.Sunday)
-        {
-            var offset = firstDayOfYear.DayOfWeek - DayOfWeek.Sunday;
-            firstDayOfYear = firstDayOfYear.AddDays(-1 * offset);
-        }
-
-        return firstDayOfYear.AddDays((weekOfYear - 1) * 7);
-    }
 }

@@ -45,7 +45,7 @@ public class AlternateBasePeriodEntityTests
     public void BasePeriodConstructor_ShouldReturnArgumentException_WhenInvalidClaimDate()
     {
         var testClaimDate = new DateTime(1776, 7, 4);
-        _ = Assert.Throws<ArgumentException>(() => new BasePeriod(testClaimDate));
+        _ = Assert.Throws<ArgumentOutOfRangeException>(() => new BasePeriod(testClaimDate));
     }
 }
 

@@ -77,7 +77,7 @@ public class AlternateBasePeriodUseCaseTests
     {
         var testClaimDate = new DateTime(1776, 7, 4);
         var basePeriodUseCase = new CalculateBasePeriod();
-        Assert.Throws<ArgumentException>(() => basePeriodUseCase.CalculateBasePeriodFromInitialClaimDate(testClaimDate));
+        _ = Assert.Throws<ArgumentOutOfRangeException>(() => basePeriodUseCase.CalculateBasePeriodFromInitialClaimDate(testClaimDate));
     }
 }
 

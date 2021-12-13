@@ -96,7 +96,7 @@ public class CalendarQuarterTests
     [Theory]
     [MemberData(nameof(DataForGetDateFromYearAndWeekNumber))]
     public void ShouldReturnDateTimeFromYearAndWeekNumber(int year, int weekOfYear, DateTime expectedStartDate) =>
-        Assert.Equal(expectedStartDate, this.calendarQuarter.GetDateTimeFromYearAndWeek(year, weekOfYear));
+        Assert.Equal(expectedStartDate, CalendarQuarter.GetDateTimeFromYearAndWeek(year, weekOfYear));
 
     [CLSCompliant(false)]
     [Theory]
@@ -105,5 +105,5 @@ public class CalendarQuarterTests
     [InlineData(2028, 54)]
     [InlineData(-18, 5)]
     public void ShouldReturnArgumentOutOfRangeExceptionWhenGetDateFromYearAndWeekNumber(int year, int weekOfYear) =>
-        Assert.Throws<ArgumentException>(() => this.calendarQuarter.GetDateTimeFromYearAndWeek(year, weekOfYear));
+        Assert.Throws<ArgumentOutOfRangeException>(() => CalendarQuarter.GetDateTimeFromYearAndWeek(year, weekOfYear));
 }

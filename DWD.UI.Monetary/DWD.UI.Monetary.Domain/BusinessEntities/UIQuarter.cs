@@ -12,25 +12,24 @@ using DWD.UI.Monetary.Domain.Utilities;
 /// </remarks>
 internal class UIQuarter : IUIQuarter
 {
-    // TODO: Ask Helen if this is needed, and if so what the correct minimum should be.
     /// <summary>
     /// The minimum valid date that can be used to construct a UI Quarter.
+    /// <remarks>TODO: Ask Helen if this is needed, and if so what the correct minimum should be.</remarks>
     /// </summary>
-    private static readonly DateTime MinimumValidDate = new(Constants.MIN_BENEFIT_YEAR, 1, 1);
+    private static readonly DateTime MinimumValidDate = new(Constants.MINBENEFITYEAR, 1, 1);
 
     /// <summary>
-    /// The quarter's year.
+    /// Gets the quarter's year.
     /// </summary>
     public int Year { get; private set; }
 
     /// <summary>
-    /// The quarter number.
+    /// Gets the quarter number.
     /// </summary>
-    /// <returns>quarter number</returns>
     public int QuarterNumber { get; private set; }
 
     /// <summary>
-    /// Construct from year and quarter number.
+    /// Initializes a new instance of the <see cref="UIQuarter"/> class from year and quarter number.
     /// </summary>
     /// <param name="year">The quarter's year.</param>
     /// <param name="quarterNumber">The quarter number.</param>
@@ -47,7 +46,7 @@ internal class UIQuarter : IUIQuarter
     }
 
     /// <summary>
-    /// Construct from calendar date.
+    /// Initializes a new instance of the <see cref="UIQuarter"/> class from calendar date.
     /// </summary>
     /// <param name="date">date.</param>
     /// <param name="calendarQuarter">calendarQuarter.</param>
@@ -113,8 +112,9 @@ internal class UIQuarter : IUIQuarter
     /// <summary>
     /// Compare two UIQuarter objects.
     /// </summary>
-    /// <param name="other">Another UIQuarter</param>
-    /// <returns>comparison</returns>
+    /// <param name="other">Another UIQuarter.</param>
+    /// <returns>-1, 0, or 1, depending on whether the this instance is
+    /// earlier, equal to, or later than the other quarter, respectively.</returns>
     public int CompareTo(IUIQuarter other)
     {
         var result = -1;
@@ -134,16 +134,16 @@ internal class UIQuarter : IUIQuarter
     /// <summary>
     /// Check for value equality.
     /// </summary>
-    /// <param name="other">the other</param>
-    /// <returns>true/false</returns>
+    /// <param name="other">the other.</param>
+    /// <returns>true/false.</returns>
     public bool Equals(IUIQuarter other) =>
         this.Equals((object)other!);
 
     /// <summary>
     /// Check if the object for value equality.
     /// </summary>
-    /// <param name="obj">other obj</param>
-    /// <returns>true/false</returns>
+    /// <param name="obj">other obj.</param>
+    /// <returns>true/false.</returns>
     public override bool Equals(object obj)
     {
         if (obj is UIQuarter quarter)
@@ -157,7 +157,7 @@ internal class UIQuarter : IUIQuarter
     /// <summary>
     /// Hash code override.
     /// </summary>
-    /// <returns>hash</returns>
+    /// <returns>hash.</returns>
     public override int GetHashCode() => HashCode.Combine(this.Year, this.QuarterNumber);
 
     /// <summary>
@@ -170,9 +170,9 @@ internal class UIQuarter : IUIQuarter
     private static bool YearOrQuarterInvalid(int year, int quarterNumber, out string errorMessage)
     {
         // Check the year is within bounds
-        if (year is < Constants.MIN_BENEFIT_YEAR or > Constants.MAX_BENEFIT_YEAR)
+        if (year is < Constants.MINBENEFITYEAR or > Constants.MAXBENEFITYEAR)
         {
-            errorMessage = $"The supplied year is not valid: year must be between {Constants.MIN_BENEFIT_YEAR} and {Constants.MAX_BENEFIT_YEAR} (Year={year}).";
+            errorMessage = $"The supplied year is not valid: year must be between {Constants.MINBENEFITYEAR} and {Constants.MAXBENEFITYEAR} (Year={year}).";
             return true;
         }
 
