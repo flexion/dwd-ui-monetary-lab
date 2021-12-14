@@ -44,7 +44,7 @@ Below are the instructions for running in the emulator with or without IDE suppo
 [Docker with GCP Access](https://cloud.google.com/run/docs/testing/local#docker-with-gcp-access)
 
 ### Cloud Code Setup
-Cloud Run is a Kubernetes instance. The Google Cloud Code plugin does a lot of the work to set up the Kubernetes environment for you. To deploy the API in the Cloud Run emulator, first begin by leaning how to create, configure, and start Cloud Run container in the [Cloud Code emulator](https://cloud.google.com/run/docs/testing/local#cloud-code-emulator) documentation above.
+Cloud Run is a Kubernetes instance. The Google Cloud Code plugin does a lot of the work to set up the Kubernetes environment for you. To deploy the API in the Cloud Run emulator, first begin by learning how to create, configure, and start Cloud Run container in the [Cloud Code emulator](https://cloud.google.com/run/docs/testing/local#cloud-code-emulator) documentation above.
 
 The API makes use of a [Cloud SQL local instance](cloud_sql_local.md) and you should start that first. With the Cloud code configuration below, the app should be fully functional locally.
 
