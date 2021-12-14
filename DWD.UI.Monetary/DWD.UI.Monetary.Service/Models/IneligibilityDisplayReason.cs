@@ -10,8 +10,8 @@ public class IneligibilityDisplayReason
     /// <summary>
     /// Constructor.
     /// </summary>
-    /// <param name="code">reason code</param>
-    /// <param name="description">reason description</param>
+    /// <param name="code">reason code.</param>
+    /// <param name="description">reason description.</param>
     public IneligibilityDisplayReason(IneligibilityReason code, string description)
     {
         this.Code = code;
@@ -19,13 +19,13 @@ public class IneligibilityDisplayReason
     }
 
     /// <summary>
-    /// Get the reason code.
+    /// Gets the reason code.
     /// </summary>
     /// <returns>the code.</returns>
     public IneligibilityReason Code { get; }
 
     /// <summary>
-    /// Get the reason description.
+    /// Gets the reason description.
     /// </summary>
     /// <returns>the reason description.</returns>
     public string Description { get; }

@@ -16,7 +16,7 @@ public static class BasePeriodMapper
     /// </summary>
     /// <param name="quarters">The base period quarters.</param>
     /// <returns>An IBasePeriodDto instance.</returns>
-    /// <exception cref="ArgumentNullException">If the quarters collection is null</exception>
+    /// <exception cref="ArgumentNullException">If the quarters collection is null.</exception>
     public static IBasePeriodDto MapToDto(IEnumerable<IUIQuarter> quarters)
     {
         if (quarters == null)
@@ -30,8 +30,8 @@ public static class BasePeriodMapper
                 new CalendarQuarterDto
                 {
                     Year = x.Year,
-                    QuarterNumber = x.QuarterNumber
-                }).ToArray()
+                    QuarterNumber = x.QuarterNumber,
+                }).ToArray(),
         };
     }
 }

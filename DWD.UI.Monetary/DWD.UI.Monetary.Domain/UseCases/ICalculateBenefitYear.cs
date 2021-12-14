@@ -15,7 +15,7 @@ public interface ICalculateBenefitYear
     /// <summary>
     /// Calculate the benefit period based on requested start date.
     /// </summary>
-    /// <param name="requestedClaimStartDate">The requested start date for the UI claim</param>
-    /// <returns>benefit year</returns>
+    /// <param name="requestedClaimStartDate">The requested start date for the UI claim.</param>
+    /// <returns>benefit year.</returns>
     BenefitYear CalculateBenefitYearFromDate(DateTime requestedClaimStartDate);
 }

@@ -7,43 +7,43 @@ using Microsoft.EntityFrameworkCore;
 using DWD.UI.Monetary.Service.Models.Stubs;
 
 /// <summary>
-/// Database context for ClaimantWage
+/// Database context for ClaimantWage.
 /// </summary>
 public partial class ClaimantWageContext : DbContext
 {
     /// <summary>
-    /// Instantiates a new ClaimantWageContext
+    /// Initializes a new instance of the <see cref="ClaimantWageContext"/> class.
     /// </summary>
     public ClaimantWageContext()
     {
     }
 
     /// <summary>
-    /// Instantiates a new instance of the ClaimantWageContext
+    /// Initializes a new instance of the <see cref="ClaimantWageContext"/> class.
     /// </summary>
-    /// <param name="options">Options for configuring the context</param>
+    /// <param name="options">Options for configuring the context.</param>
     public ClaimantWageContext(DbContextOptions<ClaimantWageContext> options)
         : base(options)
     {
     }
 
     /// <summary>
-    /// ClaimantWages DB set
+    /// Gets or sets claimantWages DB set.
     /// </summary>
     public virtual DbSet<ClaimantWage> ClaimantWages { get; set; }
 
     /// <summary>
-    /// Handler for the OnConfiguring event
+    /// Handler for the OnConfiguring event.
     /// </summary>
-    /// <param name="optionsBuilder">Object used to configure the context</param>
+    /// <param name="optionsBuilder">Object used to configure the context.</param>
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
     }
 
     /// <summary>
-    /// Handler for the OnModelCreating event
+    /// Handler for the OnModelCreating event.
     /// </summary>
-    /// <param name="modelBuilder">Model builder</param>
+    /// <param name="modelBuilder">Model builder.</param>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         if (null == modelBuilder)

@@ -2,7 +2,6 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities;
 
 /// <summary>
 /// This is the concrete class returned when the claimant is eligible.
-/// Max benefit rate will be added in a future story.
 /// </summary>
 public class EligibleResult : EligibilityResult
 {
