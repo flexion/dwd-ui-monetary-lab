@@ -14,6 +14,7 @@ using Swashbuckle.AspNetCore.Annotations;
 /// Provides endpoints for determine the eligibility for benefits.
 /// </summary>
 [ApiVersion("1.0")]
+[Route("v{version:apiVersion}/eligibility")]
 public class EligibilityController : BaseApiController
 {
     private readonly ICheckEligibilityOfMonetaryRequirements checkEligibilityRequirements;

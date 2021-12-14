@@ -23,11 +23,11 @@ public class BenefitYearControllerTests
 
         // Assert
         Assert.NotNull(actionResult);
-//        var okResult = actionResult.Result as OkObjectResult;
- //       Assert.NotNull(okResult);
-  //      var okResultValue = okResult.Value as BenefitYear;
-   //     Assert.NotNull(okResultValue);
-    //    Assert.Equal(52, okResultValue.BenefitWeeks);
-     //   Assert.Equal(200, okResult.StatusCode);
+        var okResult = actionResult.Result as OkObjectResult;
+        Assert.NotNull(okResult);
+        var okResultValue = okResult.Value as BenefitYear;
+        Assert.NotNull(okResultValue);
+        Assert.Equal(52, okResultValue.BenefitWeeks);
+        Assert.Equal(200, okResult.StatusCode);
     }
 }
