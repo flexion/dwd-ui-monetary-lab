@@ -13,9 +13,8 @@ using Swashbuckle.AspNetCore.Annotations;
 /// <summary>
 /// Provides endpoints for BasePeriod.
 /// </summary>
-[ApiController]
-[Route("[controller]")]
-public class BasePeriodController : ControllerBase
+[ApiVersion("1.0")]
+public class BasePeriodController : BaseApiController
 {
     /// <summary>
     /// Date error logging message.

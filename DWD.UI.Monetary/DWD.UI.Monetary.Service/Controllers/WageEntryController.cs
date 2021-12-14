@@ -9,9 +9,8 @@ using DWD.UI.Monetary.Service.Models.Stubs;
 /// <summary>
 /// Provides endpoints for entering wage data.
 /// </summary>
-[ApiController]
-[Route("[controller]")]
-public class WageEntryController : ControllerBase
+[ApiVersion("1.0")]
+public class WageEntryController : BaseApiController
 {
     /// <summary>
     /// Claimant Wages.

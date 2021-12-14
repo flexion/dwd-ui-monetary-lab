@@ -13,9 +13,8 @@ using Swashbuckle.AspNetCore.Annotations;
 /// <summary>
 /// Provides endpoints for determine the eligibility for benefits.
 /// </summary>
-[ApiController]
-[Route("[controller]")]
-public class EligibilityController : ControllerBase
+[ApiVersion("1.0")]
+public class EligibilityController : BaseApiController
 {
     private readonly ICheckEligibilityOfMonetaryRequirements checkEligibilityRequirements;
 
@@ -48,7 +47,6 @@ public class EligibilityController : ControllerBase
     [SwaggerResponse((int)HttpStatusCode.InternalServerError, "Internal Server Error", typeof(ProblemDetails), "application/problem+json")]
     [Produces("application/json")]
     [HttpPost]
-    [Route("VerifyEligibility")]
     public async Task<IActionResult> VerifyEligibilityAsync([FromBody] EligibilityRequestDto eligibilityRequestDto)
     {
         if (eligibilityRequestDto is null)

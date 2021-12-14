@@ -2,18 +2,18 @@ namespace DWD.UI.Monetary.Service.Controllers;
 
 using System;
 using System.Net.Mime;
+using System.Threading.Tasks;
 using DWD.UI.Monetary.Domain.BusinessEntities;
 using DWD.UI.Monetary.Domain.UseCases;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 /// <summary>
 /// Provides endpoints for Benefit Year.
 /// </summary>
-[Produces(MediaTypeNames.Application.Json)]
-[ApiController]
-[Route("benefityear")]
-public class BenefitYearController : ControllerBase
+[ApiVersion("1.0")]
+public class BenefitYearController : BaseApiController
 {
     /// <summary>
     /// Local reference to domain logic.
@@ -80,8 +80,9 @@ public class BenefitYearController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
-    [HttpGet]
-    [Route("lookup-by-date")]
-    public ActionResult<BenefitYear> GetBenefitYearForRequestedDate(DateTime requestedDate) =>
-        this.Ok(this.calculateBenefitYear.CalculateBenefitYearFromDate(requestedDate));
+    [HttpGet("[action]")]
+    public ActionResult GetBenefitYearForRequestedDate(DateTime requestedDate)
+    {
+        return this.Ok(this.Mediator.Send(this.calculateBenefitYear.CalculateBenefitYearFromDate(requestedDate)));
+    }
 }
