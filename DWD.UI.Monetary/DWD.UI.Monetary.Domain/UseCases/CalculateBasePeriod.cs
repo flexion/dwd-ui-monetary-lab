@@ -1,6 +1,7 @@
 namespace DWD.UI.Monetary.Domain.UseCases;
 
 using System;
+using DWD.UI.Calendar;
 using DWD.UI.Monetary.Domain.BusinessEntities;
 
 /// <summary>
@@ -21,5 +22,5 @@ public class CalculateBasePeriod : ICalculateBasePeriod
     /// <param name="year">Year to calculate the base periods.</param>
     /// <param name="week">Week number of the year. Must be between 1 and 52 or 53(If first day of the year lands on saturday).</param>
     /// <returns>Base period information.</returns>
-    public IBasePeriod CalculateBasePeriodFromYearAndWeek(int year, int week) => new BasePeriod(year, week);
+    public IBasePeriod CalculateBasePeriodFromYearAndWeek(int year, int week) => new BasePeriod(new UIWeek(year, week));
 }

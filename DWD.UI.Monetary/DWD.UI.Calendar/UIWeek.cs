@@ -8,7 +8,10 @@ using System.Globalization;
 /// </summary>
 public record UIWeek
 {
-    private readonly DayOfWeek firstDayOfWeek;
+    /// <summary>
+    /// The first day of the week for UI purposes.
+    /// </summary>
+    public const DayOfWeek FirstDayOfWeek = DayOfWeek.Sunday;
 
     /// <summary>
     /// Gets the first day of the week as a DateTime.
@@ -21,6 +24,11 @@ public record UIWeek
     public DateTime EndDate { get; }
 
     /// <summary>
+    /// Gets the year.
+    /// </summary>
+    public int Year { get; }
+
+    /// <summary>
     /// Gets the number of the week in the year according to the UI definition.
     /// </summary>
     public int WeekNumber { get; }
@@ -30,9 +38,8 @@ public record UIWeek
     /// </summary>
     /// <param name="year">The year.</param>
     /// <param name="weekNumber">The week nember.</param>
-    /// <param name="firstDayOfWeek">Optional definition of the first day of the week.</param>
     /// <exception cref="ArgumentOutOfRangeException">The week number was out of the acceptible range for the given year</exception>
-    public UIWeek(int year, int weekNumber, DayOfWeek firstDayOfWeek = DayOfWeek.Saturday)
+    public UIWeek(int year, int weekNumber)
     {
         var totalWeeksInYear = GetTotalWeeksInYear(year);
 
@@ -41,7 +48,7 @@ public record UIWeek
             throw new ArgumentOutOfRangeException(nameof(weekNumber), $"The week number must be between 1 and {totalWeeksInYear} in {year}");
         }
 
-        this.firstDayOfWeek = firstDayOfWeek;
+        this.Year = year;
         this.WeekNumber = weekNumber;
         this.StartDate = FirstDateOfWeek(year, weekNumber);
         this.EndDate = this.StartDate.AddDays(6);
@@ -57,11 +64,14 @@ public record UIWeek
         this.StartDate = date.AddDays(DayOfWeek.Sunday - date.DayOfWeek);
         this.EndDate = this.StartDate.AddDays(6);
 
+        // The year is that of the last day of the week (Saturday)
+        this.Year = this.EndDate.Year;
+
         var dateTimeFormatInfo = DateTimeFormatInfo.GetInstance(new CultureInfo("en-US"));
 
-        this.WeekNumber = dateTimeFormatInfo.Calendar.GetWeekOfYear(date,
-            CalendarWeekRule.FirstFullWeek,
-            this.firstDayOfWeek);
+        this.WeekNumber = this.StartDate.Year == this.EndDate.Year
+            ? dateTimeFormatInfo.Calendar.GetWeekOfYear(date, CalendarWeekRule.FirstDay, FirstDayOfWeek)
+            : 1;
     }
 
     /// <summary>

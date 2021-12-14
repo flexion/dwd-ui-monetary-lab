@@ -1,6 +1,7 @@
 namespace DWD.UI.Calendar.Tests;
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using DWD.UI.Calendar;
 using Xunit;
@@ -41,16 +42,6 @@ public class UIWeekTests
         Assert.Equal(expectedStartDate.AddDays(6), uiWeek.EndDate);
     }
 
-
-    [Theory]
-    [MemberData(nameof(TestData))]
-    public void UIWeekShouldCalculateStartDateOfWeekFromYearAndWeekWhenFirstDayOfWeekIsMonday(int year, int weekOfYear, DateTime expectedStartDate)
-    {
-        var uiWeek = new UIWeek(year, weekOfYear, DayOfWeek.Monday);
-        Assert.Equal(expectedStartDate, uiWeek.StartDate);
-        Assert.Equal(expectedStartDate.AddDays(6), uiWeek.EndDate);
-    }
-
     [Theory]
     [InlineData(2020, 0)]
     [InlineData(2020, -1)]
@@ -74,4 +65,37 @@ public class UIWeekTests
         var b = new UIWeek(aDate);
         Assert.Equal(a, b);
     }
+
+    [Theory]
+    [ClassData(typeof(TestDataGenerator))]
+    public void UIWeekShouldCalculateStartAndEndDateOfWeekFromDate(DateTime dt, int expectedStartYear, int expectedWeek, int expectedEndYear)
+    {
+        var sut = new UIWeek(dt);
+
+        Assert.Equal(expectedStartYear, sut.StartDate.Year);
+        Assert.Equal(expectedEndYear, sut.EndDate.Year);
+        Assert.Equal(expectedWeek, sut.WeekNumber);
+    }
 }
+
+/// <summary>
+/// PO acceptance criteria dates.
+/// </summary>
+public class TestDataGenerator : IEnumerable<object[]>
+{
+    private readonly List<object[]> data = new()
+    {
+        new object[] { new DateTime(2021, 11, 9), 2021, 46, 2021 },
+        new object[] { new DateTime(2021, 7, 1), 2021, 27, 2021 },
+        new object[] { new DateTime(2021, 12, 19), 2021, 52, 2021 }, // 52-week year; date in last week
+        new object[] { new DateTime(2022, 12, 26), 2022, 53, 2022 }, // 53-week year; date in last week
+        new object[] { new DateTime(2020, 12, 28), 2020, 1, 2021 },  // Week 1 crosses year; date in previous year
+        new object[] { new DateTime(2021, 1, 2), 2020, 1, 2021 },    // Week 1 crosses year; date in next year
+        new object[] { new DateTime(2021, 1, 4), 2021, 2, 2021 },    // Week 1 crosses year; date in week 2
+    };
+
+    public IEnumerator<object[]> GetEnumerator() => this.data.GetEnumerator();
+
+    IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
+}
+

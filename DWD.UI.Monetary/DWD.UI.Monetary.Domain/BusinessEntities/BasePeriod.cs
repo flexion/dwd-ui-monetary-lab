@@ -3,6 +3,7 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DWD.UI.Calendar;
 using DWD.UI.Monetary.Domain.Utilities;
 
 /// <summary>
@@ -35,20 +36,14 @@ internal class BasePeriod : IBasePeriod
     /// Initializes a new instance of the <see cref="BasePeriod"/> class using initial claim date as input.
     /// </summary>
     /// <param name="initialClaimDate">The initial claim date.</param>
-    /// <exception cref="ArgumentException">Throws a ArgumentException if the supplied initial claim date is not valid.</exception>
-    public BasePeriod(DateTime initialClaimDate) =>
-        this.PopulateBasePeriods(initialClaimDate);
+    /// <exception cref="ArgumentOutOfRangeException">Throws a ArgumentException if the supplied initial claim date is not valid.</exception>
+    public BasePeriod(DateTime initialClaimDate) => this.PopulateBasePeriods(initialClaimDate);
 
     /// <summary>
     /// Initializes a new instance of the <see cref="BasePeriod"/> class given a year and week of year.
     /// </summary>
-    /// <param name="year">The year.</param>
-    /// <param name="weekOfYear">The week.</param>
-    public BasePeriod(int year, int weekOfYear)
-    {
-        var initialClaimDate = CalendarQuarter.GetDateTimeFromYearAndWeek(year, weekOfYear);
-        this.PopulateBasePeriods(initialClaimDate);
-    }
+    /// <param name="uiWeek">The UIWeek object that represents the initial claim week.</param>
+    public BasePeriod(UIWeek uiWeek) => this.PopulateBasePeriods(uiWeek.StartDate);
 
     /// <summary>
     /// Gets base period quarters as IEnumerable of IUIQuarter.

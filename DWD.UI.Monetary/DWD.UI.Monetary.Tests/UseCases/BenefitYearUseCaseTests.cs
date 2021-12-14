@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using Domain.BusinessEntities;
 using Domain.UseCases;
 using Xunit;
+
 /// <summary>
 /// Created tests for calculating the benefit year.
 /// </summary>
