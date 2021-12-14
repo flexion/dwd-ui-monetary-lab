@@ -6,7 +6,6 @@ using DWD.UI.Monetary.Domain.Utilities;
 using Xunit;
 public class CalendarQuarterTests
 {
-    private readonly CalendarQuarter calendarQuarter = new();
     public static IEnumerable<object[]> DataForFirstDayOfCalendarQuarter
     {
         get
@@ -30,7 +29,7 @@ public class CalendarQuarterTests
     [MemberData(nameof(DataForFirstDayOfCalendarQuarter))]
     public void ShouldReturnFirstDayOfCalendarQuarter(int year, int quarterNumber, DateTime expected)
     {
-        var actual = this.calendarQuarter.FirstDayOfCalendarQuarter(year, quarterNumber);
+        var actual = CalendarQuarter.FirstDayOfCalendarQuarter(year, quarterNumber);
         Assert.Equal(expected, actual);
     }
 
@@ -56,11 +55,11 @@ public class CalendarQuarterTests
     [Theory]
     [MemberData(nameof(DataForQuarterNumber))]
     public void ShouldReturnQuarterNumber(DateTime input, int expected) =>
-        Assert.Equal(expected, this.calendarQuarter.CalendarQuarterNumber(input));
+        Assert.Equal(expected, CalendarQuarter.CalendarQuarterNumber(input));
 
     [Fact]
     public void TestInvalidQuarterNumberThrowsArgumentOutOfRangeException() =>
-        Assert.Throws<ArgumentOutOfRangeException>(() => this.calendarQuarter.FirstDayOfCalendarQuarter(2020, 5));
+        Assert.Throws<ArgumentOutOfRangeException>(() => CalendarQuarter.FirstDayOfCalendarQuarter(2020, 5));
 
     public static IEnumerable<object[]> DataForGetDateFromYearAndWeekNumber
     {

@@ -14,9 +14,10 @@ internal class UIQuarter : IUIQuarter
 {
     /// <summary>
     /// The minimum valid date that can be used to construct a UI Quarter.
-    /// <remarks>TODO: Ask Helen if this is needed, and if so what the correct minimum should be.</remarks>
+    ///
+    /// TODO: Ask Helen if this is needed, and if so what the correct minimum should be.
     /// </summary>
-    private static readonly DateTime MinimumValidDate = new(Constants.MINBENEFITYEAR, 1, 1);
+    private static readonly DateTime MinimumValidDate = new(Constants.MinBenefitYear, 1, 1);
 
     /// <summary>
     /// Gets the quarter's year.
@@ -49,8 +50,7 @@ internal class UIQuarter : IUIQuarter
     /// Initializes a new instance of the <see cref="UIQuarter"/> class from calendar date.
     /// </summary>
     /// <param name="date">date.</param>
-    /// <param name="calendarQuarter">calendarQuarter.</param>
-    public UIQuarter(DateTime date, ICalendarQuarter calendarQuarter)
+    public UIQuarter(DateTime date)
     {
         // Check if date is invalid
         if (DateInvalid(date, out var errorMessage))
@@ -59,10 +59,10 @@ internal class UIQuarter : IUIQuarter
         }
 
         this.Year = date.Year;
-        this.QuarterNumber = calendarQuarter.CalendarQuarterNumber(date);
+        this.QuarterNumber = CalendarQuarter.CalendarQuarterNumber(date);
 
         // Find first Sunday of calendar quarter
-        var firstSundayOfQuarter = calendarQuarter.FirstDayOfCalendarQuarter(date.Year, this.QuarterNumber);
+        var firstSundayOfQuarter = CalendarQuarter.FirstDayOfCalendarQuarter(date.Year, this.QuarterNumber);
         while (firstSundayOfQuarter.DayOfWeek != DayOfWeek.Sunday)
         {
             firstSundayOfQuarter = firstSundayOfQuarter.AddDays(1);
@@ -170,9 +170,9 @@ internal class UIQuarter : IUIQuarter
     private static bool YearOrQuarterInvalid(int year, int quarterNumber, out string errorMessage)
     {
         // Check the year is within bounds
-        if (year is < Constants.MINBENEFITYEAR or > Constants.MAXBENEFITYEAR)
+        if (year is < Constants.MinBenefitYear or > Constants.MaxBenefitYear)
         {
-            errorMessage = $"The supplied year is not valid: year must be between {Constants.MINBENEFITYEAR} and {Constants.MAXBENEFITYEAR} (Year={year}).";
+            errorMessage = $"The supplied year is not valid: year must be between {Constants.MinBenefitYear} and {Constants.MaxBenefitYear} (Year={year}).";
             return true;
         }
 

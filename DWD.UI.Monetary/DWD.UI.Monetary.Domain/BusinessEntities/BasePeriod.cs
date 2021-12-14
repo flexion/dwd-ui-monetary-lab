@@ -20,7 +20,8 @@ internal class BasePeriod : IBasePeriod
     /// <summary>
     /// The minimum valid initial base claim date that we will calculate from.
     /// </summary>
-    private static readonly DateTime MinimumValidInitialBaseClaimDate = new(Constants.MINBENEFITYEAR, 1, 1);
+
+    private static readonly DateTime MinimumValidInitialBaseClaimDate = new(Constants.MinBenefitYear, 1, 1);
 
     /// <summary>
     /// Local storage for quarters.
@@ -70,7 +71,7 @@ internal class BasePeriod : IBasePeriod
 
         // Populate basePeriod with last 5 complete quarters, skipping most recent complete quarter
         var previous5Quarters = new UIQuarter[5];
-        var currentQuarter = new UIQuarter(initialClaimDate, new CalendarQuarter());
+        var currentQuarter = new UIQuarter(initialClaimDate);
 
         for (var i = 4; i >= 0; i--)
         {
@@ -81,4 +82,25 @@ internal class BasePeriod : IBasePeriod
         this.standardQuarters = previous5Quarters.Take(4).ToArray();
         this.alternateQuarters = previous5Quarters.Skip(1).ToArray();
     }
+
+    /// <summary>
+    /// Constructor by year and week.
+    /// </summary>
+    /// <param name="year">year</param>
+    /// <param name="weekOfYear">weak</param>
+    public BasePeriod(int year, int weekOfYear)
+    {
+        var initialClaimDate = CalendarQuarter.GetDateTimeFromYearAndWeek(year, weekOfYear);
+        this.PopulateBasePeriods(initialClaimDate);
+    }
+
+    /// <summary>
+    /// Get base period quarters as IEnumerable of IUIQuarter.
+    /// </summary>
+    public IEnumerable<IUIQuarter> BasePeriodQuarters => new List<IUIQuarter>(this.standardQuarters);
+
+    /// <summary>
+    /// Get base period quarters as IEnumerable of IUIQuarter.
+    /// </summary>
+    public IEnumerable<IUIQuarter> AltBasePeriodQuarters => new List<IUIQuarter>(this.alternateQuarters);
 }
