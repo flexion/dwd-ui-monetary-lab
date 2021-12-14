@@ -8,12 +8,12 @@ using System.Collections.Generic;
 public interface IBasePeriod
 {
     /// <summary>
-    /// Array of quarters making up the base period.
+    /// Gets array of quarters making up the base period.
     /// </summary>
     IEnumerable<IUIQuarter> BasePeriodQuarters { get; }
 
     /// <summary>
-    /// Array of alternative quarters making up the base period.
+    /// Gets array of alternative quarters making up the base period.
     /// </summary>
     IEnumerable<IUIQuarter> AltBasePeriodQuarters { get; }
 }

@@ -22,8 +22,8 @@ public class CalculateBenefitYear : ICalculateBenefitYear
     /// <summary>
     /// Calculate the benefit period based on requested start date.
     /// </summary>
-    /// <param name="requestedClaimStartDate">The requested start date for the UI claim</param>
-    /// <returns>benefit year</returns>
+    /// <param name="requestedClaimStartDate">The requested start date for the UI claim.</param>
+    /// <returns>benefit year.</returns>
     public BenefitYear CalculateBenefitYearFromDate(DateTime requestedClaimStartDate)
     {
         var calculatedBenefitWeeks = StandardBenefitWeeks;
@@ -51,8 +51,8 @@ public class CalculateBenefitYear : ICalculateBenefitYear
     /// Therefore, if the week begins (Sunday) on 12/25 and ends (Saturday) on 1/1
     /// then that is the first week of the year.
     /// </summary>
-    /// <param name="inDate">the date</param>
-    /// <returns>Year week</returns>
+    /// <param name="inDate">the date.</param>
+    /// <returns>Year week.</returns>
     private static YearWeek GetYearWeekFromDate(DateTime inDate)
     {
         var dateTimeFormatInfo = DateTimeFormatInfo.GetInstance(new CultureInfo(EnglishUs));

@@ -11,7 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 public static class GoogleLoggingExtensions
 {
     /// <summary>
-    /// Add Google Logging and Error reporting using settngs in the "GCP" section.
+    /// Add Google Logging and Error reporting using settings in the "GCP" section.
     /// <para>
     /// Google Logging requires Application Default Credentials. They are available if running in Google Compute Engine.
     /// Otherwise, the environment variable GOOGLE_APPLICATION_CREDENTIALS must be defined pointing to a file defining the credentials.

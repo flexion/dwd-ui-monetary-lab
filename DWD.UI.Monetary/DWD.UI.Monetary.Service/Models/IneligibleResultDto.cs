@@ -8,10 +8,10 @@ using System.Collections.ObjectModel;
 public class IneligibleResultDto
 {
     /// <summary>
-    /// Constructor.
+    /// Initializes a new instance of the <see cref="IneligibleResultDto"/> class.
     /// </summary>
-    /// <param name="isEligible">boolean</param>
-    /// <param name="ineligibilityReasons">reasons collection</param>
+    /// <param name="isEligible">boolean.</param>
+    /// <param name="ineligibilityReasons">reasons collection.</param>
     public IneligibleResultDto(bool isEligible, Collection<IneligibilityDisplayReason> ineligibilityReasons)
     {
         this.IsEligible = isEligible;
@@ -19,13 +19,13 @@ public class IneligibleResultDto
     }
 
     /// <summary>
-    /// Is claimant eligible.
+    /// Gets a value indicating whether is claimant eligible.
     /// </summary>
     public bool IsEligible { get; }
 
     /// <summary>
-    /// The reasons for ineligibility.
+    /// Gets the reasons for ineligibility.
     /// </summary>
-    /// <returns>collection of reasons</returns>
+    /// <returns>collection of reasons.</returns>
     public Collection<IneligibilityDisplayReason> IneligibilityReasons { get; }
 }
