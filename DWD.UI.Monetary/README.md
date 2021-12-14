@@ -15,8 +15,8 @@ A preliminary service that exposes some public domain calculations related to DW
 * xunit 2.4.1 (unit testing)
 
 ## Building and Testing
-### Install .net 5 sdk
-Install the [.net 5 sdk](https://dotnet.microsoft.com/download/dotnet/5.0).
+### Install .NET 6 SDK
+Install the [.NET 6 SDK](https://dotnet.microsoft.com/download/dotnet/6.0).
 ### Build on command line
 Please run the following command, from /DWD.UI.Monetary/, to build the software:
 ```
@@ -32,3 +32,24 @@ Please run the following command, from /DWD.UI.Monetary/DWD.UI.Monetary.Service/
 ```
 dotnet run
 ```
+
+## Running in the Cloud Run Emulator
+In production, the application is deployed to Cloud Run -- a fully managed Kubernetes instance. To fully test the application locally, you can run the application in Google's Cloud Run emulator. The [Cloud SDK](https://cloud.google.com/sdk/docs/install) and [Docker](https://docs.docker.com/engine/install/) are required. The application Docker file is located [here](https://github.com/flexion/dwd-ui-monetary-lab/blob/main/DWD.UI.Monetary/Deploy.dockerfile).
+
+Below are the instructions for running in the emulator with or without IDE support. 
+
+[Cloud Code emulator](https://cloud.google.com/run/docs/testing/local#cloud-code-emulator)
+[Cloud SDK](https://cloud.google.com/run/docs/testing/local#cloud-sdk)
+[Docker](https://cloud.google.com/run/docs/testing/local#docker)
+[Docker with GCP Access](https://cloud.google.com/run/docs/testing/local#docker-with-gcp-access)
+
+### Cloud Code Setup
+Cloud Run is a Kubernetes instance. The Google Cloud Code plugin does a lot of the work to set up the Kubernetes environment for you. To deploy the API in the Cloud Run emulator, first begin by leaning how to create, configure, and start Cloud Run container in the [Cloud Code emulator](https://cloud.google.com/run/docs/testing/local#cloud-code-emulator) documentation above.
+
+The API makes use of a [Cloud SQL local instance](cloud_sql_local.md) and you should start that first. With the Cloud code configuration below, the app should be fully functional locally.
+
+**Cloud Code: Cloud Run Configuration**
+![run_local_create](doc_images/run_local_create.png)]
+
+**Advanced revision settings: Environment Variables**
+![run_local_env](doc_images/run_local_env.png)

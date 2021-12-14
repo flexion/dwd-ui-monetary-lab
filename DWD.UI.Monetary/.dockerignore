@@ -1,6 +1,7 @@
 **/.dockerignore
 **/.env
 **/.git
+**/.run
 **/.gitignore
 **/.project
 **/.settings
