@@ -23,6 +23,18 @@ public class Quarters : IEquatable<Quarters>
     public void Add(Quarter quarter) => this.quarters.Add(quarter);
 
     /// <summary>
+    /// Add a list of Quarters to the collection.
+    /// </summary>
+    /// <param name="quarters">A list of quarters to be added.</param>
+    public void AddRange(IEnumerable<Quarter> quarters)
+    {
+        foreach (var quarter in quarters)
+        {
+            _ = this.quarters.Add(quarter);
+        }
+    }
+
+    /// <summary>
     /// Gets the quarters in the collection as an array, sorted chronologically ascending (oldest first).
     /// </summary>
     public Quarter[] ToArray() => this.quarters.ToArray();

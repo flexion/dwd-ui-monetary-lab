@@ -19,12 +19,12 @@ internal class BasePeriod : IBasePeriod
     /// <summary>
     /// Local storage for standard quarters.
     /// </summary>
-    private List<Quarter> standardQuarters = new();
+    private readonly Quarters standardQuarters = new();
 
     /// <summary>
     /// Local storage for alternate quarters.
     /// </summary>
-    private List<Quarter> alternateQuarters = new();
+    private readonly Quarters alternateQuarters = new();
 
     /// <summary>
     /// Initializes a new instance of the <see cref="BasePeriod"/> class using initial claim date as input.
@@ -80,9 +80,9 @@ internal class BasePeriod : IBasePeriod
         var completedQuarters = QuartersCompletedBefore(initialClaimDate);
 
         // First four of the last (five)
-        this.standardQuarters = completedQuarters.Take(4).ToList();
+        this.standardQuarters.AddRange(completedQuarters.Take(4));
 
         // Four most recent
-        this.alternateQuarters = completedQuarters.Skip(1).ToList();
+        this.alternateQuarters.AddRange(completedQuarters.Skip(1));
     }
 }
