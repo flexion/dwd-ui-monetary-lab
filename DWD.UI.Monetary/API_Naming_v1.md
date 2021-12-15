@@ -24,5 +24,5 @@ Version Query Parameter?
 Custom Request Header?
 Media Versioning Accept header?
 
-Fortunately, the Microsoft.AspNetCore.Mvc.Versioning library handles all methods. We will begin wit URL versioning, but have the option to migrate to another method later.
+Fortunately, the Microsoft.AspNetCore.Mvc.Versioning library handles all methods. We will begin with URL versioning, but have the option to migrate to another method later.
 
