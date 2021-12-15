@@ -17,9 +17,9 @@ public class CalculateBasePeriod : ICalculateBasePeriod
     /// <exception cref="ArgumentOutOfRangeException">The initialClaimDate is not supported.</exception>
     public IBasePeriod CalculateBasePeriodFromInitialClaimDate(DateTime initialClaimDate)
     {
-        if (initialClaimDate.Year < Constants.MINBENEFITYEAR)
+        if (initialClaimDate.Year < Constants.MinBenefitYear)
         {
-            throw new ArgumentOutOfRangeException(nameof(initialClaimDate), $"Dates before {Constants.MINBENEFITYEAR} are not supported.");
+            throw new ArgumentOutOfRangeException(nameof(initialClaimDate), $"Dates before {Constants.MinBenefitYear} are not supported.");
         }
 
         return new BasePeriod(initialClaimDate);
@@ -34,9 +34,9 @@ public class CalculateBasePeriod : ICalculateBasePeriod
     /// <exception cref="ArgumentOutOfRangeException">The year is not supported.</exception>
     public IBasePeriod CalculateBasePeriodFromYearAndWeek(int year, int week)
     {
-        if (year < Constants.MINBENEFITYEAR)
+        if (year < Constants.MinBenefitYear)
         {
-            throw new ArgumentOutOfRangeException(nameof(year), $"Years before {Constants.MINBENEFITYEAR} are not supported.");
+            throw new ArgumentOutOfRangeException(nameof(year), $"Years before {Constants.MinBenefitYear} are not supported.");
         }
 
         return new BasePeriod(new UIWeek(year, week));

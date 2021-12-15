@@ -1,7 +1,7 @@
 namespace DWD.UI.Monetary.Domain.BusinessEntities;
 
 /// <summary>
-/// Application-wide constants
+/// Application-wide constants.
 /// </summary>
 public static class Constants
 {
