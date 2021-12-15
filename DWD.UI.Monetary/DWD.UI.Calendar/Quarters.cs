@@ -39,12 +39,12 @@ public class Quarters : IEquatable<Quarters>
     /// <param name="other">The other Quarters collection to compare to this instance.</param>
     public bool Equals(Quarters? other)
     {
-        if (other is null || ReferenceEquals(this, other) || this.quarters.Count != other.quarters.Count)
+        if (other is null || this.quarters.Count != other.quarters.Count)
         {
             return false;
         }
 
-        return SortedSet<Quarter>.CreateSetComparer().Equals(this.quarters, other.quarters);
+        return ReferenceEquals(this, other) || SortedSet<Quarter>.CreateSetComparer().Equals(this.quarters, other.quarters);
     }
 
     /// <summary>

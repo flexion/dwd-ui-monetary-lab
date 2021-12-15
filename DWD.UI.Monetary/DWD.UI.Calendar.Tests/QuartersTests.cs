@@ -58,4 +58,12 @@ public class QuartersTests
         Assert.Equal(q1, q2);
         Assert.NotEqual(q1, q3);
     }
+
+    [Fact]
+    public void QuartersShouldHaveReferenceEquality()
+    {
+        var a = new Quarters();
+        var b = a;
+        Assert.True(b.Equals(a));
+    }
 }
