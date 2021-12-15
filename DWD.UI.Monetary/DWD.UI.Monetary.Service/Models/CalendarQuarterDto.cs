@@ -1,9 +1,9 @@
 namespace DWD.UI.Monetary.Service.Models;
 
 /// <summary>
-/// A dto for calendar quarter.
+/// A Data Transfer Object for calendar quarter.
 /// </summary>
-public class CalendarQuarterDto : ICalendarQuarterDto
+public class CalendarQuarterDto
 {
     /// <summary>
     /// Gets or sets the calendar year.

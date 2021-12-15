@@ -20,6 +20,21 @@ public class QuartersTests
     }
 
     [Fact]
+    public void QuartersShouldBeConvertableToList()
+    {
+        var sut = new Quarters();
+        sut.Add(new Quarter(2021, 4));
+        sut.Add(new Quarter(2022, 3));
+        sut.Add(new Quarter(2022, 1));
+        sut.Add(new Quarter(2022, 2));
+
+        var list = sut.ToList();
+        Assert.NotNull(list);
+        Assert.Equal(4, list.Count);
+        Assert.Equal(new Quarter(2022, 3), list[3]);
+    }
+
+    [Fact]
     public void QuartersShouldBeEquatable()
     {
         var q1 = new Quarters();

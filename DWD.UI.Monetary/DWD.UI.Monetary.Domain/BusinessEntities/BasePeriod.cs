@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using DWD.UI.Calendar;
-using DWD.UI.Monetary.Domain.Utilities;
 
 /// <summary>
 /// The base period used within our eligibility logic.
@@ -15,70 +14,75 @@ using DWD.UI.Monetary.Domain.Utilities;
 /// </remarks>
 internal class BasePeriod : IBasePeriod
 {
-    // TODO: Ask Helen if this is needed, and if so what the correct minimum should be.
+    private const int NumberOfQuartersRequiredToCalculateBasePeriod = 5;
 
     /// <summary>
-    /// The minimum valid initial base claim date that we will calculate from.
+    /// Local storage for standard quarters.
     /// </summary>
-    private static readonly DateTime MinimumValidInitialBaseClaimDate = new(Constants.MINBENEFITYEAR, 1, 1);
+    private List<Quarter> standardQuarters = new();
 
     /// <summary>
-    /// Local storage for quarters.
+    /// Local storage for alternate quarters.
     /// </summary>
-    private UIQuarter[] standardQuarters = new UIQuarter[4];
-
-    /// <summary>
-    /// Local storage for quarters.
-    /// </summary>
-    private UIQuarter[] alternateQuarters = new UIQuarter[4];
+    private List<Quarter> alternateQuarters = new();
 
     /// <summary>
     /// Initializes a new instance of the <see cref="BasePeriod"/> class using initial claim date as input.
     /// </summary>
     /// <param name="initialClaimDate">The initial claim date.</param>
-    /// <exception cref="ArgumentOutOfRangeException">Throws a ArgumentException if the supplied initial claim date is not valid.</exception>
     public BasePeriod(DateTime initialClaimDate) => this.PopulateBasePeriods(initialClaimDate);
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="BasePeriod"/> class given a year and week of year.
+    /// Initializes a new instance of the <see cref="BasePeriod"/> class given a UIWeek object.
     /// </summary>
     /// <param name="uiWeek">The UIWeek object that represents the initial claim week.</param>
     public BasePeriod(UIWeek uiWeek) => this.PopulateBasePeriods(uiWeek.StartDate);
 
     /// <summary>
-    /// Gets base period quarters as IEnumerable of IUIQuarter.
+    /// Gets the first four of the last five completed calendar quarters before the week a claimant
+    /// files an initial claim application for a new benefit year.
     /// </summary>
-    public IEnumerable<IUIQuarter> BasePeriodQuarters => new List<IUIQuarter>(this.standardQuarters);
+    public IReadOnlyList<Quarter> StandardQuarters => this.standardQuarters.ToList();
 
     /// <summary>
-    /// Gets base period quarters as IEnumerable of IUIQuarter.
+    /// Gets the four most recently completed calendar quarters before the
+    /// week a claimant filed an initial claim application for a new benefit year.
     /// </summary>
-    public IEnumerable<IUIQuarter> AltBasePeriodQuarters => new List<IUIQuarter>(this.alternateQuarters);
+    public IReadOnlyList<Quarter> AlternateQuarters => this.alternateQuarters.ToList();
+
+    /// <summary>
+    /// Build a list of the (five) quarters completed before the given initial claim date.
+    /// </summary>
+    /// <param name="initialClaimDate">Initial claim date.</param>
+    /// <returns>List of <see cref="Quarter"/>.</returns>
+    private static List<Quarter> QuartersCompletedBefore(DateTime initialClaimDate)
+    {
+        Quarters quarters = new();
+        var currentQuarter = new Quarter(initialClaimDate);
+        var quarter = currentQuarter.Previous();
+
+        for (var i = 0; i < NumberOfQuartersRequiredToCalculateBasePeriod; i++)
+        {
+            quarters.Add(quarter);
+            quarter = quarter.Previous();
+        }
+
+        return (List<Quarter>)quarters.ToList();
+    }
 
     /// <summary>
     /// Populate standard and alternate base periods.
     /// </summary>
     /// <param name="initialClaimDate">The initial claim date.</param>
-    /// <exception cref="ArgumentOutOfRangeException">Throws a ArgumentException if the supplied initial claim date is not valid.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">The supplied initial claim date is too old.</exception>
     private void PopulateBasePeriods(DateTime initialClaimDate)
     {
-        // Check if claim date is invalid
-        if (initialClaimDate.Date < MinimumValidInitialBaseClaimDate)
-        {
-            throw new ArgumentOutOfRangeException($"The supplied initial claim date is not valid: Dates before {MinimumValidInitialBaseClaimDate} are not supported (initialClaimDate={initialClaimDate.Date.ToShortDateString()}).");
-        }
+        var completedQuarters = QuartersCompletedBefore(initialClaimDate);
 
-        // Populate basePeriod with last 5 complete quarters, skipping most recent complete quarter
-        var previous5Quarters = new UIQuarter[5];
-        var currentQuarter = new UIQuarter(initialClaimDate, new CalendarQuarter());
+        // First four of the last (five)
+        this.standardQuarters = completedQuarters.Take(4).ToList();
 
-        for (var i = 4; i >= 0; i--)
-        {
-            currentQuarter = --currentQuarter;
-            previous5Quarters[i] = new UIQuarter(currentQuarter.Year, currentQuarter.QuarterNumber);
-        }
-
-        this.standardQuarters = previous5Quarters.Take(4).ToArray();
-        this.alternateQuarters = previous5Quarters.Skip(1).ToArray();
+        // Four most recent
+        this.alternateQuarters = completedQuarters.Skip(1).ToList();
     }
 }

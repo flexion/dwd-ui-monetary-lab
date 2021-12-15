@@ -1,6 +1,6 @@
-namespace DWD.UI.Calendar;
+[assembly: CLSCompliant(true)]
 
-using System;
+namespace DWD.UI.Calendar;
 
 /// <summary>
 /// An object representing a quarter of a year.
@@ -18,7 +18,7 @@ public record Quarter : IComparable
     public int QuarterNumber { get; private set; }
 
     /// <summary>
-    /// Construct from year and quarter number.
+    /// Initializes a new instance of the <see cref="Quarter"/> from year and quarter number.
     /// </summary>
     /// <param name="year">The quarter's year.</param>
     /// <param name="quarterNumber">The quarter number.</param>
@@ -30,6 +30,47 @@ public record Quarter : IComparable
         }
         this.Year = year;
         this.QuarterNumber = quarterNumber;
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Quarter"/> from a date.
+    /// </summary>
+    /// <remarks>
+    /// For unemployment purposes the quarter does not start until the first full week of that month.<br /><br />
+    /// Example -  October of 2021.<br />
+    /// The first full week of October was Sunday-Saturday 10/3-10/9 so
+    /// that is when the quarter 4 would start for unemployment purposes. The week of 9/26-10/2
+    /// would be considered to be part of Q3.<br /><br />
+    /// The week number can be used to find the year and the quarter breaks conveniently.
+    /// </remarks>
+    /// <param name="date">The date from which to construct the new Quarter.</param>
+    public Quarter(DateTime date)
+    {
+        var uiWeek = new UIWeek(date);
+        this.Year = uiWeek.Year;
+        this.QuarterNumber = uiWeek.WeekNumber switch
+        {
+            < 14 => 1,
+            < 27 => 2,
+            < 40 => 3,
+            _ => 4,
+        };
+    }
+
+    /// <summary>
+    /// Creates a new Quarter that is the chronological predecessor of this instance
+    /// </summary>
+    /// <returns></returns>
+    public Quarter Previous()
+    {
+        var newYear = this.Year;
+        var newQuarterNumber = this.QuarterNumber - 1;
+        if (newQuarterNumber < 1)
+        {
+            newYear--;
+            newQuarterNumber = 4;
+        }
+        return new Quarter(newYear, newQuarterNumber);
     }
 
     /// <summary>
@@ -51,32 +92,28 @@ public record Quarter : IComparable
     /// <summary>
     /// Indicates whether a quarter precedes another quarter.
     /// </summary>
-    /// <param name="a">Left-hand quarter.</param>
-    /// <param name="b">Right-hand quarter.</param>
-    public static bool operator <(Quarter a, Quarter b) =>
-        a.Year < b.Year || (a.Year == b.Year && a.QuarterNumber < b.QuarterNumber);
-
-    /// <summary>
-    /// Indicates whether a quarter follows another quarter.
-    /// </summary>
-    /// <param name="a">Left-hand quarter.</param>
-    /// <param name="b">Right-hand quarter.</param>
-    public static bool operator >(Quarter a, Quarter b) =>
-        a.Year > b.Year || (a.Year == b.Year && a.QuarterNumber > b.QuarterNumber);
+    /// <param name="left">Left-hand quarter.</param>
+    /// <param name="right">Right-hand quarter.</param>
+    public static bool operator <(Quarter left, Quarter right) => left is null ? right is not null : left.CompareTo(right) < 0;
 
     /// <summary>
     /// Indicates whether a quarter equals or precedes another quarter.
     /// </summary>
-    /// <param name="a">Left-hand quarter.</param>
-    /// <param name="b">Right-hand quarter.</param>
-    public static bool operator <=(Quarter a, Quarter b) =>
-        a.Year < b.Year || (a.Year == b.Year && a.QuarterNumber <= b.QuarterNumber);
+    /// <param name="left">Left-hand quarter.</param>
+    /// <param name="right">Right-hand quarter.</param>
+    public static bool operator <=(Quarter left, Quarter right) => left is null || left.CompareTo(right) <= 0;
+
+    /// <summary>
+    /// Indicates whether a quarter follows another quarter.
+    /// </summary>
+    /// <param name="left">Left-hand quarter.</param>
+    /// <param name="right">Right-hand quarter.</param>
+    public static bool operator >(Quarter left, Quarter right) => left is not null && left.CompareTo(right) > 0;
 
     /// <summary>
     /// Indicates whether a quarter equals or follows another quarter.
     /// </summary>
-    /// <param name="a">Left-hand quarter.</param>
-    /// <param name="b">Right-hand quarter.</param>
-    public static bool operator >=(Quarter a, Quarter b) =>
-        a.Year > b.Year || (a.Year == b.Year && a.QuarterNumber >= b.QuarterNumber);
+    /// <param name="left">Left-hand quarter.</param>
+    /// <param name="right">Right-hand quarter.</param>
+    public static bool operator >=(Quarter left, Quarter right) => left is null ? right is null : left.CompareTo(right) >= 0;
 }

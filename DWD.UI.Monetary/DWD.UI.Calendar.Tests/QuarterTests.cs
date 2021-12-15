@@ -5,6 +5,37 @@ using Xunit;
 
 public class QuarterTests
 {
+    [Theory]
+    [InlineData(2021, 12, 25, 2021, 4)]
+    [InlineData(2021, 12, 28, 2022, 1)]
+    [InlineData(2022, 3, 26, 2022, 1)]
+    [InlineData(2022, 3, 27, 2022, 2)]
+    [InlineData(2022, 6, 25, 2022, 2)]
+    [InlineData(2022, 6, 26, 2022, 3)]
+    [InlineData(2022, 9, 24, 2022, 3)]
+    [InlineData(2022, 9, 25, 2022, 4)]
+    [InlineData(2022, 12, 31, 2022, 4)]
+    public void ShouldConstructFromDate(int year, int month, int day, int expectedYear, int expectedQuarter)
+    {
+        var sut = new Quarter(new DateTime(year, month, day));
+
+        Assert.Equal(expectedYear, sut.Year);
+        Assert.Equal(expectedQuarter, sut.QuarterNumber);
+    }
+
+    [Theory]
+    [InlineData(2021, 1, 2020, 4)]
+    [InlineData(2021, 2, 2021, 1)]
+    public void PreviousShouldProducePredecessorQuarter(int year, int quarter, int expectedYear, int expectedQuarter)
+    {
+        var a = new Quarter(year, quarter);
+
+        var b = a.Previous();
+
+        Assert.Equal(expectedYear, b.Year);
+        Assert.Equal(expectedQuarter, b.QuarterNumber);
+    }
+
     [Fact]
     public void QuarterShouldHaveValueEquality()
     {
