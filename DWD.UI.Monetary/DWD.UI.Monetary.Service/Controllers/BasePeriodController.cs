@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Http;
 /// Provides endpoints for BasePeriod.
 /// </summary>
 [ApiVersion("1.0")]
-[Route("v{version:apiVersion}/base-periods")]
+[Route("v{version:apiVersion}")]
 public class BasePeriodController : BaseApiController
 {
     /// <summary>
@@ -75,7 +75,7 @@ public class BasePeriodController : BaseApiController
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpGet]
-    [Route("std/claimdate")]
+    [Route("standard-base-period-by-date")]
     public IActionResult GetStandardBasePeriodFromInitialClaimDate(DateTime initialClaimDate)
     {
         try
@@ -116,7 +116,7 @@ public class BasePeriodController : BaseApiController
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpGet]
-    [Route("std/week")]
+    [Route("standard-base-period-by-week")]
     public IActionResult GetStandardBasePeriodFromYearAndWeek(int year, int week)
     {
         try
@@ -157,7 +157,7 @@ public class BasePeriodController : BaseApiController
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpGet]
-    [Route("alt/claimdate")]
+    [Route("alternative-base-period-by-date")]
     public IActionResult GetAlternateBasePeriodFromInitialClaimDate(DateTime initialClaimDate)
     {
         try
@@ -199,7 +199,7 @@ public class BasePeriodController : BaseApiController
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpGet]
-    [Route("alt/week")]
+    [Route("alternative-base-period-by-week")]
     public IActionResult GetAlternateBasePeriodFromYearAndWeek(int year, int week)
     {
         try
