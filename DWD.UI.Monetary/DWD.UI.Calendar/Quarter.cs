@@ -22,6 +22,7 @@ public record Quarter : IComparable
     /// </summary>
     /// <param name="year">The quarter's year.</param>
     /// <param name="quarterNumber">The quarter number.</param>
+    /// <exception cref="ArgumentOutOfRangeException">The quarter number was not in the range [1,4]</exception>"
     public Quarter(int year, int quarterNumber)
     {
         if (quarterNumber is < 1 or > 4)
@@ -36,12 +37,7 @@ public record Quarter : IComparable
     /// Initializes a new instance of the <see cref="Quarter"/> from a date.
     /// </summary>
     /// <remarks>
-    /// For unemployment purposes the quarter does not start until the first full week of that month.<br /><br />
-    /// Example -  October of 2021.<br />
-    /// The first full week of October was Sunday-Saturday 10/3-10/9 so
-    /// that is when the quarter 4 would start for unemployment purposes. The week of 9/26-10/2
-    /// would be considered to be part of Q3.<br /><br />
-    /// The week number can be used to find the year and the quarter breaks conveniently.
+    /// For unemployment purposes the quarter starts on Sunday of the 1st, 14th, 27th, and 40th UI weeks of the year.
     /// </remarks>
     /// <param name="date">The date from which to construct the new Quarter.</param>
     public Quarter(DateTime date)
