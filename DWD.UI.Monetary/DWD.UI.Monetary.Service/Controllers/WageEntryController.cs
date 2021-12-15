@@ -19,17 +19,17 @@ public class WageEntryController : ControllerBase
     private readonly IClaimantWageRepository claimantWageRepository;
 
     /// <summary>
-    /// Constructor.
+    /// Initializes a new instance of the <see cref="WageEntryController"/> class.
     /// </summary>
-    /// <param name="theClaimantWageRepository">Wages</param>
+    /// <param name="theClaimantWageRepository">Wages.</param>
     public WageEntryController(IClaimantWageRepository theClaimantWageRepository) =>
         this.claimantWageRepository = theClaimantWageRepository;
 
     /// <summary>
     /// Get claimant quarterly wage entry by entry id.
     /// </summary>
-    /// <param name="id">entry id</param>
-    /// <returns>wage entry</returns>
+    /// <param name="id">entry id.</param>
+    /// <returns>wage entry.</returns>
     [HttpGet]
     [Route("GetClaimantWage/{id}")]
     public IActionResult GetClaimantWage([FromRoute] long id)
@@ -41,7 +41,7 @@ public class WageEntryController : ControllerBase
     /// <summary>
     /// Gets all claimant quarterly wage entries.
     /// </summary>
-    /// <returns>All wage entries</returns>
+    /// <returns>All wage entries.</returns>
     [HttpGet]
     [Route("GetAllClaimantWages")]
     public IActionResult GetAllClaimantWages()
@@ -53,8 +53,8 @@ public class WageEntryController : ControllerBase
     /// <summary>
     /// Gets all claimant quarterly wage entries for claimant.
     /// </summary>
-    /// <param name="claimantId">claimant identifier</param>
-    /// <returns>All wage entries for claimant</returns>
+    /// <param name="claimantId">claimant identifier.</param>
+    /// <returns>All wage entries for claimant.</returns>
     [HttpGet]
     [Route("GetAllClaimantWagesForClaimant/{claimantId}")]
     public IActionResult GetAllClaimantWagesForClaimant([FromRoute] string claimantId)
@@ -64,13 +64,13 @@ public class WageEntryController : ControllerBase
     }
 
     /// <summary>
-    /// Updates a single wage entry by wage entry id
+    /// Updates a single wage entry by wage entry id.
     /// </summary>
-    /// <param name="id">wage entry id</param>
-    /// <param name="year">quarterly wages year</param>
-    /// <param name="quarter">quarterly wages quarter</param>
-    /// <param name="wages">quarterly wages</param>
-    /// <returns>All wage entries</returns>
+    /// <param name="id">wage entry id.</param>
+    /// <param name="year">quarterly wages year.</param>
+    /// <param name="quarter">quarterly wages quarter.</param>
+    /// <param name="wages">quarterly wages.</param>
+    /// <returns>All wage entries.</returns>
     [HttpPut]
     [Route("UpdateClaimantWage/{id}")]
     public IActionResult UpdateClaimantWage([FromRoute] long id, short? year, short? quarter, decimal wages)
@@ -86,10 +86,10 @@ public class WageEntryController : ControllerBase
     }
 
     /// <summary>
-    /// Deletes a wage entry by wage entry id
+    /// Deletes a wage entry by wage entry id.
     /// </summary>
-    /// <param name="id">wage id</param>
-    /// <returns>All wage entries</returns>
+    /// <param name="id">wage id.</param>
+    /// <returns>All wage entries.</returns>
     [HttpDelete]
     [Route("DeleteClaimantWage/{id}")]
     public IActionResult DeleteClaimantWage([FromRoute] long id)
@@ -100,13 +100,13 @@ public class WageEntryController : ControllerBase
     }
 
     /// <summary>
-    /// Create a quarterly wages entry
+    /// Create a quarterly wages entry.
     /// </summary>
-    /// <param name="claimantId">claimant identifier</param>
-    /// <param name="year">quarterly wages year</param>
-    /// <param name="quarter">quarterly wages quarter</param>
-    /// <param name="wages">quarterly wages</param>
-    /// <returns>All wage entries</returns>
+    /// <param name="claimantId">claimant identifier.</param>
+    /// <param name="year">quarterly wages year.</param>
+    /// <param name="quarter">quarterly wages quarter.</param>
+    /// <param name="wages">quarterly wages.</param>
+    /// <returns>All wage entries.</returns>
     [HttpPost]
     [Route("CreateClaimantWage")]
     public IActionResult CreateClaimantWage(string claimantId, short? year, short? quarter, decimal wages)

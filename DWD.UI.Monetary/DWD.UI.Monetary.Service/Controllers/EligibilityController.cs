@@ -22,7 +22,7 @@ public class EligibilityController : ControllerBase
     /// <summary>
     /// Initializes a new instance of the <see cref="EligibilityController"/> class.
     /// </summary>
-    /// <param name="checkEligibilityRequirements">Eligibity data.</param>
+    /// <param name="checkEligibilityRequirements">Eligibility data.</param>
     public EligibilityController(ICheckEligibilityOfMonetaryRequirements checkEligibilityRequirements) =>
         this.checkEligibilityRequirements = checkEligibilityRequirements;
 
@@ -30,7 +30,7 @@ public class EligibilityController : ControllerBase
     ///  Determine eligibility for benefits.
     /// </summary>
     /// <remarks>
-    /// Check for all monetary qualifying requirements the week the claimant is filing for so that the department can determine eligibility for benefits. <br /><br />
+    /// Check for all monetary qualifying requirements the week the claimant is filing for so that the department can determine eligibility for benefits.<br /><br />
     /// <b>Eligibility Criteria</b><br />
     /// <para>- Claimant must have been paid wages from covered employment in at least two quarters (BP).</para><br />
     /// <para>- Claimant has wages in their high quarter (BP)to meet the minimum high quarter earnings amount.</para><br />
