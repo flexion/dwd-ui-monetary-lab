@@ -116,7 +116,7 @@ public class BasePeriodController : BaseApiController
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpGet]
-    [Route("standard-base-period-by-week")]
+    [Route("standard-base-period-by-year-week")]
     public IActionResult GetStandardBasePeriodFromYearAndWeek(int year, int week)
     {
         try
@@ -199,7 +199,7 @@ public class BasePeriodController : BaseApiController
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpGet]
-    [Route("alternative-base-period-by-week")]
+    [Route("alternative-base-period-by-year-week")]
     public IActionResult GetAlternateBasePeriodFromYearAndWeek(int year, int week)
     {
         try
