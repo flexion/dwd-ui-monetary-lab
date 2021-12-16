@@ -1,7 +1,6 @@
 namespace DWD.UI.Monetary.Domain.UseCases;
 
 using System;
-using DWD.UI.Calendar;
 using DWD.UI.Monetary.Domain.BusinessEntities;
 
 /// <summary>
@@ -39,6 +38,6 @@ public class CalculateBasePeriod : ICalculateBasePeriod
             throw new ArgumentOutOfRangeException(nameof(year), $"Years before {Constants.MinBenefitYear} are not supported.");
         }
 
-        return new BasePeriod(new UIWeek(year, week));
+        return new BasePeriod(year, week);
     }
 }

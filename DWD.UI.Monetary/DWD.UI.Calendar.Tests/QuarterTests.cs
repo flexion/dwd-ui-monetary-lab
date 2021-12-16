@@ -91,11 +91,7 @@ public class QuarterTests
         Assert.Equal(-1, a.CompareTo(b));
         Assert.Equal(1, b.CompareTo(a));
         Assert.Equal(0, b.CompareTo(c));
-        Assert.Equal(-1, a.CompareTo((object)b));
-        Assert.Equal(1, b.CompareTo((object)a));
-        Assert.Equal(0, b.CompareTo((object)c));
         Assert.Equal(1, b.CompareTo(null));
-        Assert.Equal(1, b.CompareTo((object)null));
     }
 
     [Theory]

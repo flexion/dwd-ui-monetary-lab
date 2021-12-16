@@ -3,10 +3,13 @@ The Calendar package provides common calendar functions shared across UI domains
 ---
 
 ## Quarter
-The quarter is based on a year and quarter number.
+The quarter is based on a date or a year and quarter number.
+For unemployment purposes the quarter starts on Sunday of the first full week of months January, April, July, and October.
 
 A quarter is an immutable object that provides the year and quarter number as properties.
-You can compare a quarter to another quarter chronologically and clone a quarter as the previous quarter.
+
+- You can compare a quarter to another quarter chronologically
+- You can clone a quarter as the previous quarter.
 ---
 
 ## Quarters
@@ -21,7 +24,4 @@ A UIWeek is an immutable object representing a week on the UI calendar, in which
 is defined as Sunday. *Note that the first week of the UI year may contain days from the previous calendar year.*
 It can be constructed from either a date or a combination of year and week-of-year number.
 
-A UIWeek provides the year, week-of-year number, quarter number, start date, and end date of the week.
-
-For unemployment purposes the quarter starts on Sunday of the 1st, 14th, 27th, and 40th UI weeks of the year.
-
+A UIWeek provides the year, week-of-year number, start date, and end date of the week.

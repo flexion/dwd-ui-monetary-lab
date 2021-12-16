@@ -56,14 +56,14 @@ public class BasePeriodTests
     }
 
     [Fact]
-    public void ShouldConstructStdBasePeriodFromUIWeek()
+    public void ShouldConstructStdBasePeriodFromYearAndWeek()
     {
         // Arrange
         var claimDate = new DateTime(2021, 12, 25);
         var uiWeek = new UIWeek(claimDate);
 
         // Act
-        var bp = new BasePeriod(uiWeek);
+        var bp = new BasePeriod(uiWeek.Year, uiWeek.WeekNumber);
 
         // Assert
         Assert.Equal(this.expectedStdQuarters, bp.StandardQuarters);
@@ -76,7 +76,7 @@ public class BasePeriodTests
         var uiWeek = new UIWeek(new DateTime(2021, 12, 25));
 
         // Act
-        var bp = new BasePeriod(uiWeek);
+        var bp = new BasePeriod(uiWeek.Year, uiWeek.WeekNumber);
 
         // Assert
         Assert.Equal(this.expectedAltQuarters, bp.AlternateQuarters);

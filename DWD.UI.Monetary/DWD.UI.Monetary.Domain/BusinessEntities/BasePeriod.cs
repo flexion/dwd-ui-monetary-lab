@@ -30,17 +30,18 @@ internal class BasePeriod : IBasePeriod
     /// Initializes a new instance of the <see cref="BasePeriod"/> class using initial claim date as input.
     /// </summary>
     /// <param name="initialClaimDate">The initial claim date.</param>
-    public BasePeriod(DateTime initialClaimDate)
-    {
-        var uiWeek = new UIWeek(initialClaimDate);
-        this.PopulateBasePeriods(uiWeek);
-    }
+    public BasePeriod(DateTime initialClaimDate) => this.PopulateBasePeriods(initialClaimDate);
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="BasePeriod"/> class given a UIWeek object.
+    /// Initializes a new instance of the <see cref="BasePeriod"/> class given the year and week number of the initial claim.
     /// </summary>
-    /// <param name="uiWeek">The UIWeek object that represents the initial claim week.</param>
-    public BasePeriod(UIWeek uiWeek) => this.PopulateBasePeriods(uiWeek);
+    /// <param name="year">Year to calculate the base periods.</param>
+    /// <param name="weekNumber">Week number of the year. Must be between 1 and 52 or 53(If first day of the year lands on saturday).</param>
+    public BasePeriod(int year, int weekNumber)
+    {
+        var uiWeek = new UIWeek(year, weekNumber);
+        this.PopulateBasePeriods(uiWeek.StartDate);
+    }
 
     /// <summary>
     /// Gets the first four of the last five completed calendar quarters before the week a claimant
@@ -57,12 +58,12 @@ internal class BasePeriod : IBasePeriod
     /// <summary>
     /// Build a list of the (five) quarters completed before the given the UI week of the initial claim date.
     /// </summary>
-    /// <param name="uiWeek">The UIWeek containing the initial claim date.</param>
+    /// <param name="currentQuarterStartDate">The start date of the quarter containing the initial claim date.</param>
     /// <returns>List of <see cref="Quarter"/>.</returns>
-    private static List<Quarter> QuartersCompletedBefore(UIWeek uiWeek)
+    private static List<Quarter> QuartersCompletedBefore(DateTime currentQuarterStartDate)
     {
         Quarters quarters = new();
-        var currentQuarter = new Quarter(uiWeek.Year, uiWeek.QuarterNumber);
+        var currentQuarter = new Quarter(currentQuarterStartDate);
         var quarter = currentQuarter.Previous();
 
         for (var i = 0; i < NumberOfQuartersRequiredToCalculateBasePeriod; i++)
@@ -77,11 +78,10 @@ internal class BasePeriod : IBasePeriod
     /// <summary>
     /// Populate standard and alternate base periods.
     /// </summary>
-    /// <param name="uiWeek">The UIWeek containing the initial claim date.</param>
-    /// <exception cref="ArgumentOutOfRangeException">The supplied initial claim date is too old.</exception>
-    private void PopulateBasePeriods(UIWeek uiWeek)
+    /// <param name="currentQuarterStartDate">Sunday of the first full week of the quarter.</param>
+    private void PopulateBasePeriods(DateTime currentQuarterStartDate)
     {
-        var completedQuarters = QuartersCompletedBefore(uiWeek);
+        var completedQuarters = QuartersCompletedBefore(currentQuarterStartDate);
 
         // First four of the last (five)
         this.standardQuarters.AddRange(completedQuarters.Take(4));

@@ -34,9 +34,24 @@ public record Quarter : IComparable<Quarter>
     }
 
     /// <summary>
-    /// Creates a new Quarter that is the chronological predecessor of this instance
+    /// Initializes a new instance of the <see cref="Quarter"/> from year and quarter number.
     /// </summary>
-    /// <returns></returns>
+    /// <remarks>UI Quarters begin on Sunday of the first full week of months 1, 4, 7, &amp; 10.</remarks>
+    /// <param name="date">A date on which to base the quarter.</param>
+    public Quarter(DateTime date)
+    {
+        const int monthsPerQuarter = 3;
+
+        var firstDayOfWeek = date.AddDays(DayOfWeek.Sunday - date.DayOfWeek);
+
+        this.Year = firstDayOfWeek.Year;
+        this.QuarterNumber = (int)Math.Ceiling((double)firstDayOfWeek.Month / monthsPerQuarter);
+    }
+
+    /// <summary>
+    /// Creates a new Quarter that is the chronological predecessor of this instance.
+    /// </summary>
+    /// <returns>A new instance of Quarter that is the predecessor of the given Quarter.</returns>
     public Quarter Previous()
     {
         var newYear = this.Year;
@@ -47,21 +62,6 @@ public record Quarter : IComparable<Quarter>
             newQuarterNumber = 4;
         }
         return new Quarter(newYear, newQuarterNumber);
-    }
-
-    /// <summary>
-    /// Compares this instance to a specified Quarter and returns an indication of their relative values.
-    /// </summary>
-    /// <param name="obj">The other quarter.</param>
-    /// <returns>-1, 0, or 1, depending on whether the this instance is
-    /// earlier, equal to, or later than the other quarter, respectively.</returns>
-    public int CompareTo(object? obj)
-    {
-        if (obj == null || !this.GetType().IsAssignableFrom(obj.GetType()))
-        {
-            return 1;
-        }
-        return this.CompareTo(obj as Quarter);
     }
 
     /// <summary>

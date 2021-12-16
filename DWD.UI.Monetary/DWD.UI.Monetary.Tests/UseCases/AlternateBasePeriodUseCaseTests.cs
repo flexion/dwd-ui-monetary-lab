@@ -111,13 +111,13 @@ public class AlternateBasePeriodUseCaseTestData : IEnumerable<object[]>
         {
             "Claim date prior to first Sunday of first quarter",
             new DateTime(2021, 1, 1),
-            new Collection<Quarter>() { new(2020, 1), new(2020, 2), new(2020, 3), new(2020, 4) }
+            new Collection<Quarter>() { new(2019, 4), new(2020, 1), new(2020, 2), new(2020, 3) }
         };
         yield return new object[]
         {
             "Claim date prior to first Sunday of second quarter",
             new DateTime(2021, 4, 1),
-            new Collection<Quarter>() { new(2020, 2), new(2020, 3), new(2020, 4), new(2021, 1) }
+            new Collection<Quarter>() { new(2020, 1), new(2020, 2), new(2020, 3), new(2020, 4) }
         };
         yield return new object[]
         {
