@@ -4,7 +4,8 @@ using System;
 using System.Globalization;
 
 /// <summary>
-/// 
+/// A UIWeek is an immutable object representing a week on the UI calendar,
+/// in which the first day of the week is defined as Sunday.
 /// </summary>
 public record UIWeek
 {
