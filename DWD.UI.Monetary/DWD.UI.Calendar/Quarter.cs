@@ -10,12 +10,12 @@ public record Quarter : IComparable<Quarter>
     /// <summary>
     /// The quarter's year.
     /// </summary>
-    public int Year { get; private set; }
+    public int Year { get; }
 
     /// <summary>
     /// The quarter number.
     /// </summary>
-    public int QuarterNumber { get; private set; }
+    public int QuarterNumber { get; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Quarter"/> from year and quarter number.
@@ -31,26 +31,6 @@ public record Quarter : IComparable<Quarter>
         }
         this.Year = year;
         this.QuarterNumber = quarterNumber;
-    }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="Quarter"/> from a date.
-    /// </summary>
-    /// <remarks>
-    /// For unemployment purposes the quarter starts on Sunday of the 1st, 14th, 27th, and 40th UI weeks of the year.
-    /// </remarks>
-    /// <param name="date">The date from which to construct the new Quarter.</param>
-    public Quarter(DateTime date)
-    {
-        var uiWeek = new UIWeek(date);
-        this.Year = uiWeek.Year;
-        this.QuarterNumber = uiWeek.WeekNumber switch
-        {
-            < 14 => 1,
-            < 27 => 2,
-            < 40 => 3,
-            _ => 4,
-        };
     }
 
     /// <summary>

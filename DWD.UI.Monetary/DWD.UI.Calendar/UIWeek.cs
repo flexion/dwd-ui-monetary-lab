@@ -34,6 +34,17 @@ public record UIWeek
     public int WeekNumber { get; }
 
     /// <summary>
+    /// Gets the number of the quarter in which this week falls in the UI calendar.
+    /// </summary>
+    public int QuarterNumber => this.WeekNumber switch
+    {
+        < 14 => 1,
+        < 27 => 2,
+        < 40 => 3,
+        _ => 4,
+    };
+
+    /// <summary>
     /// Initializes a new UIWeek, given a year and week number.
     /// </summary>
     /// <param name="year">The year.</param>
