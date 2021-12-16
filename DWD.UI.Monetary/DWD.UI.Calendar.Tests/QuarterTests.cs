@@ -45,7 +45,7 @@ public class QuarterTests
     }
 
     [Fact]
-    public void QuarterShouldBeComparableWithBinaryOperators()
+    public void QuarterShouldBeComparableToAnotherQuarterWithBinaryOperators()
     {
         var a = new Quarter(2021, 4);
         var b = new Quarter(2022, 1);
@@ -53,6 +53,38 @@ public class QuarterTests
         Assert.True(b > a);
         Assert.True(a <= b);
         Assert.True(b >= a);
+    }
+
+    [Fact]
+    public void QuarterShouldBeComparableToNullWithBinaryLessThan()
+    {
+        var a = new Quarter(2021, 4);
+        Assert.True(null < a);
+        Assert.False(a < null);
+    }
+
+    [Fact]
+    public void QuarterShouldBeComparableToNullWithBinaryLessThanOrEqual()
+    {
+        var a = new Quarter(2021, 4);
+        Assert.True(null <= a);
+        Assert.False(a <= null);
+    }
+
+    [Fact]
+    public void QuarterShouldBeComparableToNullWithBinaryGreaterThan()
+    {
+        var a = new Quarter(2021, 4);
+        Assert.True(a > null);
+        Assert.False(null > a);
+    }
+
+    [Fact]
+    public void QuarterShouldBeComparableToNullWithBinaryGreaterThanOrEqual()
+    {
+        var a = new Quarter(2021, 4);
+        Assert.True(a >= null);
+        Assert.False(null >= a);
     }
 
     [Fact]
@@ -64,7 +96,11 @@ public class QuarterTests
         Assert.Equal(-1, a.CompareTo(b));
         Assert.Equal(1, b.CompareTo(a));
         Assert.Equal(0, b.CompareTo(c));
+        Assert.Equal(-1, a.CompareTo((object)b));
+        Assert.Equal(1, b.CompareTo((object)a));
+        Assert.Equal(0, b.CompareTo((object)c));
         Assert.Equal(1, b.CompareTo(null));
+        Assert.Equal(1, b.CompareTo((object)null));
     }
 
     [Theory]

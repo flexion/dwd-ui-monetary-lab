@@ -5,7 +5,7 @@ namespace DWD.UI.Calendar;
 /// <summary>
 /// An object representing a quarter of a year.
 /// </summary>
-public record Quarter : IComparable
+public record Quarter : IComparable<Quarter>
 {
     /// <summary>
     /// The quarter's year.
@@ -81,7 +81,21 @@ public record Quarter : IComparable
         {
             return 1;
         }
-        var other = obj as Quarter;
+        return this.CompareTo(obj as Quarter);
+    }
+
+    /// <summary>
+    /// Compares this instance to a specified Quarter and returns an indication of their relative values.
+    /// </summary>
+    /// <param name="other">The other quarter.</param>
+    /// <returns>-1, 0, or 1, depending on whether the this instance is
+    /// earlier, equal to, or later than the other quarter, respectively.</returns>
+    public int CompareTo(Quarter? other)
+    {
+        if (other is null)
+        {
+            return 1;
+        }
         return this.Year == other!.Year ? this.QuarterNumber.CompareTo(other.QuarterNumber) : this.Year.CompareTo(other.Year);
     }
 
