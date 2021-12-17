@@ -1,5 +1,8 @@
 namespace DWD.UI.Monetary.Service;
 
+using System;
+using System.IO;
+using System.Reflection;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -27,6 +30,8 @@ public class ConfigureSwaggerOptions : IConfigureOptions<SwaggerGenOptions>
         foreach (var description in this.provider.ApiVersionDescriptions)
         {
             options.SwaggerDoc(description.GroupName, CreateInfoForApiVersion(description));
+            var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
         }
     }
 

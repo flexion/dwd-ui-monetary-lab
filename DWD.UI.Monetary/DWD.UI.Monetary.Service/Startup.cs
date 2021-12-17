@@ -1,6 +1,9 @@
 namespace DWD.UI.Monetary.Service;
 
+using System;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
+using System.Reflection;
 using DWD.UI.Monetary.Domain.Interfaces;
 using DWD.UI.Monetary.Domain.UseCases;
 using DWD.UI.Monetary.Service.Extensions;
@@ -15,6 +18,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
+using Microsoft.OpenApi.Models;
 using Npgsql;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -62,12 +66,6 @@ public class Startup
         // Add API Versioning to the Project
         services.AddApiVersioning(apiconfig =>
         {
-            // Specify the default API Version as 1.0
-            apiconfig.DefaultApiVersion = new ApiVersion(1, 0);
-
-            // If the client hasn't specified the API version in the request, use the default API version number
-            apiconfig.AssumeDefaultVersionWhenUnspecified = true;
-
             // Advertise the API versions supported for the particular endpoint
             apiconfig.ReportApiVersions = true;
         });
