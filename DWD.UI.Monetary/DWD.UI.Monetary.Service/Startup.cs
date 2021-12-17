@@ -1,9 +1,6 @@
 namespace DWD.UI.Monetary.Service;
 
-using System;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
-using System.Reflection;
 using DWD.UI.Monetary.Domain.Interfaces;
 using DWD.UI.Monetary.Domain.UseCases;
 using DWD.UI.Monetary.Service.Extensions;
@@ -11,14 +8,12 @@ using DWD.UI.Monetary.Service.Frameworks;
 using DWD.UI.Monetary.Service.Gateways;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
-using Microsoft.OpenApi.Models;
 using Npgsql;
 using Swashbuckle.AspNetCore.SwaggerGen;
 

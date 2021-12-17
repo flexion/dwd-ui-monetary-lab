@@ -7,7 +7,7 @@ using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 /// <summary>
-/// Swagger default values filter
+/// Swagger default values filter.
 /// </summary>
 public class SwaggerDefaultValues : IOperationFilter
 {
