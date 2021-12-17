@@ -62,7 +62,7 @@ public record UIWeek
     public UIWeek(DateTime date)
     {
         date = date.Date;
-        this.StartDate = date.AddDays(DayOfWeek.Sunday - date.DayOfWeek);
+        this.StartDate = date.AddDays(FirstDayOfWeek - date.DayOfWeek);
         this.EndDate = this.StartDate.AddDays(6);
 
         // The year is that of the last day of the week (Saturday)
@@ -103,12 +103,8 @@ public record UIWeek
     {
         var firstDayOfYear = new DateTime(year, 1, 1);
 
-        // Set the firstDayOfYear to previous Sunday if it is not Sunday.
-        if (firstDayOfYear.DayOfWeek != DayOfWeek.Sunday)
-        {
-            firstDayOfYear = firstDayOfYear.AddDays(DayOfWeek.Sunday - firstDayOfYear.DayOfWeek);
-        }
-
-        return firstDayOfYear.AddDays((weekOfYear - 1) * 7);
+        return firstDayOfYear
+            .AddDays(FirstDayOfWeek - firstDayOfYear.DayOfWeek)    // Move to Sunday
+            .AddDays((weekOfYear - 1) * 7);                        // Move to given week
     }
 }
