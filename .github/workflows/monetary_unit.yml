@@ -39,15 +39,16 @@ jobs:
         cd DWD.UI.Monetary
         dotnet test --no-build --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./coverage
 
-    - name: Copy Coverage To Predictable Location
-      run: |-
-        cd DWD.UI.Monetary
-        cp coverage/**/coverage.cobertura.xml coverage/coverage.cobertura.xml
+    - name: Make var for comma separated coverage files
+      id: set_cov_files
+      run: |
+        files=$(ls -Rm DWD.UI.Monetary/coverage/**/coverage.cobertura.xml | tr -d '\n ')
+        echo ::set-output name=coverage_files::"${files}"
 
     - name: Code Coverage Summary Report
-      uses: irongut/CodeCoverageSummary@v1.1.0
+      uses: irongut/CodeCoverageSummary@v1.2.0
       with:
-        filename: DWD.UI.Monetary/coverage/coverage.cobertura.xml
+        filename: ${{steps.set_cov_files.outputs.coverage_files}}
         badge: true
         fail_below_min: true
         format: 'markdown'

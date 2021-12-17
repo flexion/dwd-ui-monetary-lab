@@ -6,7 +6,7 @@ using DWD.UI.Monetary.Service.Frameworks;
 using DWD.UI.Monetary.Service.Models.Stubs;
 
 /// <summary>
-/// Concrete ClaimantWageDbRepository
+/// Concrete ClaimantWageDbRepository.
 /// </summary>
 public class ClaimantWageDbRepository : IClaimantWageRepository
 {
@@ -16,7 +16,7 @@ public class ClaimantWageDbRepository : IClaimantWageRepository
     private readonly ClaimantWageContext context;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="ClaimantWageDbRepository"/> class.
+    /// Initializes a new instance of the <see cref="ClaimantWageDbRepository"/> class with a DB context.
     /// </summary>
     /// <param name="theClaimantWageContext">DB context.</param>
     public ClaimantWageDbRepository(ClaimantWageContext theClaimantWageContext) => this.context = theClaimantWageContext;

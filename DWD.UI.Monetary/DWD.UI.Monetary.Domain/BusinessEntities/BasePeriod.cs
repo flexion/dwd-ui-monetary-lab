@@ -3,7 +3,7 @@ namespace DWD.UI.Monetary.Domain.BusinessEntities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using DWD.UI.Monetary.Domain.Utilities;
+using DWD.UI.Calendar;
 
 /// <summary>
 /// The base period used within our eligibility logic.
@@ -14,76 +14,79 @@ using DWD.UI.Monetary.Domain.Utilities;
 /// </remarks>
 internal class BasePeriod : IBasePeriod
 {
-    // TODO: Ask Helen if this is needed, and if so what the correct minimum should be.
+    private const int NumberOfQuartersRequiredToCalculateBasePeriod = 5;
 
     /// <summary>
-    /// The minimum valid initial base claim date that we will calculate from.
+    /// Local storage for standard quarters.
     /// </summary>
-    private static readonly DateTime MinimumValidInitialBaseClaimDate = new(Constants.MinBenefitYear, 1, 1);
+    private readonly Quarters standardQuarters = new();
 
     /// <summary>
-    /// Local storage for quarters.
+    /// Local storage for alternate quarters.
     /// </summary>
-    private UIQuarter[] standardQuarters = new UIQuarter[4];
+    private readonly Quarters alternateQuarters = new();
 
     /// <summary>
-    /// Local storage for quarters.
-    /// </summary>
-    private UIQuarter[] alternateQuarters = new UIQuarter[4];
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="BasePeriod"/> class.
+    /// Initializes a new instance of the <see cref="BasePeriod"/> class using initial claim date as input.
     /// </summary>
     /// <param name="initialClaimDate">The initial claim date.</param>
-    /// <exception cref="ArgumentException">Throws a ArgumentException if the supplied initial claim date is not valid.</exception>
-    public BasePeriod(DateTime initialClaimDate) =>
-        this.PopulateBasePeriods(initialClaimDate);
+    public BasePeriod(DateTime initialClaimDate) => this.PopulateBasePeriods(initialClaimDate);
 
     /// <summary>
-    ///  Populate standard and alternate base periods.
+    /// Initializes a new instance of the <see cref="BasePeriod"/> class given the year and week number of the initial claim.
     /// </summary>
-    /// <param name="initialClaimDate">The initial claim date.</param>
-    /// <exception cref="ArgumentException">Throws a ArgumentException if the supplied initial claim date is not valid.</exception>
-    private void PopulateBasePeriods(DateTime initialClaimDate)
+    /// <param name="year">Year to calculate the base periods.</param>
+    /// <param name="weekNumber">Week number of the year. Must be between 1 and 52 or 53(If first day of the year lands on saturday).</param>
+    public BasePeriod(int year, int weekNumber)
     {
-        // Check if claim date is invalid
-        if (initialClaimDate.Date < MinimumValidInitialBaseClaimDate)
-        {
-            throw new ArgumentException($"The supplied initial claim date is not valid: Dates before {MinimumValidInitialBaseClaimDate} are not supported (initialClaimDate={initialClaimDate.Date.ToShortDateString()}).");
-        }
-
-        // Populate basePeriod with last 5 complete quarters, skipping most recent complete quarter
-        var previous5Quarters = new UIQuarter[5];
-        var currentQuarter = new UIQuarter(initialClaimDate);
-
-        for (var i = 4; i >= 0; i--)
-        {
-            currentQuarter = --currentQuarter;
-            previous5Quarters[i] = new UIQuarter(currentQuarter.Year, currentQuarter.QuarterNumber);
-        }
-
-        this.standardQuarters = previous5Quarters.Take(4).ToArray();
-        this.alternateQuarters = previous5Quarters.Skip(1).ToArray();
+        var uiWeek = new UIWeek(year, weekNumber);
+        this.PopulateBasePeriods(uiWeek.StartDate);
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="BasePeriod"/> class.
+    /// Gets the first four of the last five completed calendar quarters before the week a claimant
+    /// files an initial claim application for a new benefit year.
     /// </summary>
-    /// <param name="year">year.</param>
-    /// <param name="weekOfYear">weak.</param>
-    public BasePeriod(int year, int weekOfYear)
+    public IReadOnlyList<Quarter> StandardQuarters => this.standardQuarters.ToList();
+
+    /// <summary>
+    /// Gets the four most recently completed calendar quarters before the
+    /// week a claimant filed an initial claim application for a new benefit year.
+    /// </summary>
+    public IReadOnlyList<Quarter> AlternateQuarters => this.alternateQuarters.ToList();
+
+    /// <summary>
+    /// Build a list of the (five) quarters completed before the given the UI week of the initial claim date.
+    /// </summary>
+    /// <param name="currentQuarterStartDate">The start date of the quarter containing the initial claim date.</param>
+    /// <returns>List of <see cref="Quarter"/>.</returns>
+    private static List<Quarter> QuartersCompletedBefore(DateTime currentQuarterStartDate)
     {
-        var initialClaimDate = CalendarQuarter.GetDateTimeFromYearAndWeek(year, weekOfYear);
-        this.PopulateBasePeriods(initialClaimDate);
+        Quarters quarters = new();
+        var currentQuarter = new Quarter(currentQuarterStartDate);
+        var quarter = currentQuarter.Previous();
+
+        for (var i = 0; i < NumberOfQuartersRequiredToCalculateBasePeriod; i++)
+        {
+            quarters.Add(quarter);
+            quarter = quarter.Previous();
+        }
+
+        return (List<Quarter>)quarters.ToList();
     }
 
     /// <summary>
-    /// Gets base period quarters as IEnumerable of IUIQuarter.
+    /// Populate standard and alternate base periods.
     /// </summary>
-    public IEnumerable<IUIQuarter> BasePeriodQuarters => new List<IUIQuarter>(this.standardQuarters);
+    /// <param name="currentQuarterStartDate">Sunday of the first full week of the quarter.</param>
+    private void PopulateBasePeriods(DateTime currentQuarterStartDate)
+    {
+        var completedQuarters = QuartersCompletedBefore(currentQuarterStartDate);
 
-    /// <summary>
-    /// Gets base period quarters as IEnumerable of IUIQuarter.
-    /// </summary>
-    public IEnumerable<IUIQuarter> AltBasePeriodQuarters => new List<IUIQuarter>(this.alternateQuarters);
+        // First four of the last (five)
+        this.standardQuarters.AddRange(completedQuarters.Take(4));
+
+        // Four most recent
+        this.alternateQuarters.AddRange(completedQuarters.Skip(1));
+    }
 }

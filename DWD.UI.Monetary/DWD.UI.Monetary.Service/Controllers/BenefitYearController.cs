@@ -22,7 +22,7 @@ public class BenefitYearController : ControllerBase
     private readonly ICalculateBenefitYear calculateBenefitYear;
 
     /// <summary>
-    /// Constructor.
+    /// Initializes a new instance of the <see cref="BenefitYearController"/> class.
     /// </summary>
     /// <param name="calculateBenefitYear">A domain logic reference.</param>
     public BenefitYearController(ICalculateBenefitYear calculateBenefitYear) => this.calculateBenefitYear = calculateBenefitYear;

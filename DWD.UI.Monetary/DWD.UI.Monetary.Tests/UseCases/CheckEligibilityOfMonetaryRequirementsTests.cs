@@ -1,4 +1,4 @@
-namespace DWD.UI.Monetary.Tests.Business;
+namespace DWD.UI.Monetary.Tests.UseCases;
 
 using System;
 using System.Collections.Generic;
