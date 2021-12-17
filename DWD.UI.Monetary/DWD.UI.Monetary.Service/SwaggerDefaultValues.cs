@@ -7,7 +7,7 @@ using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 /// <summary>
-/// Swagger default values filter.
+/// Represents the Swagger/Swashbuckle operation filter used to document the implicit API version parameter.
 /// </summary>
 public class SwaggerDefaultValues : IOperationFilter
 {

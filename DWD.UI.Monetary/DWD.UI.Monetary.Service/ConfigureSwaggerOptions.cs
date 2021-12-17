@@ -10,8 +10,10 @@ using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 /// <summary>
-/// Configure swagger.
+/// Configures the Swagger generation options.
 /// </summary>
+/// <remarks>This allows API versioning to define a Swagger document per API version after the
+/// <see cref="IApiVersionDescriptionProvider"/> service has been resolved from the service container.</remarks>
 public class ConfigureSwaggerOptions : IConfigureOptions<SwaggerGenOptions>
 {
     private readonly IApiVersionDescriptionProvider provider;
