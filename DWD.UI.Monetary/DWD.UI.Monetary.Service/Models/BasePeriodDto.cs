@@ -5,10 +5,10 @@ using System.Collections.Generic;
 /// <summary>
 /// A dto for base period.
 /// </summary>
-public class BasePeriodDto : IBasePeriodDto
+public class BasePeriodDto
 {
     /// <summary>
-    /// Gets or sets an array of quarters making up the base period.
+    /// Gets or sets an ordered collection of quarters making up the base period.
     /// </summary>
-    public IEnumerable<ICalendarQuarterDto> Quarters { get; set; }
+    public IEnumerable<CalendarQuarterDto> Quarters { get; set; }
 }

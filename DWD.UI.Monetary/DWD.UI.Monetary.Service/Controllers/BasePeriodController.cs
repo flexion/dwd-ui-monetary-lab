@@ -6,9 +6,10 @@ using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using DWD.UI.Monetary.Domain.UseCases;
-using DWD.UI.Monetary.Service.Mappers;
 using Models;
 using Swashbuckle.AspNetCore.Annotations;
+using AutoMapper;
+using System.Collections.Generic;
 
 /// <summary>
 /// Provides endpoints for BasePeriod.
@@ -39,6 +40,7 @@ public class BasePeriodController : ControllerBase
     /// Local logger reference.
     /// </summary>
     private readonly ILogger<BasePeriodController> logger;
+    private readonly IMapper mapper;
 
     /// <summary>
     /// Local reference to domain logic.
@@ -46,14 +48,16 @@ public class BasePeriodController : ControllerBase
     private readonly ICalculateBasePeriod calculateBasePeriod;
 
     /// <summary>
-    /// Constructor.
+    /// Initializes a new instance of the <see cref="BasePeriodController"/> class.
     /// </summary>
     /// <param name="logger">A logger reference.</param>
     /// <param name="calculateBasePeriod">A domain logic reference.</param>
-    public BasePeriodController(ILogger<BasePeriodController> logger, ICalculateBasePeriod calculateBasePeriod)
+    /// <param name="mapper">Injection of AutoMapper.</param>
+    public BasePeriodController(ILogger<BasePeriodController> logger, ICalculateBasePeriod calculateBasePeriod, IMapper mapper)
     {
         this.logger = logger;
         this.calculateBasePeriod = calculateBasePeriod;
+        this.mapper = mapper;
     }
 
     /// <summary>
@@ -71,7 +75,7 @@ public class BasePeriodController : ControllerBase
     /// </remarks>
     /// <param name="initialClaimDate">The initial claim date in standard formats (MM/DD/YYYY, MM-DD-YYYY, YYYY-MM-DD, etc.). Default value is 1/1/1.</param>
     /// <returns>The calculated base period.</returns>
-    [SwaggerResponse((int)HttpStatusCode.OK, "OK", typeof(IBasePeriodDto), "application/json")]
+    [SwaggerResponse((int)HttpStatusCode.OK, "OK", typeof(BasePeriodDto), "application/json")]
     [SwaggerResponse((int)HttpStatusCode.BadRequest, "Bad Initial Claim Date", typeof(ProblemDetails), "application/problem+json")]
     [SwaggerResponse((int)HttpStatusCode.InternalServerError, "Internal Server Error", typeof(ProblemDetails), "application/problem+json")]
     [Produces("application/json")]
@@ -81,18 +85,15 @@ public class BasePeriodController : ControllerBase
     {
         try
         {
-            // Calculate the base period
             var basePeriod = this.calculateBasePeriod.CalculateBasePeriodFromInitialClaimDate(initialClaimDate);
-
-            // Map from IBasePeriod to BasePeriodDto and return
-            var result = BasePeriodMapper.MapToDto(basePeriod.BasePeriodQuarters);
-            return this.Ok(result);
+            var basePeriodDto = new BasePeriodDto() { Quarters = this.mapper.Map<IEnumerable<CalendarQuarterDto>>(basePeriod.StandardQuarters) };
+            return this.Ok(basePeriodDto);
         }
-        catch (ArgumentException argumentException)
+        catch (ArgumentOutOfRangeException ex)
         {
             // Log and return http 400
-            DateError(this.logger, initialClaimDate.ToString(CultureInfo.CurrentCulture), argumentException);
-            return this.Problem(argumentException.Message, null, 400);
+            DateError(this.logger, initialClaimDate.ToString(CultureInfo.CurrentCulture), ex);
+            return this.Problem(ex.Message, null, 400);
         }
     }
 
@@ -112,7 +113,7 @@ public class BasePeriodController : ControllerBase
     /// <param name="year">Year to calculate the base periods. Default value is 0.</param>
     /// <param name="week">Week number of the year. Must be between 1 and 52 or 53(If first day of the year lands on saturday). Default value is 0.</param>
     /// <returns>The calculated base period.</returns>
-    [SwaggerResponse((int)HttpStatusCode.OK, "OK", typeof(IBasePeriodDto), "application/json")]
+    [SwaggerResponse((int)HttpStatusCode.OK, "OK", typeof(BasePeriodDto), "application/json")]
     [SwaggerResponse((int)HttpStatusCode.BadRequest, "Bad Year and Week", typeof(ProblemDetails), "application/problem+json")]
     [SwaggerResponse((int)HttpStatusCode.InternalServerError, "Internal Server Error", typeof(ProblemDetails), "application/problem+json")]
     [Produces("application/json")]
@@ -122,18 +123,15 @@ public class BasePeriodController : ControllerBase
     {
         try
         {
-            // Calculate the base period
             var basePeriod = this.calculateBasePeriod.CalculateBasePeriodFromYearAndWeek(year, week);
-
-            // Map from IBasePeriod to BasePeriodDto and return
-            var result = BasePeriodMapper.MapToDto(basePeriod.BasePeriodQuarters);
-            return this.Ok(result);
+            var basePeriodDto = new BasePeriodDto() { Quarters = this.mapper.Map<IEnumerable<CalendarQuarterDto>>(basePeriod.StandardQuarters) };
+            return this.Ok(basePeriodDto);
         }
-        catch (ArgumentException argumentException)
+        catch (ArgumentOutOfRangeException ex)
         {
             // Log and return http 400
-            YearWeekError(this.logger, year + "/" + week, argumentException);
-            return this.Problem(argumentException.Message, null, 400);
+            YearWeekError(this.logger, year + "/" + week, ex);
+            return this.Problem(ex.Message, null, 400);
         }
     }
 
@@ -153,7 +151,7 @@ public class BasePeriodController : ControllerBase
     /// </remarks>
     /// <param name="initialClaimDate">The initial claim date in standard formats (MM/DD/YYYY, MM-DD-YYYY, YYYY-MM-DD, etc.). Default value is 1/1/1.</param>
     /// <returns>The calculated base period.</returns>
-    [SwaggerResponse((int)HttpStatusCode.OK, "OK", typeof(IBasePeriodDto), "application/json")]
+    [SwaggerResponse((int)HttpStatusCode.OK, "OK", typeof(BasePeriodDto), "application/json")]
     [SwaggerResponse((int)HttpStatusCode.BadRequest, "Bad Initial Claim Date", typeof(ProblemDetails), "application/problem+json")]
     [SwaggerResponse((int)HttpStatusCode.InternalServerError, "Internal Server Error", typeof(ProblemDetails), "application/problem+json")]
     [Produces("application/json")]
@@ -163,18 +161,15 @@ public class BasePeriodController : ControllerBase
     {
         try
         {
-            // Calculate the base period
             var basePeriod = this.calculateBasePeriod.CalculateBasePeriodFromInitialClaimDate(initialClaimDate);
-
-            // Map from IBasePeriod to BasePeriodDto and return
-            var result = BasePeriodMapper.MapToDto(basePeriod.AltBasePeriodQuarters);
-            return this.Ok(result);
+            var basePeriodDto = new BasePeriodDto() { Quarters = this.mapper.Map<IEnumerable<CalendarQuarterDto>>(basePeriod.AlternateQuarters) };
+            return this.Ok(basePeriodDto);
         }
-        catch (ArgumentException argumentException)
+        catch (ArgumentOutOfRangeException ex)
         {
             // Log and return http 400
-            DateError(this.logger, initialClaimDate.ToString(CultureInfo.CurrentCulture), argumentException);
-            return this.Problem(argumentException.Message, null, 400);
+            DateError(this.logger, initialClaimDate.ToString(CultureInfo.CurrentCulture), ex);
+            return this.Problem(ex.Message, null, 400);
         }
     }
 
@@ -195,7 +190,7 @@ public class BasePeriodController : ControllerBase
     /// <param name="year">Year to calculate the base periods. Default value is 0.</param>
     /// <param name="week">Week number of the year. Must be between 1 and 52 or 53(If first day of the year lands on saturday). Default value is 0.</param>
     /// <returns>The calculated base period.</returns>
-    [SwaggerResponse((int)HttpStatusCode.OK, "OK", typeof(IBasePeriodDto), "application/json")]
+    [SwaggerResponse((int)HttpStatusCode.OK, "OK", typeof(BasePeriodDto), "application/json")]
     [SwaggerResponse((int)HttpStatusCode.BadRequest, "Bad year and week", typeof(ProblemDetails), "application/problem+json")]
     [SwaggerResponse((int)HttpStatusCode.InternalServerError, "Internal Server Error", typeof(ProblemDetails), "application/problem+json")]
     [Produces("application/json")]
@@ -205,18 +200,15 @@ public class BasePeriodController : ControllerBase
     {
         try
         {
-            // Calculate the base period
             var basePeriod = this.calculateBasePeriod.CalculateBasePeriodFromYearAndWeek(year, week);
-
-            // Map from IBasePeriod to BasePeriodDto and return
-            var result = BasePeriodMapper.MapToDto(basePeriod.AltBasePeriodQuarters);
-            return this.Ok(result);
+            var basePeriodDto = new BasePeriodDto() { Quarters = this.mapper.Map<IEnumerable<CalendarQuarterDto>>(basePeriod.AlternateQuarters) };
+            return this.Ok(basePeriodDto);
         }
-        catch (ArgumentException argumentException)
+        catch (ArgumentOutOfRangeException ex)
         {
             // Log and return http 400
-            YearWeekError(this.logger, year + "/" + week, argumentException);
-            return this.Problem(argumentException.Message, null, 400);
+            YearWeekError(this.logger, year + "/" + week, ex);
+            return this.Problem(ex.Message, null, 400);
         }
     }
 }

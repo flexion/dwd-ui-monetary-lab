@@ -27,7 +27,7 @@ public class EligibilityController : ControllerBase
         this.checkEligibilityRequirements = checkEligibilityRequirements;
 
     /// <summary>
-    ///  Determine eligibility for benefits
+    ///  Determine eligibility for benefits.
     /// </summary>
     /// <remarks>
     /// Check for all monetary qualifying requirements the week the claimant is filing for so that the department can determine eligibility for benefits.<br /><br />

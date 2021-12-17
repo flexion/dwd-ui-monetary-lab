@@ -13,10 +13,9 @@ public class BenefitYearControllerTests
     [Fact]
     public void ShouldReturnValidBenefitYear()
     {
-
-        var mockCalculateBenefitYear = new Mock<CalculateBenefitYear>().Object;
-
-        var controller = new BenefitYearController(mockCalculateBenefitYear);
+        // Arrange
+        var mockCalculateBenefitYear = new Mock<CalculateBenefitYear>();
+        var controller = new BenefitYearController(mockCalculateBenefitYear.Object);
 
         // Act
         var actionResult = controller.GetBenefitYearForRequestedDate(new DateTime(2021, 2, 1));

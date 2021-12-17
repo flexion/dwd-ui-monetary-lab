@@ -11,7 +11,7 @@
     <ItemGroup>
         <PackageReference Include="MELT" Version="0.8.0" />
         <PackageReference Include="MELT.Xunit" Version="0.8.0" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.1" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
         <PackageReference Include="Moq" Version="4.16.1" />
         <PackageReference Include="xunit" Version="2.4.1" />
@@ -26,6 +26,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\DWD.UI.Calendar\DWD.UI.Calendar.csproj" />
       <ProjectReference Include="..\DWD.UI.Monetary.Domain\DWD.UI.Monetary.Domain.csproj" />
       <ProjectReference Include="..\DWD.UI.Monetary.Service\DWD.UI.Monetary.Service.csproj" />
     </ItemGroup>

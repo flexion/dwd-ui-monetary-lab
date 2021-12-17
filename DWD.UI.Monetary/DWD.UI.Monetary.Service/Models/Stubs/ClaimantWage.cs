@@ -1,14 +1,14 @@
-﻿#nullable disable
+#nullable disable
 
 namespace DWD.UI.Monetary.Service.Models.Stubs;
 
 /// <summary>
-/// ClaimantWage stub
+/// ClaimantWage stub.
 /// </summary>
 public partial class ClaimantWage
 {
     /// <summary>
-    /// Gets or sets iD
+    /// Gets or sets iD.
     /// </summary>
     public long Id { get; set; }
 
@@ -18,7 +18,7 @@ public partial class ClaimantWage
     public string ClaimantId { get; set; }
 
     /// <summary>
-    /// Gets or sets wage Year
+    /// Gets or sets wage Year.
     /// </summary>
     public short? WageYear { get; set; }
 

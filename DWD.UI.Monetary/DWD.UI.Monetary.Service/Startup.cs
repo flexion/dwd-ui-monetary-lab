@@ -1,3 +1,5 @@
+#pragma warning disable IDE0058 // Expression value is never used (This avoids the clutter of the discard prefix when adding services, i.e., _ = services.AddControllers();)
+
 namespace DWD.UI.Monetary.Service;
 
 using System;
@@ -75,6 +77,8 @@ public class Startup
 
         var connectionString = GetPgConnectionString(this.config);
         services.AddDbContext<ClaimantWageContext>(options => options.UseNpgsql(connectionString));
+
+        services.AddAutoMapper(typeof(Startup));
 
         services
             .AddTransient<ICalculateBasePeriod, CalculateBasePeriod>()
