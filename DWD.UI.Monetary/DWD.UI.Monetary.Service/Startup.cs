@@ -2,7 +2,10 @@
 
 namespace DWD.UI.Monetary.Service;
 
+using System;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
+using System.Reflection;
 using DWD.UI.Monetary.Domain.Interfaces;
 using DWD.UI.Monetary.Domain.UseCases;
 using DWD.UI.Monetary.Service.Extensions;
@@ -78,7 +81,11 @@ public class Startup
             options.SubstituteApiVersionInUrl = true;
         });
         services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
-        services.AddSwaggerGen(options => options.OperationFilter<SwaggerDefaultValues>());
+        services.AddSwaggerGen(options =>
+        {
+            var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+        });
 
         var connectionString = GetPgConnectionString(this.config);
         services.AddDbContext<ClaimantWageContext>(options => options.UseNpgsql(connectionString));
