@@ -161,7 +161,7 @@ public class BasePeriodController : ControllerBase
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpGet]
-    [Route("alternative-base-period-by-date")]
+    [Route("alternate-base-period-by-date")]
     public IActionResult GetAlternateBasePeriodFromInitialClaimDate(DateTime initialClaimDate)
     {
         try
@@ -201,7 +201,7 @@ public class BasePeriodController : ControllerBase
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpGet]
-    [Route("alternative-base-period-by-year-week")]
+    [Route("alternate-base-period-by-year-week")]
     public IActionResult GetAlternateBasePeriodFromYearAndWeek(int year, int week)
     {
         try

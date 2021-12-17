@@ -39,20 +39,20 @@ The HTTP protocol defines a number of methods that assign semantic meaning to a 
 
 ## Rename Existing Endpoints
 
-| **From**                                                                             | **To**                                                            |
-|--------------------------------------------------------------------------------------|-------------------------------------------------------------------|
-| GET /BasePeriod/GetStandardBasePeriodFromInitialClaimDate?initialClaimDate=1/1/2021  | GET /v1/standard-base-period-by-date?initialClaimDate=1/1/2021    |
-| GET /BasePeriod/GetAlternateBasePeriodFromInitialClaimDate?initialClaimDate=1/1/2021 | GET /v1/alternative-base-period-by-date?initialClaimDate=1/1/2021 |
-| GET /BasePeriod/GetStandardBasePeriodFromYearAndWeek?year=2021&week=1                | GET /v1/standard-base-period-by-year-week?year=2021&week=1        |
-| GET /BasePeriod/GetAlternateBasePeriodFromYearAndWeek?year=2021&week=1               | GET /v1/alternative-base-period-by-year-week?year=2021&week=1     |
-| GET /benefityear/lookup-by-date?requestedDate=1/1/2021                               | GET /v1/benefit-year?requestedDate=1/1/2021                       |
-| POST /Eligibility/VerifyEligibility                                                  | POST /v1/eligibility-verification                                 |
-| GET /WageEntry/GetClaimantWage/{id}                                                  | GET /v1/wage-entries/{wageEntryId}                                |
-| GET /WageEntry/GetAllClaimantWages                                                   | GET /v1/wage-entries                                              |
-| GET /WageEntry/GetAllClaimantWagesForClaimant/{claimantId}                           | GET /v1/claimants/{claimantId}/wage-entries                       |
-| PUT /WageEntry/UpdateClaimantWage/{id}                                               | PUT /v1/wage-entries/{wageEntryId}                                |
-| DELETE /WageEntry/DeleteClaimantWage/{id}                                            | DELETE /v1/wage-entries/{wageEntryId}                             |
-| POST /WageEntry/CreateClaimantWag                                                    | POST /v1/claimants/{claimantId}/wage-entries                      |
+| **From**                                                                             | **To**                                                          |
+|--------------------------------------------------------------------------------------|-----------------------------------------------------------------|
+| GET /BasePeriod/GetStandardBasePeriodFromInitialClaimDate?initialClaimDate=1/1/2021  | GET /v1/standard-base-period-by-date?initialClaimDate=1/1/2021  |
+| GET /BasePeriod/GetAlternateBasePeriodFromInitialClaimDate?initialClaimDate=1/1/2021 | GET /v1/alternate-base-period-by-date?initialClaimDate=1/1/2021 |
+| GET /BasePeriod/GetStandardBasePeriodFromYearAndWeek?year=2021&week=1                | GET /v1/standard-base-period-by-year-week?year=2021&week=1      |
+| GET /BasePeriod/GetAlternateBasePeriodFromYearAndWeek?year=2021&week=1               | GET /v1/alternate-base-period-by-year-week?year=2021&week=1     |
+| GET /benefityear/lookup-by-date?requestedDate=1/1/2021                               | GET /v1/benefit-year?requestedDate=1/1/2021                     |
+| POST /Eligibility/VerifyEligibility                                                  | POST /v1/eligibility-verification                               |
+| GET /WageEntry/GetClaimantWage/{id}                                                  | GET /v1/wage-entries/{wageEntryId}                              |
+| GET /WageEntry/GetAllClaimantWages                                                   | GET /v1/wage-entries                                            |
+| GET /WageEntry/GetAllClaimantWagesForClaimant/{claimantId}                           | GET /v1/claimants/{claimantId}/wage-entries                     |
+| PUT /WageEntry/UpdateClaimantWage/{id}                                               | PUT /v1/wage-entries/{wageEntryId}                              |
+| DELETE /WageEntry/DeleteClaimantWage/{id}                                            | DELETE /v1/wage-entries/{wageEntryId}                           |
+| POST /WageEntry/CreateClaimantWag                                                    | POST /v1/claimants/{claimantId}/wage-entries                    |
 
 ## Path Variables vs Query String For Base Period
 We should use unique identifier for path variables and neither initialClaimDate nor year/week unique identifiers for base period. So we should use query string to get base periods.
