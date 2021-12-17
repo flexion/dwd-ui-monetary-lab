@@ -1,12 +1,12 @@
 # Development Guidelines
 
 Table of contents:
-- [Introduction and Goals](#introduction-and-goals)
-- [Git](#git)
-  - [LFS](#lfs)
-- [Topic X](#topic-x)
-- [Topic Y](#topic-y)
-- [Topic Z](#topic-z)
+- [Introduction and Goals](#introduction-and-goals-)
+- [Git](#git-)
+  - [LFS](#lfs-)
+- [Topic X](#topic-x-)
+- [Topic Y](#topic-y-)
+- [Topic Z](#topic-z-)
 
 ## Introduction and Goals [^](#)
 This document consists of a collection of general development guidelines to help ease maintenance and development. These suggestions, as most guidelines, are subject to change as we learn more.

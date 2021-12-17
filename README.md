@@ -3,12 +3,12 @@ This repository is for developing the APIs that will be used for the DWD Unemplo
 
 Table of contents:
 
-- [Overview](#overview)
-- [Technical Overview](#technical-overview)
-- [Documentation](#documentation)
-- [Topic X](#topic-x)
-- [Topic Y](#topic-y)
-- [Topic Z](#topic-z)
+- [Overview](#overview-)
+- [Technical Overview](#technical-overview-)
+- [Documentation](#documentation-)
+- [Topic X](#topic-x-)
+- [Topic Y](#topic-y-)
+- [Topic Z](#topic-z-)
 
 ## Overview [^](#)
 Placeholder
