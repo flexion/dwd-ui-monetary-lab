@@ -8,13 +8,16 @@ using Microsoft.Extensions.Logging;
 using DWD.UI.Monetary.Domain.UseCases;
 using DWD.UI.Monetary.Service.Mappers;
 using Microsoft.AspNetCore.Http;
+using Models;
 
 /// <summary>
 /// Provides endpoints for BasePeriod.
 /// </summary>
 [ApiVersion("1.0")]
+[ApiController]
+[Produces(MediaTypeNames.Application.Json)]
 [Route("v{version:apiVersion}")]
-public class BasePeriodController : BaseApiController
+public class BasePeriodController : ControllerBase
 {
     /// <summary>
     /// Date error logging message.
@@ -70,8 +73,9 @@ public class BasePeriodController : BaseApiController
     /// </remarks>
     /// <param name="initialClaimDate">The initial claim date in standard formats (MM/DD/YYYY, MM-DD-YYYY, YYYY-MM-DD, etc.). Default value is 1/1/1.</param>
     /// <returns>The calculated base period.</returns>
+    /// <response code="400">Invalid Date.</response>
     [Consumes(MediaTypeNames.Text.Plain)]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(IBasePeriodDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpGet]
@@ -111,8 +115,9 @@ public class BasePeriodController : BaseApiController
     /// <param name="year">Year to calculate the base periods. Default value is 0.</param>
     /// <param name="week">Week number of the year. Must be between 1 and 52 or 53(If first day of the year lands on saturday). Default value is 0.</param>
     /// <returns>The calculated base period.</returns>
+    /// <response code="400">Invalid Year/Week.</response>
     [Consumes(MediaTypeNames.Text.Plain)]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(IBasePeriodDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpGet]
@@ -152,8 +157,9 @@ public class BasePeriodController : BaseApiController
     /// </remarks>
     /// <param name="initialClaimDate">The initial claim date in standard formats (MM/DD/YYYY, MM-DD-YYYY, YYYY-MM-DD, etc.). Default value is 1/1/1.</param>
     /// <returns>The calculated base period.</returns>
+    /// <response code="400">Invalid Date.</response>
     [Consumes(MediaTypeNames.Text.Plain)]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(IBasePeriodDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpGet]
@@ -194,8 +200,9 @@ public class BasePeriodController : BaseApiController
     /// <param name="year">Year to calculate the base periods. Default value is 0.</param>
     /// <param name="week">Week number of the year. Must be between 1 and 52 or 53(If first day of the year lands on saturday). Default value is 0.</param>
     /// <returns>The calculated base period.</returns>
+    /// <response code="400">Invalid Year/Week.</response>
     [Consumes(MediaTypeNames.Text.Plain)]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(IBasePeriodDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpGet]

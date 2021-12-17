@@ -11,8 +11,10 @@ using Microsoft.AspNetCore.Mvc;
 /// Provides endpoints for Benefit Year.
 /// </summary>
 [ApiVersion("1.0")]
+[ApiController]
+[Produces(MediaTypeNames.Application.Json)]
 [Route("v{version:apiVersion}/benefit-years")]
-public class BenefitYearController : BaseApiController
+public class BenefitYearController : ControllerBase
 {
     /// <summary>
     /// Local reference to domain logic.
@@ -76,7 +78,7 @@ public class BenefitYearController : BaseApiController
     /// <param name="requestedDate">The requested benefit date in standard formats (MM/DD/YYYY, MM-DD-YYYY, YYYY-MM-DD, etc.).</param>
     /// <returns>The calculated benefit year.</returns>
     [Consumes(MediaTypeNames.Text.Plain)]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(BenefitYear), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpGet]

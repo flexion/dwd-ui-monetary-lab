@@ -2,6 +2,7 @@
 
 namespace DWD.UI.Monetary.Service.Controllers;
 
+using System.Net.Mime;
 using Microsoft.AspNetCore.Mvc;
 using DWD.UI.Monetary.Service.Gateways;
 using DWD.UI.Monetary.Service.Models.Stubs;
@@ -10,8 +11,10 @@ using DWD.UI.Monetary.Service.Models.Stubs;
 /// Provides endpoints for entering wage data.
 /// </summary>
 [ApiVersion("1.0")]
+[ApiController]
+[Produces(MediaTypeNames.Application.Json)]
 [Route("v{version:apiVersion}/wage-entries")]
-public class WageEntryController : BaseApiController
+public class WageEntryController : ControllerBase
 {
     /// <summary>
     /// Claimant Wages.

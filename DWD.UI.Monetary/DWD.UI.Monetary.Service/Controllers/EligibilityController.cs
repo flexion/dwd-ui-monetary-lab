@@ -1,6 +1,6 @@
 namespace DWD.UI.Monetary.Service.Controllers;
 
-using System.Net;
+using System.Net.Mime;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using DWD.UI.Monetary.Domain.BusinessEntities;
@@ -8,14 +8,16 @@ using DWD.UI.Monetary.Domain.UseCases;
 using DWD.UI.Monetary.Service.Models;
 using DWD.UI.Monetary.Service.Extensions;
 using DWD.UI.Monetary.Service.Mappers;
-using Swashbuckle.AspNetCore.Annotations;
+using Microsoft.AspNetCore.Http;
 
 /// <summary>
 /// Provides endpoints for determine the eligibility for benefits.
 /// </summary>
 [ApiVersion("1.0")]
+[ApiController]
+[Produces(MediaTypeNames.Application.Json)]
 [Route("v{version:apiVersion}/eligibility")]
-public class EligibilityController : BaseApiController
+public class EligibilityController : ControllerBase
 {
     private readonly ICheckEligibilityOfMonetaryRequirements checkEligibilityRequirements;
 
@@ -41,12 +43,13 @@ public class EligibilityController : BaseApiController
     /// </remarks>
     /// <param name="eligibilityRequestDto">Eligibility data.</param>
     /// <returns>the API response.</returns>
-    [SwaggerResponse(
-        (int)HttpStatusCode.OK,
-        description: "If eligible then weekly benefit rate is returned. Otherwise reasons for ineligibility")]
-    [SwaggerResponse((int)HttpStatusCode.BadRequest, "Bad Initial Claim Date or wagesOfQuarter is empty", typeof(ProblemDetails), "application/problem+json")]
-    [SwaggerResponse((int)HttpStatusCode.InternalServerError, "Internal Server Error", typeof(ProblemDetails), "application/problem+json")]
-    [Produces("application/json")]
+    /// <response code="200">If eligible then weekly benefit rate is returned. Otherwise reasons for ineligibility.</response>
+    /// <response code="400">Bad Initial Claim Date or wagesOfQuarter is empty.</response>
+    /// <response code="500">Internal Server Error.</response>
+    [Consumes(MediaTypeNames.Application.Json)]
+    [ProducesResponseType(typeof(EligibleResultDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpPost]
     public async Task<IActionResult> VerifyEligibilityAsync([FromBody] EligibilityRequestDto eligibilityRequestDto)
     {
