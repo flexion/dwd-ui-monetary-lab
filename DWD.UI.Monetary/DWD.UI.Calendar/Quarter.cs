@@ -10,12 +10,12 @@ public record Quarter : IComparable<Quarter>
     /// <summary>
     /// The quarter's year.
     /// </summary>
-    public int Year { get; }
+    public short Year { get; }
 
     /// <summary>
     /// The quarter number.
     /// </summary>
-    public int QuarterNumber { get; }
+    public short QuarterNumber { get; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Quarter"/> from year and quarter number.
@@ -23,7 +23,7 @@ public record Quarter : IComparable<Quarter>
     /// <param name="year">The quarter's year.</param>
     /// <param name="quarterNumber">The quarter number.</param>
     /// <exception cref="ArgumentOutOfRangeException">The quarter number was not in the range [1,4]</exception>"
-    public Quarter(int year, int quarterNumber)
+    public Quarter(short year, short quarterNumber)
     {
         if (quarterNumber is < 1 or > 4)
         {
@@ -44,8 +44,9 @@ public record Quarter : IComparable<Quarter>
 
         var firstDayOfWeek = date.AddDays(DayOfWeek.Sunday - date.DayOfWeek);
 
-        this.Year = firstDayOfWeek.Year;
-        this.QuarterNumber = (int)Math.Ceiling((double)firstDayOfWeek.Month / monthsPerQuarter);
+        this.Year = Convert.ToInt16(firstDayOfWeek.Year);
+        //this.Year = short.Parse(firstDayOfWeek.Year.ToString());
+        this.QuarterNumber = Convert.ToInt16(Math.Ceiling((double)firstDayOfWeek.Month / monthsPerQuarter));
     }
 
     /// <summary>
@@ -55,7 +56,7 @@ public record Quarter : IComparable<Quarter>
     public Quarter Previous()
     {
         var newYear = this.Year;
-        var newQuarterNumber = this.QuarterNumber - 1;
+        var newQuarterNumber = Convert.ToInt16(this.QuarterNumber - 1);
         if (newQuarterNumber < 1)
         {
             newYear--;

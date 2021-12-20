@@ -12,5 +12,5 @@ public class AutoMapperProfile : Profile
     /// <summary>
     /// Initializes a new instance of the <see cref="AutoMapperProfile"/> class.
     /// </summary>
-    public AutoMapperProfile() => this.CreateMap<Quarter, CalendarQuarterDto>();
+    public AutoMapperProfile() => this.CreateMap<Quarter, CalendarQuarterDto>().ReverseMap();
 }

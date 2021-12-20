@@ -2,9 +2,13 @@
 
 namespace DWD.UI.Monetary.Service.Controllers;
 
+using System.Collections.Generic;
+using AutoMapper;
+using Calendar;
 using Microsoft.AspNetCore.Mvc;
-using DWD.UI.Monetary.Service.Gateways;
-using DWD.UI.Monetary.Service.Models.Stubs;
+using Gateways;
+using Models.Stubs;
+using Models;
 
 /// <summary>
 /// Provides endpoints for entering wage data.
@@ -19,11 +23,21 @@ public class WageEntryController : ControllerBase
     private readonly IClaimantWageRepository claimantWageRepository;
 
     /// <summary>
+    /// Automapper injection.
+    /// </summary>
+    private readonly IMapper mapper;
+
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="WageEntryController"/> class.
     /// </summary>
     /// <param name="theClaimantWageRepository">Wages.</param>
-    public WageEntryController(IClaimantWageRepository theClaimantWageRepository) =>
+    /// <param name="mapper">Mapper.</param>
+    public WageEntryController(IClaimantWageRepository theClaimantWageRepository, IMapper mapper)
+    {
         this.claimantWageRepository = theClaimantWageRepository;
+        this.mapper = mapper;
+    }
 
     /// <summary>
     /// Get claimant quarterly wage entry by entry id.
@@ -60,6 +74,26 @@ public class WageEntryController : ControllerBase
     public IActionResult GetAllClaimantWagesForClaimant([FromRoute] string claimantId)
     {
         var claimantWages = this.claimantWageRepository.GetClaimantWagesByClaimantId(claimantId);
+        return this.Ok(claimantWages);
+    }
+
+    /// <summary>
+    /// Gets claimant quarterly wage entries for claimant by quarters.
+    /// </summary>
+    /// <param name="claimantId">claimant identifier.</param>
+    /// <param name="calendarQuarters">list of quarters from which to return wages.</param>
+    /// <returns>All wage entries for claimant.</returns>
+    [HttpGet]
+    [Route("GetAllWagesForClaimantByQuarters/{claimantId}")]
+    public IActionResult GetAllWagesForClaimantByQuarters([FromBody] string claimantId, [FromBody] List<CalendarQuarterDto> calendarQuarters)
+    {
+        var quarters = new Quarters();
+        foreach (var quarter in calendarQuarters)
+        {
+            quarters.Add(this.mapper.Map<Quarter>(quarter));
+        }
+
+        var claimantWages = this.claimantWageRepository.GetClaimantWagesByClaimantIdByQuarters(claimantId, quarters);
         return this.Ok(claimantWages);
     }
 

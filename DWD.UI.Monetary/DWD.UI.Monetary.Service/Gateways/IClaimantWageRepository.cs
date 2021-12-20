@@ -1,6 +1,7 @@
 namespace DWD.UI.Monetary.Service.Gateways;
 
 using System.Collections.ObjectModel;
+using Calendar;
 using DWD.UI.Monetary.Service.Models.Stubs;
 
 /// <summary>
@@ -45,4 +46,12 @@ public interface IClaimantWageRepository
     /// <param name="claimantId">Claimant ID.</param>
     /// <returns>wages for claimant.</returns>
     Collection<ClaimantWage> GetClaimantWagesByClaimantId(string claimantId);
+
+    /// <summary>
+    /// Get all wages for a claimant for specific quarters.
+    /// </summary>
+    /// <param name="claimantId">Claimant ID.</param>
+    /// <param name="quarters">Quarters.</param>
+    /// <returns>wages for claimant.</returns>
+    Collection<ClaimantWage> GetClaimantWagesByClaimantIdByQuarters(string claimantId, Quarters quarters);
 }
