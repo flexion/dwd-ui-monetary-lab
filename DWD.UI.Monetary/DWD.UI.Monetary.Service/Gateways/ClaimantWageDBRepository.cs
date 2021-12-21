@@ -7,6 +7,7 @@ using Calendar;
 using DWD.UI.Monetary.Service.Frameworks;
 using DWD.UI.Monetary.Service.Models.Stubs;
 using Extensions;
+using System;
 
 /// <summary>
 /// Concrete ClaimantWageDbRepository.
@@ -84,6 +85,11 @@ public class ClaimantWageDbRepository : IClaimantWageRepository
     /// <returns>wages for claimant.</returns>
     public Collection<ClaimantWage> GetClaimantWagesByClaimantIdByQuarters(string claimantId, Quarters quarters)
     {
+        if (quarters == null)
+        {
+            throw new ArgumentNullException(nameof(quarters));
+        }
+
         var query = this.context.ClaimantWages.Where(c =>
             c.ClaimantId == claimantId).AsQueryable();
 

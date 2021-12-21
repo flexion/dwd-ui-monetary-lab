@@ -1,14 +1,13 @@
-#pragma warning disable IDE0009
-
 namespace DWD.UI.Monetary.Service.Controllers;
 
-using System.Collections.Generic;
 using AutoMapper;
 using Calendar;
 using Microsoft.AspNetCore.Mvc;
 using Gateways;
 using Models.Stubs;
 using Models;
+using System.Collections.ObjectModel;
+using System;
 
 /// <summary>
 /// Provides endpoints for entering wage data.
@@ -26,7 +25,6 @@ public class WageEntryController : ControllerBase
     /// Automapper injection.
     /// </summary>
     private readonly IMapper mapper;
-
 
     /// <summary>
     /// Initializes a new instance of the <see cref="WageEntryController"/> class.
@@ -85,8 +83,13 @@ public class WageEntryController : ControllerBase
     /// <returns>All wage entries for claimant.</returns>
     [HttpGet]
     [Route("GetAllWagesForClaimantByQuarters/{claimantId}")]
-    public IActionResult GetAllWagesForClaimantByQuarters([FromBody] string claimantId, [FromBody] List<CalendarQuarterDto> calendarQuarters)
+    public IActionResult GetAllWagesForClaimantByQuarters([FromBody] string claimantId, [FromBody] Collection<CalendarQuarterDto> calendarQuarters)
     {
+        if (calendarQuarters == null)
+        {
+            throw new ArgumentNullException(nameof(calendarQuarters));
+        }
+
         var quarters = new Quarters();
         foreach (var quarter in calendarQuarters)
         {
@@ -150,7 +153,7 @@ public class WageEntryController : ControllerBase
             ClaimantId = claimantId,
             WageYear = year,
             WageQuarter = quarter,
-            TotalWages = wages
+            TotalWages = wages,
         };
 
         this.claimantWageRepository.AddClaimantWage(wage);

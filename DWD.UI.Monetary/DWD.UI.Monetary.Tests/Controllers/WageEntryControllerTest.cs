@@ -2,6 +2,9 @@ namespace DWD.UI.Monetary.Tests.Controllers;
 
 using System;
 using System.Collections.ObjectModel;
+using AutoMapper;
+using DWD.UI.Calendar;
+using DWD.UI.Monetary.Service.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Service.Controllers;
@@ -19,23 +22,25 @@ public sealed class WageEntryControllerTest : IDisposable
 
     private readonly ClaimantWageContext dbContextOptions;
     private readonly ClaimantWageDbRepository claimantWageDbRepository;
+    private readonly WageEntryController controller;
 
     public WageEntryControllerTest()
     {
+        var config = new MapperConfiguration(opts => opts.CreateMap<Quarter, CalendarQuarterDto>());
+        var mapper = config.CreateMapper();
         this.dbContextOptions =
             new ClaimantWageContext(new DbContextOptionsBuilder<ClaimantWageContext>()
                 .UseInMemoryDatabase(Guid.NewGuid().ToString())
                 .Options);
-
         this.claimantWageDbRepository = new ClaimantWageDbRepository(this.dbContextOptions);
+        this.controller = new WageEntryController(this.claimantWageDbRepository, mapper);
     }
 
     [Fact]
     public void CreateClaimantWageTest()
     {
-        var controller = this.GetWageEntryController();
-        _ = controller.CreateClaimantWage("12", 2021, 3, (decimal)100.00);
-        var actionResult = controller.GetAllClaimantWages();
+        _ = this.controller.CreateClaimantWage("12", 2021, 3, (decimal)100.00);
+        var actionResult = this.controller.GetAllClaimantWages();
         Assert.NotNull(actionResult);
         // cast it to the expected response type
         var okResult = actionResult as OkObjectResult;
@@ -63,8 +68,7 @@ public sealed class WageEntryControllerTest : IDisposable
         this.claimantWageDbRepository.AddClaimantWage(inWage);
         var wages = this.claimantWageDbRepository.GetClaimantWagesByClaimantId("19");
         Assert.NotNull(wages);
-        var controller = this.GetWageEntryController();
-        var actionResult = controller.GetClaimantWage(wages[0].Id);
+        var actionResult = this.controller.GetClaimantWage(wages[0].Id);
 
         Assert.NotNull(actionResult);
         // We cast it to the expected response type
@@ -96,8 +100,7 @@ public sealed class WageEntryControllerTest : IDisposable
 
         var wages = this.claimantWageDbRepository.GetClaimantWagesByClaimantId("21");
         Assert.NotNull(wages);
-        var controller = this.GetWageEntryController();
-        _ = controller.UpdateClaimantWage(wages[0].Id, 2010, 4, 200);
+        _ = this.controller.UpdateClaimantWage(wages[0].Id, 2010, 4, 200);
 
         var wage = this.claimantWageDbRepository.GetClaimantWage(wages[0].Id);
         Assert.True(wage != null);
@@ -121,8 +124,7 @@ public sealed class WageEntryControllerTest : IDisposable
         var wages = this.claimantWageDbRepository.GetClaimantWagesByClaimantId("21");
         Assert.NotNull(wages);
 
-        var controller = this.GetWageEntryController();
-        var actionResultDel = controller.DeleteClaimantWage(wages[0].Id);
+        var actionResultDel = this.controller.DeleteClaimantWage(wages[0].Id);
         Assert.NotNull(actionResultDel);
 
         var okResultDel = actionResultDel as OkObjectResult;
@@ -146,8 +148,7 @@ public sealed class WageEntryControllerTest : IDisposable
 
         this.claimantWageDbRepository.AddClaimantWage(inWage);
 
-        var controller = this.GetWageEntryController();
-        var actionResult = controller.GetAllClaimantWagesForClaimant("33");
+        var actionResult = this.controller.GetAllClaimantWagesForClaimant("33");
 
         Assert.NotNull(actionResult);
         // We cast it to the expected response type
@@ -160,8 +161,6 @@ public sealed class WageEntryControllerTest : IDisposable
         Assert.Equal(1, wages[0].Id);
         Assert.Equal("33", wages[0].ClaimantId);
     }
-
-    private WageEntryController GetWageEntryController() => new(this.claimantWageDbRepository);
 
     public void Dispose() => this.dbContextOptions?.Dispose();
 }
