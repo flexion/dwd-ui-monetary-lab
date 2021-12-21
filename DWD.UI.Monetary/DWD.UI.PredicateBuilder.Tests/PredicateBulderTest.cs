@@ -6,26 +6,29 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 
-public class PredicateBulderTest
+public sealed class PredicateBulderTest : IDisposable
 {
-    [Fact]
-    public void ShouldBuildQueryWithMultipleOrPredicates()
+    private readonly AnEntityContext dbContext;
+
+    public PredicateBulderTest()
     {
-        // Arrange
-        var dbContext =
+        this.dbContext =
             new AnEntityContext(new DbContextOptionsBuilder<AnEntityContext>()
                 .UseInMemoryDatabase(Guid.NewGuid().ToString())
                 .Options);
 
-        _ = dbContext.Add(new AnEntity() { Id = 1, Fk = 1, P1 = 1, P2 = 1 });
-        _ = dbContext.Add(new AnEntity() { Id = 2, Fk = 1, P1 = 1, P2 = 2 });
-        _ = dbContext.Add(new AnEntity() { Id = 3, Fk = 1, P1 = 1, P2 = 3 });
-        _ = dbContext.Add(new AnEntity() { Id = 4, Fk = 2, P1 = 1, P2 = 3 });
+        _ = this.dbContext.Add(new AnEntity() { Id = 1, Fk = 1, P1 = 1, P2 = 1 });
+        _ = this.dbContext.Add(new AnEntity() { Id = 2, Fk = 1, P1 = 1, P2 = 2 });
+        _ = this.dbContext.Add(new AnEntity() { Id = 3, Fk = 1, P1 = 1, P2 = 3 });
+        _ = this.dbContext.Add(new AnEntity() { Id = 4, Fk = 2, P1 = 1, P2 = 3 });
+        _ = this.dbContext.SaveChanges();
+    }
 
-        _ = dbContext.SaveChanges();
-        var allEntities = dbContext.AnEntities.ToList();
-        Assert.True(4 == allEntities.Count, "Arrange error");
-
+    [Fact]
+    public void ShouldBuildQueryWithMultipleOrPredicates()
+    {
+        // Arrange
+        const int queryFk = 1;
         var queryObjects = new Collection<AnEntityQueryObject>
             {
                 new AnEntityQueryObject() {P1 = 1, P2 = 2},
@@ -33,13 +36,7 @@ public class PredicateBulderTest
             };
 
         // Act
-        var fkExpression = PredicateBuilder.Create<AnEntity>(p => p.Fk == 1);
-        var orExpression = PredicateBuilder.False<AnEntity>();
-        foreach (var queryObject in queryObjects)
-        {
-            orExpression = orExpression.Or(p => p.P1 == queryObject.P1 && p.P2 == queryObject.P2);
-        }
-        var result = dbContext.AnEntities.Where(fkExpression.And(orExpression)).ToList();
+        var result = this.SetUpAndRunQuery(queryFk, queryObjects);
 
         // Assert
         Assert.NotNull(result);
@@ -47,4 +44,56 @@ public class PredicateBulderTest
         Assert.Equal(2, result[0].Id);
         Assert.Equal(3, result[1].Id);
     }
+
+    [Fact]
+    public void ShouldBuildQueryWithMultipleOrPredicatesWhenNoMatches()
+    {
+        // Arrange
+        const int queryFk = 1;
+        var queryObjects = new Collection<AnEntityQueryObject>
+            {
+                new AnEntityQueryObject() {P1 = 2, P2 = 2},
+                new AnEntityQueryObject() {P1 = 2, P2 = 3},
+            };
+
+        // Act
+        var result = this.SetUpAndRunQuery(queryFk, queryObjects);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Empty(result);
+    }
+
+    [Fact]
+    public void ShouldBuildQueryWithMultipleOrPredicatesWhenNoFkMatches()
+    {
+        // Arrange
+        const int queryFk = 3;
+        var queryObjects = new Collection<AnEntityQueryObject>
+            {
+                new AnEntityQueryObject() {P1 = 1, P2 = 2},
+                new AnEntityQueryObject() {P1 = 1, P2 = 3},
+            };
+
+        // Act
+        var result = this.SetUpAndRunQuery(queryFk, queryObjects);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Empty(result);
+    }
+
+    private System.Collections.Generic.List<AnEntity> SetUpAndRunQuery(int queryFk, Collection<AnEntityQueryObject> queryObjects)
+    {
+        var fkExpression = PredicateBuilder.Create<AnEntity>(p => p.Fk == queryFk);
+        var orExpression = PredicateBuilder.False<AnEntity>();
+        foreach (var queryObject in queryObjects)
+        {
+            orExpression = orExpression.Or(p => p.P1 == queryObject.P1 && p.P2 == queryObject.P2);
+        }
+        var result = this.dbContext.AnEntities.Where(fkExpression.And(orExpression)).ToList();
+        return result;
+    }
+
+    public void Dispose() => this.dbContext.Dispose();
 }
