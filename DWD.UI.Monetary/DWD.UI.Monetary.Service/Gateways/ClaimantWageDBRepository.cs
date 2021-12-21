@@ -3,10 +3,10 @@ namespace DWD.UI.Monetary.Service.Gateways;
 using System.Collections.ObjectModel;
 using System.Linq;
 using LinqKit;
-using Calendar;
+using DWD.UI.Calendar;
 using DWD.UI.Monetary.Service.Frameworks;
 using DWD.UI.Monetary.Service.Models.Stubs;
-using Extensions;
+using DWD.UI.Monetary.Service.Extensions;
 using System;
 
 /// <summary>

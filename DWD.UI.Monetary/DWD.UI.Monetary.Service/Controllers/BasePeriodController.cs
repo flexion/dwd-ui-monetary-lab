@@ -6,7 +6,7 @@ using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using DWD.UI.Monetary.Domain.UseCases;
-using Models;
+using DWD.UI.Monetary.Service.Models;
 using Swashbuckle.AspNetCore.Annotations;
 using AutoMapper;
 using System.Collections.Generic;

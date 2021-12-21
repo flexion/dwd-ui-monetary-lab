@@ -1,11 +1,11 @@
 namespace DWD.UI.Monetary.Service.Controllers;
 
 using AutoMapper;
-using Calendar;
+using DWD.UI.Calendar;
 using Microsoft.AspNetCore.Mvc;
-using Gateways;
-using Models.Stubs;
-using Models;
+using DWD.UI.Monetary.Service.Gateways;
+using DWD.UI.Monetary.Service.Models.Stubs;
+using DWD.UI.Monetary.Service.Models;
 using System.Collections.ObjectModel;
 using System;
 
