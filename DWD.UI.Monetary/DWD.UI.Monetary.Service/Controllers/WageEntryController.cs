@@ -143,7 +143,7 @@ public class WageEntryController : ControllerBase
     /// <param name="year">quarterly wages year.</param>
     /// <param name="quarter">quarterly wages quarter.</param>
     /// <param name="wages">quarterly wages.</param>
-    /// <returns>All wage entries.</returns>
+    /// <returns>Wage entries.</returns>
     [HttpPost]
     [Route("CreateClaimantWage")]
     public IActionResult CreateClaimantWage(string claimantId, short? year, short? quarter, decimal wages)
