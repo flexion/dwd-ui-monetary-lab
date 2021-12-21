@@ -26,7 +26,7 @@ public sealed class WageEntryControllerTest : IDisposable
 
     public WageEntryControllerTest()
     {
-        var config = new MapperConfiguration(opts => opts.CreateMap<Quarter, CalendarQuarterDto>());
+        var config = new MapperConfiguration(opts => opts.CreateMap<Quarter, CalendarQuarterDto>().ReverseMap());
         var mapper = config.CreateMapper();
         this.dbContextOptions =
             new ClaimantWageContext(new DbContextOptionsBuilder<ClaimantWageContext>()
@@ -136,7 +136,7 @@ public sealed class WageEntryControllerTest : IDisposable
     }
 
     [Fact]
-    public void GetAllClaimantWagesForClaimantTest()
+    public void GetAllWagesForClaimantTest()
     {
         var inWage = new ClaimantWage
         {
@@ -160,6 +160,62 @@ public sealed class WageEntryControllerTest : IDisposable
         Assert.True(wages != null && wages.Count.Equals(1));
         Assert.Equal(1, wages[0].Id);
         Assert.Equal("33", wages[0].ClaimantId);
+    }
+
+    [Fact]
+    public void GetAllWagesForClaimantByQuartersTest()
+    {
+        var wage1 = new ClaimantWage
+        {
+            Id = 1,
+            ClaimantId = "33",
+            WageYear = 2021,
+            WageQuarter = 1,
+            TotalWages = (decimal)100.00
+        };
+
+        var wage2 = new ClaimantWage
+        {
+            Id = 2,
+            ClaimantId = "33",
+            WageYear = 2021,
+            WageQuarter = 2,
+            TotalWages = (decimal)75.00
+        };
+
+        var wage3 = new ClaimantWage
+        {
+            Id = 3,
+            ClaimantId = "33",
+            WageYear = 2021,
+            WageQuarter = 3,
+            TotalWages = (decimal)50.00
+        };
+
+        this.claimantWageDbRepository.AddClaimantWage(wage1);
+        this.claimantWageDbRepository.AddClaimantWage(wage2);
+        this.claimantWageDbRepository.AddClaimantWage(wage3);
+
+        var calendarQuarters = new Collection<CalendarQuarterDto>()
+        {
+            new CalendarQuarterDto() {Year = 2021, QuarterNumber = 1},
+            new CalendarQuarterDto() {Year = 2021, QuarterNumber = 2},
+        };
+
+        var actionResult = this.controller.GetAllWagesForClaimantByQuarters("33", calendarQuarters);
+
+        Assert.NotNull(actionResult);
+        // We cast it to the expected response type
+        var okResult = actionResult as OkObjectResult;
+
+        Assert.NotNull(okResult);
+        Assert.Equal(200, okResult.StatusCode);
+        var wages = okResult.Value as Collection<ClaimantWage>;
+        Assert.True(wages is {Count: 2});
+        Assert.Equal(1, wages[0].Id);
+        Assert.Equal(2, wages[1].Id);
+        Assert.Equal("33", wages[0].ClaimantId);
+        Assert.Equal("33", wages[1].ClaimantId);
     }
 
     public void Dispose() => this.dbContextOptions?.Dispose();
