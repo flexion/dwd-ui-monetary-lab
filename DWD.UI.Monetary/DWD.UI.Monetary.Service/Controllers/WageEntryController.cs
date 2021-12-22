@@ -1,5 +1,6 @@
 namespace DWD.UI.Monetary.Service.Controllers;
 
+using System.Net.Mime;
 using AutoMapper;
 using DWD.UI.Calendar;
 using Microsoft.AspNetCore.Mvc;
@@ -14,8 +15,10 @@ using System.Linq;
 /// <summary>
 /// Provides endpoints for entering wage data.
 /// </summary>
+[ApiVersion("1.0")]
 [ApiController]
-[Route("[controller]")]
+[Produces(MediaTypeNames.Application.Json)]
+[Route("v{version:apiVersion}/wage-entries")]
 public class WageEntryController : ControllerBase
 {
     /// <summary>
@@ -45,7 +48,7 @@ public class WageEntryController : ControllerBase
     /// <param name="id">entry id.</param>
     /// <returns>wage entry.</returns>
     [HttpGet]
-    [Route("GetClaimantWage/{id}")]
+    [Route("{id}")]
     public IActionResult GetClaimantWage([FromRoute] long id)
     {
         var claimantWage = this.claimantWageRepository.GetClaimantWage(id);
@@ -57,7 +60,6 @@ public class WageEntryController : ControllerBase
     /// </summary>
     /// <returns>All wage entries.</returns>
     [HttpGet]
-    [Route("GetAllClaimantWages")]
     public IActionResult GetAllClaimantWages()
     {
         var claimantWages = this.claimantWageRepository.GetClaimantWages();
@@ -70,7 +72,7 @@ public class WageEntryController : ControllerBase
     /// <param name="claimantId">claimant identifier.</param>
     /// <returns>All wage entries for claimant.</returns>
     [HttpGet]
-    [Route("GetAllClaimantWagesForClaimant/{claimantId}")]
+    [Route("~/v{version:apiVersion}/claimant/{claimantId}/wage-entries")]
     public IActionResult GetAllClaimantWagesForClaimant([FromRoute] string claimantId)
     {
         var claimantWages = this.claimantWageRepository.GetClaimantWagesByClaimantId(claimantId);
@@ -80,15 +82,21 @@ public class WageEntryController : ControllerBase
     /// <summary>
     /// Gets wage entries for a claimant in any of a collection of calendar quarters.
     /// </summary>
+    /// <remarks>
+    /// <b>Fetch wages for a claimant by quarters</b><br /><br />
+    /// This function will find the wages entered for the given claimant in any of the list of year-quarters
+    /// specified in the body as a JSON array of objects, each consisting of a year and a quarter number (1-4).
+    /// </remarks>
     /// <param name="claimantId">The claimant identifier.</param>
     /// <param name="calendarQuarters">A list of quarters from which to return wages.</param>
     /// <returns>All wage entries for claimant during the specified quarters.</returns>
-    [SwaggerResponse((int)HttpStatusCode.OK, description: "The request was successfule, and the wages for the requested quarters are returned.")]
-    [SwaggerResponse((int)HttpStatusCode.BadRequest, "The parameters supplied were invalid", typeof(ProblemDetails), "application/problem+json")]
+    [Consumes(MediaTypeNames.Application.Json)]
+    [SwaggerResponse((int)HttpStatusCode.OK, description: "The request was successful, and the wage entries found for the requested quarters are returned.")]
+    [SwaggerResponse((int)HttpStatusCode.BadRequest, "One or more supplied parameters were invalid", typeof(ProblemDetails), "application/problem+json")]
     [SwaggerResponse((int)HttpStatusCode.InternalServerError, "Internal Server Error", typeof(ProblemDetails), "application/problem+json")]
     [Produces("application/json")]
     [HttpPost]
-    [Route("GetWagesForClaimantByQuarters/{claimantId}")]
+    [Route("~/v{version:apiVersion}/claimant/{claimantId}/wages-by-quarters")]
     public IActionResult GetAllWagesForClaimantByQuarters([FromRoute] string claimantId, [FromBody] Collection<CalendarQuarterDto> calendarQuarters)
     {
         if (calendarQuarters == null)
@@ -119,8 +127,8 @@ public class WageEntryController : ControllerBase
     /// <param name="wages">quarterly wages.</param>
     /// <returns>All wage entries.</returns>
     [HttpPut]
-    [Route("UpdateClaimantWage/{id}")]
-    public IActionResult UpdateClaimantWage([FromRoute] long id, int? year, short? quarter, decimal wages)
+    [Route("{id}")]
+    public IActionResult UpdateClaimantWage([FromRoute] long id, short? year, short? quarter, decimal wages)
     {
         var claimantWage = this.claimantWageRepository.GetClaimantWage(id);
         claimantWage.WageYear = year;
@@ -138,7 +146,7 @@ public class WageEntryController : ControllerBase
     /// <param name="id">wage id.</param>
     /// <returns>All wage entries.</returns>
     [HttpDelete]
-    [Route("DeleteClaimantWage/{id}")]
+    [Route("{id}")]
     public IActionResult DeleteClaimantWage([FromRoute] long id)
     {
         this.claimantWageRepository.DeleteClaimantWage(id);
@@ -155,7 +163,6 @@ public class WageEntryController : ControllerBase
     /// <param name="wages">quarterly wages.</param>
     /// <returns>All wage entries.</returns>
     [HttpPost]
-    [Route("CreateClaimantWage")]
     public IActionResult CreateClaimantWage(string claimantId, int? year, short? quarter, decimal wages)
     {
         var wage = new ClaimantWage
