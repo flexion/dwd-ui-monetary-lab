@@ -7,7 +7,9 @@ using DWD.UI.Monetary.Service.Gateways;
 using DWD.UI.Monetary.Service.Models.Stubs;
 using DWD.UI.Monetary.Service.Models;
 using System.Collections.ObjectModel;
-using System;
+using Swashbuckle.AspNetCore.Annotations;
+using System.Net;
+using System.Linq;
 
 /// <summary>
 /// Provides endpoints for entering wage data.
@@ -76,25 +78,26 @@ public class WageEntryController : ControllerBase
     }
 
     /// <summary>
-    /// Gets claimant quarterly wage entries for claimant by quarters.
+    /// Gets wage entries for a claimant in any of a collection of calendar quarters.
     /// </summary>
-    /// <param name="claimantId">claimant identifier.</param>
-    /// <param name="calendarQuarters">list of quarters from which to return wages.</param>
-    /// <returns>All wage entries for claimant.</returns>
-    [HttpGet]
-    [Route("GetAllWagesForClaimantByQuarters/{claimantId}")]
-    public IActionResult GetAllWagesForClaimantByQuarters([FromBody] string claimantId, [FromBody] Collection<CalendarQuarterDto> calendarQuarters)
+    /// <param name="claimantId">The claimant identifier.</param>
+    /// <param name="calendarQuarters">A list of quarters from which to return wages.</param>
+    /// <returns>All wage entries for claimant during the specified quarters.</returns>
+    [SwaggerResponse((int)HttpStatusCode.OK, description: "The request was successfule, and the wages for the requested quarters are returned.")]
+    [SwaggerResponse((int)HttpStatusCode.BadRequest, "The parameters supplied were invalid", typeof(ProblemDetails), "application/problem+json")]
+    [SwaggerResponse((int)HttpStatusCode.InternalServerError, "Internal Server Error", typeof(ProblemDetails), "application/problem+json")]
+    [Produces("application/json")]
+    [HttpPost]
+    [Route("GetWagesForClaimantByQuarters/{claimantId}")]
+    public IActionResult GetAllWagesForClaimantByQuarters([FromRoute] string claimantId, [FromBody] Collection<CalendarQuarterDto> calendarQuarters)
     {
         if (calendarQuarters == null)
         {
-            throw new ArgumentNullException(nameof(calendarQuarters));
+            return this.Problem("The quarters from which to fetch wages were not given.", null, (int)HttpStatusCode.BadRequest);
         }
 
         var quarters = new Quarters();
-        foreach (var quarter in calendarQuarters)
-        {
-            quarters.Add(this.mapper.Map<Quarter>(quarter));
-        }
+        quarters.AddRange(calendarQuarters.Select(q => this.mapper.Map<Quarter>(q)));
 
         var claimantWages = this.claimantWageRepository.GetClaimantWagesByClaimantIdByQuarters(claimantId, quarters);
         return this.Ok(claimantWages);
@@ -110,7 +113,7 @@ public class WageEntryController : ControllerBase
     /// <returns>All wage entries.</returns>
     [HttpPut]
     [Route("UpdateClaimantWage/{id}")]
-    public IActionResult UpdateClaimantWage([FromRoute] long id, short? year, short? quarter, decimal wages)
+    public IActionResult UpdateClaimantWage([FromRoute] long id, int? year, short? quarter, decimal wages)
     {
         var claimantWage = this.claimantWageRepository.GetClaimantWage(id);
         claimantWage.WageYear = year;
@@ -146,7 +149,7 @@ public class WageEntryController : ControllerBase
     /// <returns>All wage entries.</returns>
     [HttpPost]
     [Route("CreateClaimantWage")]
-    public IActionResult CreateClaimantWage(string claimantId, short? year, short? quarter, decimal wages)
+    public IActionResult CreateClaimantWage(string claimantId, int? year, short? quarter, decimal wages)
     {
         var wage = new ClaimantWage
         {

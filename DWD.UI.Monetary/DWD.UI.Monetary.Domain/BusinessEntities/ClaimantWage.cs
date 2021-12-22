@@ -20,7 +20,7 @@ public partial class ClaimantWage
     /// <summary>
     /// Gets or sets wage Year.
     /// </summary>
-    public short? WageYear { get; set; }
+    public int? WageYear { get; set; }
 
     /// <summary>
     /// Gets or sets wage Quarter.

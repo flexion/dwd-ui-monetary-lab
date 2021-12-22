@@ -1,7 +1,7 @@
 namespace DWD.UI.Monetary.Service.Gateways;
 
 using System.Collections.ObjectModel;
-using Calendar;
+using DWD.UI.Calendar;
 using DWD.UI.Monetary.Service.Models.Stubs;
 
 /// <summary>

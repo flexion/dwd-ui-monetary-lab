@@ -79,7 +79,7 @@ public sealed class WageEntryControllerTest : IDisposable
         var wage = okResult.Value as ClaimantWage;
         Assert.True(wage != null);
         Assert.Equal("19", wage.ClaimantId);
-        Assert.Equal((short)2021, wage.WageYear);
+        Assert.Equal(2021, wage.WageYear);
         Assert.Equal((short)3, wage.WageQuarter);
         Assert.Equal((decimal)100.00, wage.TotalWages);
         Assert.Equal(1, wage.Id);
@@ -105,7 +105,7 @@ public sealed class WageEntryControllerTest : IDisposable
         var wage = this.claimantWageDbRepository.GetClaimantWage(wages[0].Id);
         Assert.True(wage != null);
         Assert.Equal("21", wage.ClaimantId);
-        Assert.Equal((short)2010, wage.WageYear);
+        Assert.Equal(2010, wage.WageYear);
     }
 
     [Fact]
@@ -211,7 +211,7 @@ public sealed class WageEntryControllerTest : IDisposable
         Assert.NotNull(okResult);
         Assert.Equal(200, okResult.StatusCode);
         var wages = okResult.Value as Collection<ClaimantWage>;
-        Assert.True(wages is {Count: 2});
+        Assert.True(wages is { Count: 2 });
         Assert.Equal(1, wages[0].Id);
         Assert.Equal(2, wages[1].Id);
         Assert.Equal("33", wages[0].ClaimantId);

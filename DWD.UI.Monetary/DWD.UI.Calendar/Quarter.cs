@@ -10,7 +10,7 @@ public record Quarter : IComparable<Quarter>
     /// <summary>
     /// The quarter's year.
     /// </summary>
-    public short Year { get; }
+    public int Year { get; }
 
     /// <summary>
     /// The quarter number.
@@ -23,7 +23,7 @@ public record Quarter : IComparable<Quarter>
     /// <param name="year">The quarter's year.</param>
     /// <param name="quarterNumber">The quarter number.</param>
     /// <exception cref="ArgumentOutOfRangeException">The quarter number was not in the range [1,4]</exception>"
-    public Quarter(short year, short quarterNumber)
+    public Quarter(int year, short quarterNumber)
     {
         if (quarterNumber is < 1 or > 4)
         {
@@ -44,8 +44,7 @@ public record Quarter : IComparable<Quarter>
 
         var firstDayOfWeek = date.AddDays(DayOfWeek.Sunday - date.DayOfWeek);
 
-        this.Year = Convert.ToInt16(firstDayOfWeek.Year);
-        //this.Year = short.Parse(firstDayOfWeek.Year.ToString());
+        this.Year = firstDayOfWeek.Year;
         this.QuarterNumber = Convert.ToInt16(Math.Ceiling((double)firstDayOfWeek.Month / monthsPerQuarter));
     }
 
