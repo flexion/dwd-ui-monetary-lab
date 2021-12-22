@@ -97,10 +97,17 @@ public class WageEntryController : ControllerBase
         }
 
         var quarters = new Quarters();
-        quarters.AddRange(calendarQuarters.Select(q => this.mapper.Map<Quarter>(q)));
+        try
+        {
+            quarters.AddRange(calendarQuarters.Select(q => this.mapper.Map<Quarter>(q)));
 
-        var claimantWages = this.claimantWageRepository.GetClaimantWagesByClaimantIdByQuarters(claimantId, quarters);
-        return this.Ok(claimantWages);
+            var claimantWages = this.claimantWageRepository.GetClaimantWagesByClaimantIdByQuarters(claimantId, quarters);
+            return this.Ok(claimantWages);
+        }
+        catch (System.ArgumentOutOfRangeException ex)
+        {
+            return this.Problem(ex.Message, null, (int)HttpStatusCode.BadRequest);
+        }
     }
 
     /// <summary>

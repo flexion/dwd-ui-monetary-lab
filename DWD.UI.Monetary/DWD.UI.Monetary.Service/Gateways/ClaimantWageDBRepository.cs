@@ -5,7 +5,6 @@ using System.Linq;
 using DWD.UI.Calendar;
 using DWD.UI.Monetary.Service.Frameworks;
 using DWD.UI.Monetary.Service.Models.Stubs;
-using DWD.UI.PredicateBuilder;
 using DWD.UI.Monetary.Service.Extensions;
 using System;
 
@@ -90,19 +89,9 @@ public class ClaimantWageDbRepository : IClaimantWageRepository
             throw new ArgumentNullException(nameof(quarters));
         }
 
-        // Create an expression based on the claimant
-        var deviceNameExpression = PredicateBuilder.Create<ClaimantWage>(p => p.ClaimantId == claimantId);
+        var query = this.context.ClaimantWages.Where(p => p.ClaimantId == claimantId).AsEnumerable();
+        query = query.Where(p => quarters.ToList().Contains(new Quarter(p.WageYear.Value, p.WageQuarter.Value)));
 
-        // Create a false expression to initialize the dynamic OR expression
-        var orExpression = PredicateBuilder.False<ClaimantWage>();
-
-        // Add an OR predicate to the expression for each item in the list of quarters
-        foreach (var quarter in quarters.ToList())
-        {
-            orExpression = orExpression.Or(wage => wage.WageQuarter == quarter.QuarterNumber && wage.WageYear == quarter.Year);
-        }
-
-        // Combine the two expressions using AND and materialize the query
-        return this.context.ClaimantWages.Where(deviceNameExpression.And(orExpression)).ToCollection();
+        return query.ToCollection();
     }
 }

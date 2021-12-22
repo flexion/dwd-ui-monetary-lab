@@ -38,7 +38,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\DWD.UI.Monetary.Domain\DWD.UI.Monetary.Domain.csproj" />
-      <ProjectReference Include="..\PredicateBuilder\DWD.UI.PredicateBuilder.csproj" />
     </ItemGroup>
 
 </Project>
