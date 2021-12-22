@@ -47,11 +47,11 @@ public class BenefitYearControllerTests
 
         Assert.NotNull(okResult);
         Assert.NotNull(okResult.StatusCode);
+
         Assert.Equal((int)HttpStatusCode.OK, okResult.StatusCode.Value);
 
         var okResultValue = Assert.IsType<BenefitYear>(okResult.Value);
         Assert.NotNull(okResultValue);
-        Assert.Equal((int)HttpStatusCode.OK, okResult.StatusCode);
 
         Assert.Equal(benefitWeeks, okResultValue.BenefitWeeks);
         Assert.Equal(beginDate, okResultValue.BeginDate);
