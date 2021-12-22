@@ -1,5 +1,6 @@
 namespace DWD.UI.Monetary.Service.Mappers;
 
+using System.Diagnostics.CodeAnalysis;
 using AutoMapper;
 using DWD.UI.Calendar;
 using DWD.UI.Monetary.Service.Models;
@@ -7,6 +8,7 @@ using DWD.UI.Monetary.Service.Models;
 /// <summary>
 /// Provides a configuration profile for AutoMapper.
 /// </summary>
+[ExcludeFromCodeCoverage]
 public class AutoMapperProfile : Profile
 {
     /// <summary>

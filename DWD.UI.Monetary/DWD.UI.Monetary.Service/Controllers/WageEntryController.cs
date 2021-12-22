@@ -5,12 +5,12 @@ using AutoMapper;
 using DWD.UI.Calendar;
 using Microsoft.AspNetCore.Mvc;
 using DWD.UI.Monetary.Service.Gateways;
-using DWD.UI.Monetary.Service.Models.Stubs;
 using DWD.UI.Monetary.Service.Models;
 using System.Collections.ObjectModel;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Net;
 using System.Linq;
+using DWD.UI.Monetary.Service.Models.Stubs;
 
 /// <summary>
 /// Provides endpoints for entering wage data.

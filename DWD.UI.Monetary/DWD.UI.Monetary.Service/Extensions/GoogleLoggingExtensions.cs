@@ -1,6 +1,7 @@
 namespace DWD.UI.Monetary.Service.Extensions;
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using Google.Cloud.Diagnostics.AspNetCore3;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,6 +23,7 @@ public static class GoogleLoggingExtensions
     /// <param name="configuration">Reference to app configuration.</param>
     /// <exception cref="ArgumentNullException">Configuration is null.</exception>
     /// <returns>Services collection for fluent chaining.</returns>
+    [ExcludeFromCodeCoverage]
     public static IServiceCollection AddGoogleLogging(this IServiceCollection services, IConfiguration configuration)
     {
         if (configuration is null)
