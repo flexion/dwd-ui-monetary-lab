@@ -1,21 +1,23 @@
 namespace DWD.UI.Monetary.Service.Controllers;
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
-using System.Net;
+using System.Net.Mime;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using DWD.UI.Monetary.Domain.UseCases;
+using Microsoft.AspNetCore.Http;
 using Models;
-using Swashbuckle.AspNetCore.Annotations;
-using AutoMapper;
-using System.Collections.Generic;
 
 /// <summary>
 /// Provides endpoints for BasePeriod.
 /// </summary>
+[ApiVersion("1.0")]
 [ApiController]
-[Route("[controller]")]
+[Produces(MediaTypeNames.Application.Json)]
+[Route("v{version:apiVersion}")]
 public class BasePeriodController : ControllerBase
 {
     /// <summary>
@@ -75,12 +77,13 @@ public class BasePeriodController : ControllerBase
     /// </remarks>
     /// <param name="initialClaimDate">The initial claim date in standard formats (MM/DD/YYYY, MM-DD-YYYY, YYYY-MM-DD, etc.). Default value is 1/1/1.</param>
     /// <returns>The calculated base period.</returns>
-    [SwaggerResponse((int)HttpStatusCode.OK, "OK", typeof(BasePeriodDto), "application/json")]
-    [SwaggerResponse((int)HttpStatusCode.BadRequest, "Bad Initial Claim Date", typeof(ProblemDetails), "application/problem+json")]
-    [SwaggerResponse((int)HttpStatusCode.InternalServerError, "Internal Server Error", typeof(ProblemDetails), "application/problem+json")]
-    [Produces("application/json")]
+    /// <response code="400">Invalid Date.</response>
+    [Consumes(MediaTypeNames.Text.Plain)]
+    [ProducesResponseType(typeof(BasePeriodDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpGet]
-    [Route("GetStandardBasePeriodFromInitialClaimDate")]
+    [Route("standard-base-period-by-date")]
     public IActionResult GetStandardBasePeriodFromInitialClaimDate(DateTime initialClaimDate)
     {
         try
@@ -113,12 +116,13 @@ public class BasePeriodController : ControllerBase
     /// <param name="year">Year to calculate the base periods. Default value is 0.</param>
     /// <param name="week">Week number of the year. Must be between 1 and 52 or 53(If first day of the year lands on saturday). Default value is 0.</param>
     /// <returns>The calculated base period.</returns>
-    [SwaggerResponse((int)HttpStatusCode.OK, "OK", typeof(BasePeriodDto), "application/json")]
-    [SwaggerResponse((int)HttpStatusCode.BadRequest, "Bad Year and Week", typeof(ProblemDetails), "application/problem+json")]
-    [SwaggerResponse((int)HttpStatusCode.InternalServerError, "Internal Server Error", typeof(ProblemDetails), "application/problem+json")]
-    [Produces("application/json")]
+    /// <response code="400">Invalid Year/Week.</response>
+    [Consumes(MediaTypeNames.Text.Plain)]
+    [ProducesResponseType(typeof(BasePeriodDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpGet]
-    [Route("GetStandardBasePeriodFromYearAndWeek")]
+    [Route("standard-base-period-by-year-week")]
     public IActionResult GetStandardBasePeriodFromYearAndWeek(int year, int week)
     {
         try
@@ -151,12 +155,13 @@ public class BasePeriodController : ControllerBase
     /// </remarks>
     /// <param name="initialClaimDate">The initial claim date in standard formats (MM/DD/YYYY, MM-DD-YYYY, YYYY-MM-DD, etc.). Default value is 1/1/1.</param>
     /// <returns>The calculated base period.</returns>
-    [SwaggerResponse((int)HttpStatusCode.OK, "OK", typeof(BasePeriodDto), "application/json")]
-    [SwaggerResponse((int)HttpStatusCode.BadRequest, "Bad Initial Claim Date", typeof(ProblemDetails), "application/problem+json")]
-    [SwaggerResponse((int)HttpStatusCode.InternalServerError, "Internal Server Error", typeof(ProblemDetails), "application/problem+json")]
-    [Produces("application/json")]
+    /// <response code="400">Invalid Date.</response>
+    [Consumes(MediaTypeNames.Text.Plain)]
+    [ProducesResponseType(typeof(BasePeriodDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpGet]
-    [Route("GetAlternateBasePeriodFromInitialClaimDate")]
+    [Route("alternate-base-period-by-date")]
     public IActionResult GetAlternateBasePeriodFromInitialClaimDate(DateTime initialClaimDate)
     {
         try
@@ -190,12 +195,13 @@ public class BasePeriodController : ControllerBase
     /// <param name="year">Year to calculate the base periods. Default value is 0.</param>
     /// <param name="week">Week number of the year. Must be between 1 and 52 or 53(If first day of the year lands on saturday). Default value is 0.</param>
     /// <returns>The calculated base period.</returns>
-    [SwaggerResponse((int)HttpStatusCode.OK, "OK", typeof(BasePeriodDto), "application/json")]
-    [SwaggerResponse((int)HttpStatusCode.BadRequest, "Bad year and week", typeof(ProblemDetails), "application/problem+json")]
-    [SwaggerResponse((int)HttpStatusCode.InternalServerError, "Internal Server Error", typeof(ProblemDetails), "application/problem+json")]
-    [Produces("application/json")]
+    /// <response code="400">Invalid Year/Week.</response>
+    [Consumes(MediaTypeNames.Text.Plain)]
+    [ProducesResponseType(typeof(BasePeriodDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpGet]
-    [Route("GetAlternateBasePeriodFromYearAndWeek")]
+    [Route("alternate-base-period-by-year-week")]
     public IActionResult GetAlternateBasePeriodFromYearAndWeek(int year, int week)
     {
         try
