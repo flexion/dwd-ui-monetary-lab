@@ -1,18 +1,31 @@
-Table of contents:
-
-- [DWD Unemployment Insurance API](#dwd-unemployment-insurance-api-)
-  - [Development Guidelines](#development-guidelines-)
-
----
-
-# DWD Unemployment Insurance API - [^](#)
+# State of Wisconsin - Department of Workforce Development - Unemployment Insurance API
 This repository is for developing the APIs that will be used for the DWD Unemployment Insurance application.
 
-TODO: Add repository structure/explanation
-TODO: Add architectural design
+Table of contents:
 
+- [Overview](#overview-)
+- [Technical Overview](#technical-overview-)
+- [Documentation](#documentation-)
+- [Topic X](#topic-x-)
+- [Topic Y](#topic-y-)
+- [Topic Z](#topic-z-)
 
-## Development Guidelines - [^](#)
+## Overview [^](#)
+Placeholder
 
-Please take a look at [Development Guideline](docs/dev-guidelines.md). They have been recorded to ease in
-general maintenance and development.
+## Technical Overview [^](#)
+Placeholder
+* Add repository structure & explanation
+* Add architecture design 
+
+## Documentation [^](#)
+Please see [documentation](./docs/README.md).
+
+## Topic X [^](#)
+Placeholder
+
+## Topic Y [^](#)
+Placeholder
+
+## Topic Z [^](#)
+Placeholder
