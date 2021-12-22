@@ -10,9 +10,10 @@ using Microsoft.AspNetCore.Mvc;
 /// <summary>
 /// Provides endpoints for Benefit Year.
 /// </summary>
-[Produces(MediaTypeNames.Application.Json)]
+[ApiVersion("1.0")]
 [ApiController]
-[Route("benefityear")]
+[Produces(MediaTypeNames.Application.Json)]
+[Route("v{version:apiVersion}/benefit-years")]
 public class BenefitYearController : ControllerBase
 {
     /// <summary>
@@ -77,11 +78,10 @@ public class BenefitYearController : ControllerBase
     /// <param name="requestedDate">The requested benefit date in standard formats (MM/DD/YYYY, MM-DD-YYYY, YYYY-MM-DD, etc.).</param>
     /// <returns>The calculated benefit year.</returns>
     [Consumes(MediaTypeNames.Text.Plain)]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(BenefitYear), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpGet]
-    [Route("lookup-by-date")]
     public ActionResult<BenefitYear> GetBenefitYearForRequestedDate(DateTime requestedDate) =>
         this.Ok(this.calculateBenefitYear.CalculateBenefitYearFromDate(requestedDate));
 }

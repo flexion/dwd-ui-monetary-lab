@@ -13,12 +13,14 @@ using DWD.UI.Monetary.Service.Frameworks;
 using DWD.UI.Monetary.Service.Gateways;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
+using Microsoft.Extensions.Options;
 using Npgsql;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 /// <summary>
 /// Configure the service during start up.
@@ -61,18 +63,28 @@ public class Startup
             services.AddGoogleLogging(this.config);
         }
 
-        services.AddSwaggerGen(c =>
+        // Add API Versioning to the Project
+        services.AddApiVersioning(apiconfig =>
         {
-            c.SwaggerDoc("v1", new OpenApiInfo
-            {
-                Title = "Monetary Endpoint Demo",
-                Version = "v1",
-                Description = "An initial lab-safe implementation.",
-            });
+            // Advertise the API versions supported for the particular endpoint
+            apiconfig.ReportApiVersions = true;
+        });
 
-            // using System.Reflection;
+        services.AddVersionedApiExplorer(options =>
+        {
+            // add the versioned api explorer, which also adds IApiVersionDescriptionProvider service
+            // note: the specified format code will format the version as "'v'major[.minor][-status]"
+            options.GroupNameFormat = "'v'VVV";
+
+            // note: this option is only necessary when versioning by url segment. the SubstitutionFormat
+            // can also be used to control the format of the API version in route templates
+            options.SubstituteApiVersionInUrl = true;
+        });
+        services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
+        services.AddSwaggerGen(options =>
+        {
             var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-            c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+            options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
         });
 
         var connectionString = GetPgConnectionString(this.config);
@@ -94,9 +106,10 @@ public class Startup
     /// </summary>
     /// <param name="app">Application builder reference.</param>
     /// <param name="hostenv">Environment reference.</param>
+    /// <param name="provider">Api version Description provider.</param>
     /// <remarks>This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
     /// </remarks>
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment hostenv)
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment hostenv, IApiVersionDescriptionProvider provider)
     {
         if (hostenv.IsDevelopment())
         {
@@ -106,13 +119,15 @@ public class Startup
         // always generate swagger doc
         app.UseDeveloperExceptionPage();
         app.UseSwagger();
-        app.UseSwaggerUI(c =>
-        {
-            c.DocumentTitle = "Monetary API - Swagger docs";
-            c.SwaggerEndpoint("/swagger/v1/swagger.json", "DWD.UI.Monetary.Service v1");
-            c.EnableDeepLinking();
-            c.DefaultModelsExpandDepth(0);
-        });
+        app.UseSwaggerUI(
+            options =>
+            {
+                // build a swagger endpoint for each discovered API version
+                foreach (var description in provider.ApiVersionDescriptions)
+                {
+                    options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName.ToUpperInvariant());
+                }
+            });
 
         // app.UseHttpsRedirection();
         app.UseRouting();
