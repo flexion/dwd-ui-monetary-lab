@@ -64,11 +64,8 @@ public class Startup
         }
 
         // Add API Versioning to the Project
-        services.AddApiVersioning(apiconfig =>
-        {
-            // Advertise the API versions supported for the particular endpoint
-            apiconfig.ReportApiVersions = true;
-        });
+        // ReportApiVersions advertises the API versions supported for the particular endpoint
+        services.AddApiVersioning(apiconfig => apiconfig.ReportApiVersions = true);
 
         services.AddVersionedApiExplorer(options =>
         {

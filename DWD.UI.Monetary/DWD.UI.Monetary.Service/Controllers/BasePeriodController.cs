@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using DWD.UI.Monetary.Domain.UseCases;
 using Microsoft.AspNetCore.Http;
-using Models;
+using DWD.UI.Monetary.Service.Models;
 
 /// <summary>
 /// Provides endpoints for BasePeriod.

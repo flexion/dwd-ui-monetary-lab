@@ -2,6 +2,9 @@ namespace DWD.UI.Monetary.Tests.Controllers;
 
 using System;
 using System.Collections.ObjectModel;
+using AutoMapper;
+using DWD.UI.Calendar;
+using DWD.UI.Monetary.Service.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Service.Controllers;
@@ -19,23 +22,25 @@ public sealed class WageEntryControllerTest : IDisposable
 
     private readonly ClaimantWageContext dbContextOptions;
     private readonly ClaimantWageDbRepository claimantWageDbRepository;
+    private readonly WageEntryController controller;
 
     public WageEntryControllerTest()
     {
+        var config = new MapperConfiguration(opts => opts.CreateMap<Quarter, CalendarQuarterDto>().ReverseMap());
+        var mapper = config.CreateMapper();
         this.dbContextOptions =
             new ClaimantWageContext(new DbContextOptionsBuilder<ClaimantWageContext>()
                 .UseInMemoryDatabase(Guid.NewGuid().ToString())
                 .Options);
-
         this.claimantWageDbRepository = new ClaimantWageDbRepository(this.dbContextOptions);
+        this.controller = new WageEntryController(this.claimantWageDbRepository, mapper);
     }
 
     [Fact]
     public void CreateClaimantWageTest()
     {
-        var controller = this.GetWageEntryController();
-        _ = controller.CreateClaimantWage("12", 2021, 3, (decimal)100.00);
-        var actionResult = controller.GetAllClaimantWages();
+        _ = this.controller.CreateClaimantWage("12", 2021, 3, (decimal)100.00);
+        var actionResult = this.controller.GetAllClaimantWages();
         Assert.NotNull(actionResult);
         // cast it to the expected response type
         var okResult = actionResult as OkObjectResult;
@@ -63,8 +68,7 @@ public sealed class WageEntryControllerTest : IDisposable
         this.claimantWageDbRepository.AddClaimantWage(inWage);
         var wages = this.claimantWageDbRepository.GetClaimantWagesByClaimantId("19");
         Assert.NotNull(wages);
-        var controller = this.GetWageEntryController();
-        var actionResult = controller.GetClaimantWage(wages[0].Id);
+        var actionResult = this.controller.GetClaimantWage(wages[0].Id);
 
         Assert.NotNull(actionResult);
         // We cast it to the expected response type
@@ -75,7 +79,7 @@ public sealed class WageEntryControllerTest : IDisposable
         var wage = okResult.Value as ClaimantWage;
         Assert.True(wage != null);
         Assert.Equal("19", wage.ClaimantId);
-        Assert.Equal((short)2021, wage.WageYear);
+        Assert.Equal(2021, wage.WageYear);
         Assert.Equal((short)3, wage.WageQuarter);
         Assert.Equal((decimal)100.00, wage.TotalWages);
         Assert.Equal(1, wage.Id);
@@ -96,13 +100,12 @@ public sealed class WageEntryControllerTest : IDisposable
 
         var wages = this.claimantWageDbRepository.GetClaimantWagesByClaimantId("21");
         Assert.NotNull(wages);
-        var controller = this.GetWageEntryController();
-        _ = controller.UpdateClaimantWage(wages[0].Id, 2010, 4, 200);
+        _ = this.controller.UpdateClaimantWage(wages[0].Id, 2010, 4, 200);
 
         var wage = this.claimantWageDbRepository.GetClaimantWage(wages[0].Id);
         Assert.True(wage != null);
         Assert.Equal("21", wage.ClaimantId);
-        Assert.Equal((short)2010, wage.WageYear);
+        Assert.Equal(2010, wage.WageYear);
     }
 
     [Fact]
@@ -121,8 +124,7 @@ public sealed class WageEntryControllerTest : IDisposable
         var wages = this.claimantWageDbRepository.GetClaimantWagesByClaimantId("21");
         Assert.NotNull(wages);
 
-        var controller = this.GetWageEntryController();
-        var actionResultDel = controller.DeleteClaimantWage(wages[0].Id);
+        var actionResultDel = this.controller.DeleteClaimantWage(wages[0].Id);
         Assert.NotNull(actionResultDel);
 
         var okResultDel = actionResultDel as OkObjectResult;
@@ -134,7 +136,7 @@ public sealed class WageEntryControllerTest : IDisposable
     }
 
     [Fact]
-    public void GetAllClaimantWagesForClaimantTest()
+    public void GetAllWagesForClaimantTest()
     {
         var inWage = new ClaimantWage
         {
@@ -146,8 +148,7 @@ public sealed class WageEntryControllerTest : IDisposable
 
         this.claimantWageDbRepository.AddClaimantWage(inWage);
 
-        var controller = this.GetWageEntryController();
-        var actionResult = controller.GetAllClaimantWagesForClaimant("33");
+        var actionResult = this.controller.GetAllClaimantWagesForClaimant("33");
 
         Assert.NotNull(actionResult);
         // We cast it to the expected response type
@@ -161,7 +162,61 @@ public sealed class WageEntryControllerTest : IDisposable
         Assert.Equal("33", wages[0].ClaimantId);
     }
 
-    private WageEntryController GetWageEntryController() => new(this.claimantWageDbRepository);
+    [Fact]
+    public void GetAllWagesForClaimantByQuartersTest()
+    {
+        var wage1 = new ClaimantWage
+        {
+            Id = 1,
+            ClaimantId = "33",
+            WageYear = 2021,
+            WageQuarter = 1,
+            TotalWages = (decimal)100.00
+        };
+
+        var wage2 = new ClaimantWage
+        {
+            Id = 2,
+            ClaimantId = "33",
+            WageYear = 2021,
+            WageQuarter = 2,
+            TotalWages = (decimal)75.00
+        };
+
+        var wage3 = new ClaimantWage
+        {
+            Id = 3,
+            ClaimantId = "33",
+            WageYear = 2021,
+            WageQuarter = 3,
+            TotalWages = (decimal)50.00
+        };
+
+        this.claimantWageDbRepository.AddClaimantWage(wage1);
+        this.claimantWageDbRepository.AddClaimantWage(wage2);
+        this.claimantWageDbRepository.AddClaimantWage(wage3);
+
+        var calendarQuarters = new Collection<CalendarQuarterDto>()
+        {
+            new CalendarQuarterDto() {Year = 2021, QuarterNumber = 1},
+            new CalendarQuarterDto() {Year = 2021, QuarterNumber = 2},
+        };
+
+        var actionResult = this.controller.GetAllWagesForClaimantByQuarters("33", calendarQuarters);
+
+        Assert.NotNull(actionResult);
+        // We cast it to the expected response type
+        var okResult = actionResult as OkObjectResult;
+
+        Assert.NotNull(okResult);
+        Assert.Equal(200, okResult.StatusCode);
+        var wages = okResult.Value as Collection<ClaimantWage>;
+        Assert.True(wages is { Count: 2 });
+        Assert.Equal(1, wages[0].Id);
+        Assert.Equal(2, wages[1].Id);
+        Assert.Equal("33", wages[0].ClaimantId);
+        Assert.Equal("33", wages[1].ClaimantId);
+    }
 
     public void Dispose() => this.dbContextOptions?.Dispose();
 }

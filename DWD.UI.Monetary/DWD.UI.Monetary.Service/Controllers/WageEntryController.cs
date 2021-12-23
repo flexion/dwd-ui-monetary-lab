@@ -1,10 +1,15 @@
-#pragma warning disable IDE0009
-
 namespace DWD.UI.Monetary.Service.Controllers;
 
 using System.Net.Mime;
+using AutoMapper;
+using DWD.UI.Calendar;
 using Microsoft.AspNetCore.Mvc;
 using DWD.UI.Monetary.Service.Gateways;
+using DWD.UI.Monetary.Service.Models;
+using System.Collections.ObjectModel;
+using Swashbuckle.AspNetCore.Annotations;
+using System.Net;
+using System.Linq;
 using DWD.UI.Monetary.Service.Models.Stubs;
 
 /// <summary>
@@ -22,11 +27,20 @@ public class WageEntryController : ControllerBase
     private readonly IClaimantWageRepository claimantWageRepository;
 
     /// <summary>
+    /// Automapper injection.
+    /// </summary>
+    private readonly IMapper mapper;
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="WageEntryController"/> class.
     /// </summary>
     /// <param name="theClaimantWageRepository">Wages.</param>
-    public WageEntryController(IClaimantWageRepository theClaimantWageRepository) =>
+    /// <param name="mapper">Mapper.</param>
+    public WageEntryController(IClaimantWageRepository theClaimantWageRepository, IMapper mapper)
+    {
         this.claimantWageRepository = theClaimantWageRepository;
+        this.mapper = mapper;
+    }
 
     /// <summary>
     /// Get claimant quarterly wage entry by entry id.
@@ -63,6 +77,45 @@ public class WageEntryController : ControllerBase
     {
         var claimantWages = this.claimantWageRepository.GetClaimantWagesByClaimantId(claimantId);
         return this.Ok(claimantWages);
+    }
+
+    /// <summary>
+    /// Gets wage entries for a claimant in any of a collection of calendar quarters.
+    /// </summary>
+    /// <remarks>
+    /// <b>Fetch wages for a claimant by quarters</b><br /><br />
+    /// This function will find the wages entered for the given claimant in any of the list of year-quarters
+    /// specified in the body as a JSON array of objects, each consisting of a year and a quarter number (1-4).
+    /// </remarks>
+    /// <param name="claimantId">The claimant identifier.</param>
+    /// <param name="calendarQuarters">A list of quarters from which to return wages.</param>
+    /// <returns>All wage entries for claimant during the specified quarters.</returns>
+    [Consumes(MediaTypeNames.Application.Json)]
+    [SwaggerResponse((int)HttpStatusCode.OK, description: "The request was successful, and the wage entries found for the requested quarters are returned.")]
+    [SwaggerResponse((int)HttpStatusCode.BadRequest, "One or more supplied parameters were invalid", typeof(ProblemDetails), "application/problem+json")]
+    [SwaggerResponse((int)HttpStatusCode.InternalServerError, "Internal Server Error", typeof(ProblemDetails), "application/problem+json")]
+    [Produces("application/json")]
+    [HttpPost]
+    [Route("~/v{version:apiVersion}/claimant/{claimantId}/wages-by-quarters")]
+    public IActionResult GetAllWagesForClaimantByQuarters([FromRoute] string claimantId, [FromBody] Collection<CalendarQuarterDto> calendarQuarters)
+    {
+        if (calendarQuarters == null)
+        {
+            return this.Problem("The quarters from which to fetch wages were not given.", null, (int)HttpStatusCode.BadRequest);
+        }
+
+        var quarters = new Quarters();
+        try
+        {
+            quarters.AddRange(calendarQuarters.Select(q => this.mapper.Map<Quarter>(q)));
+
+            var claimantWages = this.claimantWageRepository.GetClaimantWagesByClaimantIdByQuarters(claimantId, quarters);
+            return this.Ok(claimantWages);
+        }
+        catch (System.ArgumentOutOfRangeException ex)
+        {
+            return this.Problem(ex.Message, null, (int)HttpStatusCode.BadRequest);
+        }
     }
 
     /// <summary>
@@ -110,14 +163,14 @@ public class WageEntryController : ControllerBase
     /// <param name="wages">quarterly wages.</param>
     /// <returns>All wage entries.</returns>
     [HttpPost]
-    public IActionResult CreateClaimantWage(string claimantId, short? year, short? quarter, decimal wages)
+    public IActionResult CreateClaimantWage(string claimantId, int? year, short? quarter, decimal wages)
     {
         var wage = new ClaimantWage
         {
             ClaimantId = claimantId,
             WageYear = year,
             WageQuarter = quarter,
-            TotalWages = wages
+            TotalWages = wages,
         };
 
         this.claimantWageRepository.AddClaimantWage(wage);

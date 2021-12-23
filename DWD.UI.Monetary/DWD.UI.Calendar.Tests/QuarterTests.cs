@@ -10,7 +10,7 @@ public class QuarterTests
     [InlineData(2022, 2, 2022, 2)]
     [InlineData(2022, 3, 2022, 3)]
     [InlineData(2022, 4, 2022, 4)]
-    public void ShouldConstructFromYearAndQuarter(int year, int quarter, int expectedYear, int expectedQuarter)
+    public void ShouldConstructFromYearAndQuarter(int year, short quarter, int expectedYear, int expectedQuarter)
     {
         var sut = new Quarter(year, quarter);
 
@@ -21,7 +21,7 @@ public class QuarterTests
     [Theory]
     [InlineData(2021, 1, 2020, 4)]
     [InlineData(2021, 2, 2021, 1)]
-    public void PreviousShouldProducePredecessorQuarter(int year, int quarter, int expectedYear, int expectedQuarter)
+    public void PreviousShouldProducePredecessorQuarter(int year, short quarter, int expectedYear, int expectedQuarter)
     {
         var a = new Quarter(year, quarter);
 
@@ -98,6 +98,6 @@ public class QuarterTests
     [InlineData(2020, 0)]
     [InlineData(2020, -1)]
     [InlineData(2020, 5)]
-    public void QuarterShouldRejectInvalidConstruction(int year, int quarterNumber) =>
+    public void QuarterShouldRejectInvalidConstruction(int year, short quarterNumber) =>
         Assert.Throws<ArgumentOutOfRangeException>(() => new Quarter(year, quarterNumber));
 }
