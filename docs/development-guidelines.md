@@ -1,13 +1,15 @@
 # Development Guidelines
 
 Table of contents:
-- [Introduction and Goals](#introduction-and-goals-)
-- [Git](#git-)
-  - [Cloning a DWD repository](#cloning-a-dwd-repository-)
-  - [LFS](#lfs-)
-- [Topic X](#topic-x-)
-- [Topic Y](#topic-y-)
-- [Topic Z](#topic-z-)
+- [Development Guidelines](#development-guidelines)
+  - [Introduction and Goals](#introduction-and-goals-)
+  - [Git](#git-)
+    - [Cloning a DWD repository](#cloning-a-dwd-repository-)
+    - [Setting up GPG](#setting-up-gpg-)
+    - [LFS](#lfs-)
+  - [Topic X](#topic-x-)
+  - [Topic Y](#topic-y-)
+  - [Topic Z](#topic-z-)
 
 ## Introduction and Goals [^](#development-guidelines)
 This document consists of a collection of general development guidelines to help ease maintenance and development. These suggestions, as most guidelines, are subject to change as we learn more.
@@ -66,6 +68,34 @@ For example:
 git clone https://firstname-lastname_widwd@github.com/WI-DWD/UI-Modernization.git`
 ```
 
+### Setting up GPG [^](#development-guidelines)
+Need:
+- Installed version of the [gpg](https://www.gnupg.org/download/#sec-1-2) command line
+- Have your wisconsin.gov email ready
+
+To create your new key:
+- [Create a new GPG key](https://docs.github.com/en/authentication/managing-commit-signature-verification/generating-a-new-gpg-key)
+- [Add your new key to your GH account](https://docs.github.com/en/authentication/managing-commit-signature-verification/adding-a-new-gpg-key-to-your-github-account)
+
+Next, you can set git to use that key for all your repos or for specific repos.
+- All Repos:
+  ```bash
+  git config --global commit.gpgsign true
+  KEY_ID=$(gpg --list-secret-keys --keyid-format=long wisconsin.gov | grep ^sec | sed -e 's|.*/\([A-Z0-9]*\) .*|\1|')
+  git config --global user.signingkey $KEY_ID
+  ```
+
+- Specific Repos:
+
+  ```bash
+  # First, clone the repository that you want to use this key for.
+  # Change to that cloned directory and run:
+  git config --local commit.gpgsign true
+  KEY_ID=$(gpg --list-secret-keys --keyid-format=long wisconsin.gov | grep ^sec | sed -e 's|.*/\([A-Z0-9]*\) .*|\1|')
+  git config --local user.signingkey $KEY_ID
+  git config --local user.email firstname.lastname@wisconsin.gov
+  git config --local user.name "Firstname Lastname"
+  ```
 
 ### LFS [^](#development-guidelines)
 
