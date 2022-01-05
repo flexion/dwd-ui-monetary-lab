@@ -1,0 +1,307 @@
+# Orchestration Spike Workflow
+# Related Tasks:
+#   Technical Task #76 - Research Orchestration of current APIS in GCP
+#   Technical Task #93 - Securely calling an on-prem API from GCP
+# 
+# This workflow demonstrates orchestration of a simulated claim processing workflow.
+# The following inputs are expected:
+#   claimantID - the ID of the claimant
+#   claimantDeidentifiedSSN - the de-identified SSN of the claimant[1]
+#   initialClaimDate - the initial claim date of the claim
+#
+# Given these inputs, the workflow does the following:
+#   1. Invoke lab API to get the standard base period for the given claim date
+#   2. Invoke lab API to get the alternate base period for the given claim date
+#   3. Get wages for the individual
+#       A) Lab api calls to get wages are commented out and will be removed after initial commit so they can be preserved
+#          if needed in the future.
+#       B) DWD On-prem Wage API is currently used, which requires:
+#           i) Retrieval of the "client secret" descripting the caller that will call the API
+#           ii) Invoking Okta to retrieve a bearer token using the client id / secret
+#           iii) Invoking the wage API using the client secret along with the SSN and quarters
+#   4. If no wages present, end the workflow.  If wages present, assemble the wages in a format that matches eligibilty API
+#   5. Invoke eligibility api with the base period wages
+#   6. If not eligible, try with the alternate base period
+#   7. Return as output the relevant information:
+#       A) standard eligibility details
+#       B) alternate eligibility details
+#       C) standard wages used
+#       D) alternate wages used
+#
+# Configuration settings:
+#   baseUrl:  Base URL of the lab API environemnt
+#   oktaAuthUrl:  URL to use for obtaining a bearer token
+#   oktaClientSecretId:  The secret ID in GCP Secret Manager containing the okta client ID
+#   project_id: The project id - obtained via sys calls so shouldn't need to be set
+#   wageUrl:  The URL to use to retrieve wages
+#   enableDebugLog:  This switch is defaulting to true in the sub workflow for debug logging
+main:
+    params: [args]
+    steps:
+    - assign_initial_vars:
+        assign:
+            - initialClaimDate: ${args.initialClaimDate}
+            - claimantId: ${args.claimantId}
+            - claimantDeidentifiedSsn: ${args.deidentifiedSsn}
+            - baseUrl: "https://dwd-ui-monetary-api-cvavqdvvtq-uc.a.run.app/v1/"
+            - oktaAuthUrl: "https://wisconsin-dwd.oktapreview.com/oauth2/aus27g85isIVYfIv81d7/v1/token"
+            - oktaClientSecretId: "wi-dwd-ui-mod-dev-web-workflow-ui-wage-api-client-secret"
+            - project_id: ${sys.get_env("GOOGLE_CLOUD_PROJECT_ID")}
+            - wageUrl: "https://unemploymentdev.wisconsin.gov/WageWebAPI/Wages"
+
+    # record starting conditions
+    - logStart:
+        call: debug_log
+        args:
+            data: ${"Started Workflow.  initialClaimDate=" + initialClaimDate + ", claimantId=" + claimantId}
+    # get the standard base period for the given initial claim date
+    - getBasePeriod:
+        call: http.get
+        args:
+            url: ${baseUrl + "standard-base-period-by-date"}
+            query: 
+                initialClaimDate: ${initialClaimDate}
+        result: standardPeriod
+    # log the standard period
+    - logStandardPeriod:
+        call: debug_log
+        args:
+            data: ${"standardPeriod="+json.encode_to_string(standardPeriod.body)}
+    # get the alternate base period
+    - getAlternatePeriod:
+        call: http.get
+        args:
+            url: ${baseUrl + "alternate-base-period-by-date"}
+            query: 
+                initialClaimDate: ${initialClaimDate}
+        result: alternatePeriod
+    # log the alternate base period
+    - logAlternatePeriod:
+        call: debug_log
+        args:
+            data: ${"alternatePeriod="+json.encode_to_string(alternatePeriod.body)}
+    # retrieve the client secret we will need to get a bearer token from okta so we can call the wage API
+    - get_wage_api_okta_client_secret:
+        call: googleapis.secretmanager.v1.projects.secrets.versions.accessString
+        args:
+            secret_id: ${oktaClientSecretId}
+            # version: ${version}  # If not set, "latest" will be used.
+            project_id: ${project_id}
+        result: wage_api_okta_client_secret
+    # call okta to get a bearer token
+    - get_wage_api_bearer_tokem:
+            call: http.post
+            args:
+                url: ${oktaAuthUrl}
+                headers:
+                    accept: application/json
+                    authorization: ${"Basic " + wage_api_okta_client_secret}
+                    cache-control:  no-cache
+                    content-type: application/x-www-form-urlencoded
+                body:
+                    grant_type: client_credentials
+            result: bearer_token
+    - log_bearer_token:
+        call: debug_log
+        args:
+            data: ${"bearer token=" + bearer_token.body.access_token}
+    # reidentify / decrypt ssn.  Does nothing for now.  Placeholder
+    - reidentify_claimant_ssn:
+        assign:
+            - reidentified_ssn: ${claimantDeidentifiedSsn}
+    # get wages from UI wage API
+    - get_standard_wages:
+        call: http.post
+        args:
+            url: ${wageUrl}
+            headers:
+                Authorization: ${"Bearer " + bearer_token.body.access_token}
+            body: 
+                quarters: ${standardPeriod.body.quarters}
+                ssn: ${reidentified_ssn}
+ 
+        result: standardWageAPIResult
+    - get_alternate_wages:
+        call: http.post
+        args:
+            url: ${wageUrl}
+            headers:
+                Authorization: ${"Bearer " + bearer_token.body.access_token}
+            body: 
+                quarters: ${alternatePeriod.body.quarters}
+                ssn: ${reidentified_ssn}
+ 
+        result: alternateWageAPIResult
+    # DEPRECATED - call to lab wage API. get all claimant wage data.  This API should probably only return wages for a given series of quarters but now it returns all
+    #- getWages:
+    #    call: http.get
+    #    args:
+    #        url: ${baseUrl + "claimant/" +claimantId + "/wage-entries"}
+    #    result: wages
+    # log wages found
+    - logWages:
+        call: debug_log
+        args:
+            data: ${"wages="+json.encode_to_string(standardWageAPIResult.body) + " / " + json.encode_to_string(alternateWageAPIResult.body)}
+    - get_wages_from_standard_api_result:
+        call: sub_workflow_get_wages_only
+        args:
+            wageResult: ${standardWageAPIResult.body}
+        result: standardPeriodWages
+    - get_wages_from_alternate_api_result:
+        call: sub_workflow_get_wages_only
+        args:
+            wageResult: ${alternateWageAPIResult.body}
+        result: alternatePeriodWages
+
+    # DEPRECATED - match up wage data from lab API based on quarters. match any wages that correspond to the standard base period
+    #- matchStandardBasePeriodWages:
+    #    call: sub_workflow_get_matching_wages
+    #    args:
+    #        quarters: ${standardPeriod.body.quarters}
+    #        wages: ${wages.body}
+    #    result: standardPeriodWages
+    # match any wages for alternate base period
+    #- matchAlternateBasePeriodWages:
+    #    call: sub_workflow_get_matching_wages
+    #    args:
+    #        quarters: ${alternatePeriod.body.quarters}
+    #        wages: ${wages.body}
+    #    result: alternatePeriodWages
+
+    # if there are no wages at all, don't bother calling eligibility
+    - verify_enough_wages:
+        switch:
+        - condition: ${len(standardPeriodWages) == 0 AND len(alternatePeriodWages) == 0}
+          next: log_not_enough_wages
+    # get eligibility for standard period
+    - getStandardPeriodEligibility:
+        call: sub_workflow_get_eligibility
+        args:
+            claimantId: ${claimantId}
+            initialClaimDate: ${initialClaimDate}
+            wagesOfQuarters: ${standardPeriodWages}
+            baseUrl: ${baseUrl}
+        result: standardPeriodEligibility           
+    # check if ineligible for standard period and, if so, try alternate period 
+    - getAlternatePeriodEligibilityIfStandardFails:
+        switch:
+        - condition: ${standardPeriodEligibility.isEligible == false}
+          steps:
+              - log_calling_alternate_eligibility:
+                    call: debug_log
+                    args:
+                        data: ${"Trying Alternate Period."}
+              - tryAlternateEligibility:
+                    call: sub_workflow_get_eligibility
+                    args:
+                        claimantId: ${claimantId}
+                        initialClaimDate: ${initialClaimDate}
+                        wagesOfQuarters: ${alternatePeriodWages}
+                        baseUrl: ${baseUrl}
+                    result: alternatePeriodEligibility 
+
+    # set up our return result
+    - assign_output:
+        assign:
+            - result:
+                - standardEligibilityDetails: ${standardPeriodEligibility}
+                - alternateEligibilityDetails:  ${alternatePeriodEligibility}
+                - standardWages: ${standardPeriodWages}
+                - alternateWages: ${alternatePeriodWages}
+    # return our result
+    - returnResult:
+        return: 
+            ${result}
+
+    # not enough wages, so log it and return
+    - not_enough_wages:
+        steps:
+            - log_not_enough_wages:
+                call: debug_log
+                args:
+                    data: "No wages found.  No reason to invoke eligibility."
+            - go_to_end:
+                next: assign_output
+
+# get just the wages from the wage API result             
+sub_workflow_get_wages_only:
+    params: [wageResult]
+    steps:
+       - initialize_output:
+            assign:
+            - output: []
+       - loop_through_quarters:
+            for:
+                value: q
+                in: ${wageResult}
+                steps:
+                    - append_to_output:
+                        assign:
+                            - output: ${list.concat(output, q.wages)}
+       - return_output:
+            return: ${output}
+        
+# DEPRECATED.  sub workflow that composes an array of wage values from the wages array only if the wage quarter is in the quarters list passed in
+#sub_workflow_get_matching_wages:
+#    params: [quarters, wages]
+#    steps:
+#        - initialize_output:
+#            assign:
+#            - output: []
+#
+#        - loop_through_quarters:
+#            for:
+#                value: q
+#                in: ${quarters}
+#                steps:
+#                - loop_through_wages:
+#                    for:
+#                        value: w
+#                        in: ${wages}
+#                        steps:
+#                            - compare_if_quarters_match:
+#                                switch:
+#                                - condition: ${q.quarterNumber == w.wageQuarter AND q.year == w.wageYear}
+#                                  steps:
+#                                    - assign_wages:
+#                                        assign:
+#                                        - output: ${list.concat(output, w.totalWages)}
+#        - return_output:
+#            return: ${output}
+
+# sub workflow that calls the eligibility API with the provided inputs
+sub_workflow_get_eligibility:
+    params: [claimantId, initialClaimDate, wagesOfQuarters, baseUrl]
+    steps:
+        - get_eligibility_API_result:
+            call: http.post
+            args:
+                url: ${baseUrl + "eligibility"}
+                body:
+                    claimantId: ${string(claimantId)}
+                    initialClaimDate: ${initialClaimDate}
+                    wagesOfQuarters: ${wagesOfQuarters}
+            result: eligibilityResult
+        - log_eligibility_results:
+            call: debug_log
+            args:
+                data: ${"Eligibility result = " + string(eligibilityResult.body.isEligible)}
+        - return_result:
+            return: ${eligibilityResult.body}
+
+# sub workflow that logs via sys.log.  currently always logs.  should figure out a way to make this more configurable
+debug_log:
+    params: [data, enableDebugLog: true]
+    steps:
+        - end_if_not_enabled:
+            switch:
+            - condition: ${enableDebugLog == false}
+              next: end
+        - invoke_sys_log:
+            call: sys.log
+            args:
+                data: ${data}
+                severity: "INFO"
+
+
