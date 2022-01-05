@@ -23,7 +23,7 @@ The goals of this document are as follows:
 - Placeholder
 
 ## Authoring Development Guidelines [^](#development-guidelines)
-All team members are expected to maintain and expand upon the devleopment guidelines.  Please follow these guidelines to modify existing guidelines and to expand the guidelines to cover new topics.
+All team members are expected to maintain and expand upon the development guidelines.  Please follow these guidelines to modify existing guidelines and to expand the guidelines to cover new topics.
 * Guidelines are modified via the standard pull request process.  This allows the team to review and fine tune proposed changes.
 * Small topics can be included directly in development-guidelines.md.  Larger topics should have their own markdown file in ./docs/.  The larger topics still have a section in development-guidelines.md, but it is just an introduction and a link to the topic specific file.  Please use your judgement to determine if a topic is sufficiently large to require its own file.  One thing to consider, if the topic requires multiple sub-topics/sub-sections, then it is likely more suitable to place that content into its own file.
 
