@@ -1,5 +1,5 @@
 # Clean Architecture
-The team is following a clean architecture approach. Clean architecture was introducted in a [blog post](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html) by Robert C Martin in August 2012.  Clean architecture is similar to [orthagonal architecture](https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)), among others.
+The team is following a clean architecture approach. Clean architecture was introducted in a [blog post](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html) by Robert C Martin in August 2012.  Clean architecture is similar to [hexagonal architecture](https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)), among others.
 
 In 2018, Robert C. Martin published the book [Clean Architecture - A craftsman's guide to software structure and design](https://www.amazon.com/dp/0134494164/ref=cm_sw_em_r_mt_dp_KMPTGHH4T1133T2SXAH4).  This book is recommended reading for team members.
 
