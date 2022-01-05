@@ -2,9 +2,11 @@
 
 Table of contents:
 - [Introduction and Goals](#introduction-and-goals-)
+- [Authoring Development Guidelines](#authoring-development-guidelines-)
 - [Git](#git-)
   - [Cloning a DWD repository](#cloning-a-dwd-repository-)
   - [LFS](#lfs-)
+- [Clean Architecture](#clean-architecture-)
 - [Topic X](#topic-x-)
 - [Topic Y](#topic-y-)
 - [Topic Z](#topic-z-)
@@ -19,6 +21,11 @@ The goals of this document are as follows:
 - Placeholder
 - Placeholder
 - Placeholder
+
+## Authoring Development Guidelines [^](#development-guidelines)
+All team members are expected to maintain and expand upon the devleopment guidelines.  Please follow these guidelines to modify existing guidelines and to expand the guidelines to cover new topics.
+* Guidelines are modified via the standard pull request process.  This allows the team to review and fine tune proposed changes.
+* Small topics can be included directly in development-guidelines.md.  Larger topics should have their own markdown file in ./docs/.  The larger topics still have a section in development-guidelines.md, but it is just an introduction and a link to the topic specific file.  Please use your judgement to determine if a topic is sufficiently large to require its own file.  One thing to consider, if the topic requires multiple sub-topics/sub-sections, then it is likely more suitable to place that content into its own file.
 
 ## Git [^](#development-guidelines)
 
@@ -82,6 +89,9 @@ For the DWD UI, we don't currently see a need for the extra configuration and ma
 ***⚠ Note:** If larger files are required, this may change.*
 
 ---
+
+## Clean Architecture [^](#development-guidelines)
+The team is following a clean architecture approach, but we are fine tuning some of the terminology to better fit with C# and .NET common best practices.  Please see [clean architecture](./clean-architecture.md) for more information. 
 
 ## Topic X [^](#development-guidelines)
 Placeholder
