@@ -71,7 +71,7 @@ git clone https://firstname-lastname_widwd@github.com/WI-DWD/UI-Modernization.gi
 ### Setting up GPG [^](#development-guidelines)
 Need:
 - Installed version of the [gpg](https://www.gnupg.org/download/#sec-1-2) command line
-- Have your wisconsin.gov email ready
+- Have your wisconsin.gov email ready(firstname.lastname@wisconsin.gov)
 
 To create your new key:
 - [Create a new GPG key](https://docs.github.com/en/authentication/managing-commit-signature-verification/generating-a-new-gpg-key)
