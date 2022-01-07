@@ -1,0 +1,30 @@
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '--file=DWD.UI.Monetary/Deploy.dockerfile'
+      - '--tag=us-central1-docker.pkg.dev/$PROJECT_ID/dwd-modernization-lab/dwd-ui-monetary-deploy:$COMMIT_SHA'
+      - 'DWD.UI.Monetary'
+    id: build-deploy-container
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'us-central1-docker.pkg.dev/$PROJECT_ID/dwd-modernization-lab/dwd-ui-monetary-deploy:$COMMIT_SHA'
+    id: push-deploy-container
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'dwd-ui-monetary-api'
+      - '--image=us-central1-docker.pkg.dev/$PROJECT_ID/dwd-modernization-lab/dwd-ui-monetary-deploy:$COMMIT_SHA'
+      - '--platform=managed'
+      - '--region=us-central1'
+      - '--allow-unauthenticated'
+      - '--add-cloudsql-instances=dwd-ui-modernizatioin:us-central1:daves-awesome-db'
+      - '--update-secrets=INSTANCE_CONNECTION_NAME=DAVE_INSTANCE_CONNECTION_NAME:latest'
+      - '--update-secrets=DB_NAME=DAVE_DB_NAME:latest'
+      - '--update-secrets=DB_USER=DAVE_DB_USER:latest'
+      - '--update-secrets=DB_PASS=DAVE_DB_PASS:latest'
+    id: deploy-container
+

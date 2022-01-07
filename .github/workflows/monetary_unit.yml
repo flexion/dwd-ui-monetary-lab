@@ -1,0 +1,62 @@
+name: Monetary Unit tests
+
+on:
+  pull_request:
+    branches: [ '*' ]
+    paths:
+      - "DWD.UI.Monetary/**"
+      - ".github/workflows/monetary_unit.yml"
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    env:
+      DOTNET_NOLOGO: true
+      DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: 0
+      DOTNET_RUNNING_IN_CONTAINER: true
+      ASPNETCORE_URLS: http://+:8080
+      
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+
+    - name: Restore dependencies
+      run: |-
+        cd DWD.UI.Monetary
+        dotnet restore
+
+    - name: Build
+      run: |-
+        cd DWD.UI.Monetary
+        dotnet build --no-restore
+
+    - name: Test
+      run: |-
+        cd DWD.UI.Monetary
+        dotnet test --no-build --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./coverage
+
+    - name: Make var for comma separated coverage files
+      id: set_cov_files
+      run: |
+        files=$(ls -Rm DWD.UI.Monetary/coverage/**/coverage.cobertura.xml | tr -d '\n ')
+        echo ::set-output name=coverage_files::"${files}"
+
+    - name: Code Coverage Summary Report
+      uses: irongut/CodeCoverageSummary@v1.2.0
+      with:
+        filename: ${{steps.set_cov_files.outputs.coverage_files}}
+        badge: true
+        fail_below_min: true
+        format: 'markdown'
+        output: 'both'
+        thresholds: '70 80'
+
+    - name: Add Coverage PR Comment
+      uses: marocchino/sticky-pull-request-comment@v2
+      with:
+        recreate: true
+        path: code-coverage-results.md
