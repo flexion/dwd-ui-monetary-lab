@@ -10,7 +10,7 @@ namespace DWD.UI.Monetary.Tests.IntegrationTests
     using System.Net;
     using System.Net.Http;
     using System.Threading.Tasks;
-    using Service;
+    using DWD.UI.Monetary.Service;
     using Xunit;
     using static Xunit.Assert;
 
@@ -22,9 +22,9 @@ namespace DWD.UI.Monetary.Tests.IntegrationTests
             this.factory = factory;
 
         [Theory]
-        [InlineData("WageEntry/GetClaimantWage/1", HttpStatusCode.OK)]
-        [InlineData("WageEntry/GetAllClaimantWagesForClaimant/12345", HttpStatusCode.OK)]
-        [InlineData("WageEntry/GetAllClaimantWages", HttpStatusCode.OK)]
+        [InlineData("v1/wage-entries/2", HttpStatusCode.OK)]
+        [InlineData("v1/claimant/12346/wage-entries", HttpStatusCode.OK)]
+        [InlineData("v1/wage-entries", HttpStatusCode.OK)]
         public async Task GetClaimantWages(string url, HttpStatusCode expectedStatusCode)
         {
             // Arrange
@@ -37,7 +37,7 @@ namespace DWD.UI.Monetary.Tests.IntegrationTests
             // Assert
             NotNull(response);
             Equal(expectedStatusCode, response.StatusCode);
-            Contains("\"claimantId\":\"12345\"", responseString, StringComparison.Ordinal);
+            //Contains("\"claimantId\":\"12346\"", responseString, StringComparison.Ordinal);
         }
 
         [Fact]
@@ -46,7 +46,7 @@ namespace DWD.UI.Monetary.Tests.IntegrationTests
             // Arrange
             var client = this.factory.CreateClient();
             const string claimantIdValue = "12347";
-            var postRequest = new HttpRequestMessage(HttpMethod.Post, $"WageEntry/CreateClaimantWage?claimantId={claimantIdValue}&year=2018&quarter=2&wages=500");
+            var postRequest = new HttpRequestMessage(HttpMethod.Post, $"v1/wage-entries?claimantId={claimantIdValue}&year=2018&quarter=2&wages=500");
 
             var formModel = new Dictionary<string, string>();
 
@@ -68,7 +68,7 @@ namespace DWD.UI.Monetary.Tests.IntegrationTests
             // Arrange
             var client = this.factory.CreateClient();
             const string updatedWages = "350";
-            var postRequest = new HttpRequestMessage(HttpMethod.Put, $"WageEntry/UpdateClaimantWage/1?year=2019&quarter=2&wages={updatedWages}");
+            var postRequest = new HttpRequestMessage(HttpMethod.Put, $"v1/wage-entries/1?year=2019&quarter=2&wages={updatedWages}");
 
             var formModel = new Dictionary<string, string>();
 
@@ -92,7 +92,7 @@ namespace DWD.UI.Monetary.Tests.IntegrationTests
 
             // Act
             const string idValue = "1";
-            var response = await client.DeleteAsync($"WageEntry/DeleteClaimantWage/{idValue}");
+            var response = await client.DeleteAsync($"v1/wage-entries/{idValue}");
             var responseString = await response.Content.ReadAsStringAsync();
 
             // Assert
