@@ -1,144 +1,177 @@
-#pragma warning disable IDE0052
-#pragma warning disable CA1801
-#pragma warning disable IDE0060
+#pragma warning disable IDE0058 // Expression value is never used (This avoids the clutter of the discard prefix when adding services, i.e., _ = services.AddControllers();)
 
-namespace DWD.UI.Monetary.Service
+namespace DWD.UI.Monetary.Service;
+
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
+using System.Reflection;
+using DWD.UI.Monetary.Domain.Interfaces;
+using DWD.UI.Monetary.Domain.UseCases;
+using DWD.UI.Monetary.Service.Extensions;
+using DWD.UI.Monetary.Service.Frameworks;
+using DWD.UI.Monetary.Service.Gateways;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
+using Npgsql;
+using Swashbuckle.AspNetCore.SwaggerGen;
+
+/// <summary>
+/// Configure the service during start up.
+/// </summary>
+[ExcludeFromCodeCoverage]
+public class Startup
 {
-    using System;
-    using System.Diagnostics.CodeAnalysis;
-    using System.IO;
-    using System.Reflection;
-    using Domain.UseCases;
-    using Frameworks;
-    using Gateways;
-    using Microsoft.AspNetCore.Builder;
-    using Microsoft.AspNetCore.Hosting;
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.Hosting;
-    using Microsoft.OpenApi.Models;
-    using Npgsql;
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Startup"/> class.
+    /// </summary>
+    /// <param name="env">Reference to hosting environment.</param>
+    /// <param name="configuration">Reference to the app configuration.</param>
+    public Startup(IWebHostEnvironment env, IConfiguration configuration)
+    {
+        this.env = env;
+        this.config = configuration;
+    }
 
     /// <summary>
-    /// Configure the service during start up.
+    /// Reference to configuration data.
     /// </summary>
-    [ExcludeFromCodeCoverage]
-    public class Startup
+    private readonly IConfiguration config;
+
+    /// <summary>
+    /// Reference to host environment.
+    /// </summary>
+    private readonly IWebHostEnvironment env;
+
+    /// <summary>
+    /// Configure services in IoC container.
+    /// </summary>
+    /// <param name="services">The services collection.</param>
+    /// <remarks>This method gets called by the runtime. Use this method to add services to the container.</remarks>
+    public void ConfigureServices(IServiceCollection services)
     {
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="configuration"></param>
-        public Startup(IConfiguration configuration) => this.Configuration = configuration;
+        services.AddControllers();
 
-        /// <summary>
-        /// Reference to configuration data.
-        /// </summary>
-        private IConfiguration Configuration { get; }
-
-        /// <summary>
-        /// Configure services in IoC container.
-        /// </summary>
-        /// <param name="services">The services collection.</param>
-        /// <remarks>This method gets called by the runtime. Use this method to add services to the container.</remarks>
-        public void ConfigureServices(IServiceCollection services)
+        if (this.env.IsStaging() || this.env.IsProduction())
         {
-            services.AddControllers();
+            services.AddGoogleLogging(this.config);
+        }
 
-            // var sqlConnectionString = this.Configuration["PostgreSqlConnectionString"];
+        // Add API Versioning to the Project
+        // ReportApiVersions advertises the API versions supported for the particular endpoint
+        services.AddApiVersioning(apiconfig => apiconfig.ReportApiVersions = true);
 
+        services.AddVersionedApiExplorer(options =>
+        {
+            // add the versioned api explorer, which also adds IApiVersionDescriptionProvider service
+            // note: the specified format code will format the version as "'v'major[.minor][-status]"
+            options.GroupNameFormat = "'v'VVV";
 
-            services.AddSwaggerGen(c =>
+            // note: this option is only necessary when versioning by url segment. the SubstitutionFormat
+            // can also be used to control the format of the API version in route templates
+            options.SubstituteApiVersionInUrl = true;
+        });
+        services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
+        services.AddSwaggerGen(options =>
+        {
+            var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+        });
+
+        var connectionString = GetPgConnectionString(this.config);
+        services.AddDbContext<ClaimantWageContext>(options => options.UseNpgsql(connectionString));
+
+        services.AddAutoMapper(typeof(Startup));
+
+        services
+            .AddTransient<ICalculateBasePeriod, CalculateBasePeriod>()
+            .AddSingleton<ICalculateBenefitYear, CalculateBenefitYear>()
+            .AddScoped<IClaimantWageRepository, ClaimantWageDbRepository>()
+            .AddScoped<IClaimantWageRepository, ClaimantWageDbRepository>()
+            .AddScoped<ICheckEligibilityOfMonetaryRequirements, CheckEligibilityOfMonetaryRequirements>()
+            .AddScoped<IEligibilityBasisGateway, StubEligibilityBasisGateway>();
+    }
+
+    /// <summary>
+    /// Configure http pipeline.
+    /// </summary>
+    /// <param name="app">Application builder reference.</param>
+    /// <param name="hostenv">Environment reference.</param>
+    /// <param name="provider">Api version Description provider.</param>
+    /// <remarks>This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+    /// </remarks>
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment hostenv, IApiVersionDescriptionProvider provider)
+    {
+        if (hostenv.IsDevelopment())
+        {
+            // nothing yet
+        }
+
+        // always generate swagger doc
+        app.UseDeveloperExceptionPage();
+        app.UseSwagger();
+        app.UseSwaggerUI(
+            options =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo
+                // build a swagger endpoint for each discovered API version
+                foreach (var description in provider.ApiVersionDescriptions)
                 {
-                    Title = "Monetary Endpoint Demo",
-                    Version = "v1",
-                    Description = "An initial lab-safe implementation."
-                });
-
-                // using System.Reflection;
-                var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-                c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+                    options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName.ToUpperInvariant());
+                }
             });
 
-            // services.AddDbContext<ClaimantWageContext>(options => options.UseNpgsql(sqlConnectionString));
-            ConfigureDbContext(services, this.Configuration);
-            services
-                .AddTransient<ICalculateBasePeriod, CalculateBasePeriod>()
-                .AddScoped<IClaimantWageRepository, ClaimantWageDbRepository>();
-        }
+        // app.UseHttpsRedirection();
+        app.UseRouting();
 
-        /// <summary>
-        /// Configure http pipeline.
-        /// </summary>
-        /// <param name="app">Application builder reference.</param>
-        /// <param name="env">Environment reference.</param>
-        /// <remarks>This method gets called by the runtime. Use this method to configure the HTTP request pipeline.</remarks>
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        app.UseAuthorization();
+
+        app.UseEndpoints(endpoints => endpoints.MapControllers());
+    }
+
+    /// <summary>
+    /// Chooses where to get the Postgres DB credentials.
+    /// </summary>
+    private static string GetPgConnectionString(IConfiguration config)
+    {
+        var instanceConnectionName = config.GetValue<string>("INSTANCE_CONNECTION_NAME");
+
+        NpgsqlConnectionStringBuilder connectionString;
+        if (string.IsNullOrEmpty(instanceConnectionName))
         {
-            if (env.IsDevelopment())
+            var dbSettings = config.GetSection("SqlConnection");
+            connectionString = new NpgsqlConnectionStringBuilder
             {
-                // nothing yet
-            }
-
-            // always generate swagger doc
-            app.UseDeveloperExceptionPage();
-            app.UseSwagger();
-            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "DWD.UI.Monetary.Service v1"));
-
-            // app.UseHttpsRedirection();
-
-            app.UseRouting();
-
-            app.UseAuthorization();
-
-            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+                Host = dbSettings["Host"],
+                Username = dbSettings["User"],
+                Password = config["SqlConnection:Password"],
+                Database = dbSettings["Database"],
+                SslMode = SslMode.Disable,
+                Pooling = true,
+            };
         }
-
-        /// <summary>
-        /// Chooses where to get the DB credentials and creates the Connection.
-        /// </summary>
-        /// <param name="services">framework services collection</param>
-        /// <param name="config">framework config</param>
-        private static void ConfigureDbContext(IServiceCollection services, IConfiguration config)
+        else
         {
-            var instanceConnectionName = Environment.GetEnvironmentVariable("INSTANCE_CONNECTION_NAME");
-
-            NpgsqlConnectionStringBuilder connectionString;
-            if (string.IsNullOrEmpty(instanceConnectionName))
+            var dbSocketDir = config.GetValue<string>("DB_SOCKET_PATH") ?? "/cloudsql";
+            connectionString = new NpgsqlConnectionStringBuilder()
             {
-                var dbSettings = config.GetSection("SqlConnection");
-                connectionString = new NpgsqlConnectionStringBuilder
-                {
-                    Host = dbSettings["Host"],
-                    Username = dbSettings["User"],
-                    Password = config["SqlConnection:Password"],
-                    Database = dbSettings["Database"],
-                    SslMode = SslMode.Disable,
-                    Pooling = true
-                };
-            }
-            else
-            {
-                var dbSocketDir = Environment.GetEnvironmentVariable("DB_SOCKET_PATH") ?? "/cloudsql";
-                connectionString = new NpgsqlConnectionStringBuilder()
-                {
-                    // Remember - storing secrets in plain text is potentially unsafe. Consider using
-                    // something like https://cloud.google.com/secret-manager/docs/overview to help keep
-                    // secrets secret.
-                    Host = $"{dbSocketDir}/{instanceConnectionName}",
-                    Username = Environment.GetEnvironmentVariable("DB_USER"), // e.g. 'my-db-user
-                    Password = Environment.GetEnvironmentVariable("DB_PASS"), // e.g. 'my-db-password'
-                    Database = Environment.GetEnvironmentVariable("DB_NAME"), // e.g. 'my-database'
-                    SslMode = SslMode.Disable,
-                    Pooling = true
-                };
-            }
-
-            _ = services.AddDbContext<ClaimantWageContext>(options =>
-                  options.UseNpgsql(connectionString.ToString()));
+                // Remember - storing secrets in plain text is potentially unsafe. Consider using
+                // something like https://cloud.google.com/secret-manager/docs/overview to help keep
+                // secrets secret.
+                Host = $"{dbSocketDir}/{instanceConnectionName}",
+                Username = config.GetValue<string>("DB_USER"), // e.g. 'my-db-user
+                Password = config.GetValue<string>("DB_PASS"), // e.g. 'my-db-password'
+                Database = config.GetValue<string>("DB_NAME"), // e.g. 'my-database'
+                SslMode = SslMode.Disable,
+                Pooling = true,
+            };
         }
+
+        return connectionString.ToString();
     }
 }

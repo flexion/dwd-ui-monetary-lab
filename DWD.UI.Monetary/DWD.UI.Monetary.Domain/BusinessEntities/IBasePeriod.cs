@@ -1,19 +1,20 @@
-namespace DWD.UI.Monetary.Domain.BusinessEntities
+namespace DWD.UI.Monetary.Domain.BusinessEntities;
+
+using System.Collections.Generic;
+using DWD.UI.Calendar;
+
+/// <summary>
+/// Simplified representation of the base period.
+/// </summary>
+public interface IBasePeriod
 {
-    using System.Collections.Generic;
+    /// <summary>
+    /// Gets the collection of standard quarters making up the base period.
+    /// </summary>
+    IReadOnlyList<Quarter> StandardQuarters { get; }
 
     /// <summary>
-    /// Simplified representation of the base period.
+    /// Gets the collection of alternate quarters making up the base period.
     /// </summary>
-    public interface IBasePeriod
-    {
-        /// <summary>
-        /// Array of quarters making up the base period.
-        /// </summary>
-        IEnumerable<IUIQuarter> BasePeriodQuarters { get; }
-        /// <summary>
-        /// Array of alternative quarters making up the base period.
-        /// </summary>
-        IEnumerable<IUIQuarter> AltBasePeriodQuarters { get; }
-    }
+    IReadOnlyList<Quarter> AlternateQuarters { get; }
 }
