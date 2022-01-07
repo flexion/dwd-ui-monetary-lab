@@ -71,7 +71,9 @@ git clone https://firstname-lastname_widwd@github.com/WI-DWD/UI-Modernization.gi
 ### Setting up GPG [^](#development-guidelines)
 Need:
 - Installed version of the [gpg](https://www.gnupg.org/download/#sec-1-2) command line
-- Have your wisconsin.gov email ready(firstname.lastname@wisconsin.gov)
+- Have your dwd.wisconsin.gov email ready. firstname.lastname@dwd.wisconsin.gov)
+  > Note: Make sure it is your dwd.wisconsin.gov email. If GitHub has a different email, we will need it
+  > changed by an administrator so that it aligns with the team.
 
 To create your new key:
 - [Create a new GPG key](https://docs.github.com/en/authentication/managing-commit-signature-verification/generating-a-new-gpg-key)
@@ -81,7 +83,7 @@ Next, you can set git to use that key for all your repos or for specific repos.
 - All Repos:
   ```bash
   git config --global commit.gpgsign true
-  KEY_ID=$(gpg --list-secret-keys --keyid-format=long wisconsin.gov | grep ^sec | sed -e 's|.*/\([A-Z0-9]*\) .*|\1|')
+  KEY_ID=$(gpg --list-secret-keys --keyid-format=long dwd.wisconsin.gov | grep ^sec | sed -e 's|.*/\([A-Z0-9]*\) .*|\1|')
   git config --global user.signingkey $KEY_ID
   ```
 
@@ -91,9 +93,9 @@ Next, you can set git to use that key for all your repos or for specific repos.
   # First, clone the repository that you want to use this key for.
   # Change to that cloned directory and run:
   git config --local commit.gpgsign true
-  KEY_ID=$(gpg --list-secret-keys --keyid-format=long wisconsin.gov | grep ^sec | sed -e 's|.*/\([A-Z0-9]*\) .*|\1|')
+  KEY_ID=$(gpg --list-secret-keys --keyid-format=long dwd.wisconsin.gov | grep ^sec | sed -e 's|.*/\([A-Z0-9]*\) .*|\1|')
   git config --local user.signingkey $KEY_ID
-  git config --local user.email firstname.lastname@wisconsin.gov
+  git config --local user.email firstname.lastname@dwd.wisconsin.gov
   git config --local user.name "Firstname Lastname"
   ```
 
