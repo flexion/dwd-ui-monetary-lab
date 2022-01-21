@@ -1,3 +1,11 @@
+------
+# Project Closed
+
+This Project has been archived active project has been moved [here](https://github.com/WI-DWD/UI-Modernization). All the issues and pull request for this project have archived [here](archive).
+
+------
+
+
 # State of Wisconsin - Department of Workforce Development - Unemployment Insurance API
 This repository is for developing the APIs that will be used for the DWD Unemployment Insurance application.
 
