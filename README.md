@@ -1,7 +1,7 @@
 ------
 # Project Closed
 
-This Project has been archived and the active project has been moved [here](https://github.com/WI-DWD/UI-Modernization). All the issues and pull request for this project have archived [here](archive).
+This project has been archived and the active project has been moved [here](https://github.com/WI-DWD/UI-Modernization). All the issues and pull requests for this project have archived [here](archive).
 
 ------
 
